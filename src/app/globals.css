@@ -15,7 +15,7 @@
   --primary: oklch(0.205 0 0);
   --primary-foreground: oklch(0.985 0 0);
   --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
+  --secondary-foreground: oklch(0.205M 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);
   --accent: oklch(0.97 0 0);
@@ -35,8 +35,8 @@
   --color-dpro-dark: oklch(0.3603 0.0501 201.1);
   --color-dpro-light-gray: oklch(0.9067 0 0);
   --color-dpro-gray: oklch(0.7889 0 0);
+  --color-dpro-dark-blue: oklch(0.3238 0.0875 253.97);
   --font-roboto: "Roboto", sans-serif; 
-
 }
 
 @theme inline {

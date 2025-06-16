@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import DiscussionsTab from "@/components/tabs/discussions-tab";
 
 const tabs = ["Brief", "Discussions", "Media", "Timeline", "Other"];
 
@@ -63,7 +64,6 @@ const ProjectPage = () => {
     <li><strong>Build Community Understanding:</strong> The showcase event invites local community members to engage with refugees and learn about their contributions to society.</li>
     <li><strong>Inspire Long-Term Change:</strong> Students and community members alike leave with a greater awareness of refugee issues and the role they can play in fostering inclusion.</li>
   </ul>
-
   `);
 
   const editor = useEditor({
@@ -259,39 +259,70 @@ const ProjectPage = () => {
             </button>
           ))}
         </nav>
-        <div className="flex justify-end ml-auto gap-2">
-          {isEditing && (
-            <Button variant="secondary" onClick={toggleEdit}>
-              Cancel
+        {activeTab === "Brief" && (
+          <div className="flex justify-end ml-auto gap-2">
+            {isEditing && (
+              <Button variant="secondary" onClick={toggleEdit}>
+                Cancel
+              </Button>
+            )}
+            <Button onClick={toggleEdit} className="bg-dpro-primary text-white">
+              {isEditing ? "Save Changes" : "Edit Content"}
             </Button>
-          )}
-          <Button onClick={toggleEdit} className="bg-dpro-primary text-white">
-            {isEditing ? "Save Changes" : "Edit Content"}
-          </Button>
-        </div>
+          </div>
+        )}
       </div>
       <div className="px-16">
         <div>
-          {isEditing && <MenuBar />}
-          <div
-            className={`mb-16 ${
-              isEditing
-                ? "border border-gray-300 rounded-b-lg min-h-[600px]"
-                : ""
-            }`}
-          >
-            {isEditing ? (
-              <EditorContent
-                editor={editor}
-                className="prose prose-lg max-w-none p-6 focus:outline-none"
-              />
-            ) : (
+          {activeTab === "Brief" && (
+            <>
+              {isEditing && <MenuBar />}
               <div
-                className="prose prose-lg"
-                dangerouslySetInnerHTML={{ __html: content }}
-              />
-            )}
-          </div>
+                className={`${
+                  isEditing
+                    ? "border border-gray-300 rounded-b-lg min-h-[600px]"
+                    : ""
+                }`}
+              >
+                {isEditing ? (
+                  <EditorContent
+                    editor={editor}
+                    className="prose prose-lg max-w-none p-6 focus:outline-none"
+                  />
+                ) : (
+                  <div
+                    className="prose prose-lg"
+                    dangerouslySetInnerHTML={{ __html: content }}
+                  />
+                )}
+              </div>
+            </>
+          )}
+
+          {activeTab === "Discussions" && <DiscussionsTab />}
+
+          {activeTab === "Media" && (
+            <div className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">Media</h2>
+              <p className="text-gray-600">Media content coming soon...</p>
+            </div>
+          )}
+
+          {activeTab === "Timeline" && (
+            <div className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">
+                Timeline
+              </h2>
+              <p className="text-gray-600">Timeline content coming soon...</p>
+            </div>
+          )}
+
+          {activeTab === "Other" && (
+            <div className="mb-16">
+              <h2 className="text-3xl font-bold text-gray-900 mb-6">Other</h2>
+              <p className="text-gray-600">Other content coming soon...</p>
+            </div>
+          )}
         </div>
       </div>
     </div>

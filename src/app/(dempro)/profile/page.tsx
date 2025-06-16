@@ -1,4 +1,5 @@
 import { MainCard } from "@/components/cards";
+import { RoundedPrimaryInput } from "@/components/custom-inputs";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -39,22 +40,15 @@ export default async function Profile() {
                 <label htmlFor="title" className="font-medium">
                   Title
                 </label>
-                <input
-                  id="title"
-                  name="title"
-                  placeholder="Title"
-                  className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-dpro-primary border-[2px] rounded-full focus:outline-none focus:ring-1"
-                />
+                <RoundedPrimaryInput name="title" placeholder="Title" />
               </div>
               <div className="grid gap-3">
-                <label htmlFor="title" className="font-medium">
+                <label htmlFor="description" className="font-medium">
                   Description
                 </label>
-                <input
-                  id="description"
+                <RoundedPrimaryInput
                   name="description"
                   placeholder="Description"
-                  className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-dpro-primary border-[2px] rounded-full focus:outline-none focus:ring-1"
                 />
               </div>
             </div>

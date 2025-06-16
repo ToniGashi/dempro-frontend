@@ -11,7 +11,7 @@ const links = [
 export default function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="bg-dpro-dark flex font-roboto text-white items-center px-10 py-12 z-10 flex-col gap-4">
+    <footer className="bg-dpro-dark flex font-roboto text-white items-center px-10 py-12 z-10 flex-col gap-4 mt-16">
       <div className="grid grid-cols-3">
         <div className="flex">
           <div className="flex flex-col gap-4 text-2xl">
