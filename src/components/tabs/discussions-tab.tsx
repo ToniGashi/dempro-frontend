@@ -49,7 +49,7 @@ export default function DiscussionsTab() {
   };
 
   return (
-    <div className="space-y-8 max-w-200">
+    <div className="space-y-8 max-w-200 mt-16">
       <div>
         <p className="text-4xl font-bold text-dpro-dark-blue mb-6">
           Discussion Board

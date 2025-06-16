@@ -1,4 +1,5 @@
 "use client";
+
 import { useState } from "react";
 
 import DiscussionsTab from "@/components/tabs/discussions-tab";
@@ -6,7 +7,7 @@ import BriefTab from "@/components/tabs/brief-tab";
 
 const tabs = ["Brief", "Discussions", "Media", "Timeline", "Other"];
 
-export default function TabsContainer() {
+export default function ProjectTabsContainer({ project }: { project: any }) {
   const [activeTab, setActiveTab] = useState("Brief");
 
   return (
@@ -28,31 +29,27 @@ export default function TabsContainer() {
           ))}
         </nav>
       </div>
-      <div className="px-16">
-        <div>
-          {activeTab === "Brief" && <BriefTab />}
-          {activeTab === "Discussions" && <DiscussionsTab />}
-          {activeTab === "Media" && (
-            <div className="mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Media</h2>
-              <p className="text-gray-600">Media content coming soon...</p>
-            </div>
-          )}
-          {activeTab === "Timeline" && (
-            <div className="mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">
-                Timeline
-              </h2>
-              <p className="text-gray-600">Timeline content coming soon...</p>
-            </div>
-          )}
-          {activeTab === "Other" && (
-            <div className="mb-16">
-              <h2 className="text-3xl font-bold text-gray-900 mb-6">Other</h2>
-              <p className="text-gray-600">Other content coming soon...</p>
-            </div>
-          )}
-        </div>
+      <div className="px-16 mt-16">
+        {activeTab === "Brief" && <BriefTab />}
+        {activeTab === "Discussions" && <DiscussionsTab />}
+        {activeTab === "Media" && (
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Media</h2>
+            <p className="text-gray-600">Media content coming soon...</p>
+          </div>
+        )}
+        {activeTab === "Timeline" && (
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Timeline</h2>
+            <p className="text-gray-600">Timeline content coming soon...</p>
+          </div>
+        )}
+        {activeTab === "Other" && (
+          <div className="mb-16">
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Other</h2>
+            <p className="text-gray-600">Other content coming soon...</p>
+          </div>
+        )}
       </div>
     </div>
   );

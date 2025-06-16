@@ -1,7 +1,17 @@
-import TabsContainer from "@/components/tabs/tabs-container";
+import ProjectTabsContainer from "@/components/tabs/tabs-container";
+import { getProject } from "@/lib/actions";
 import NextImage from "next/image";
 
-export default async function ProjectPage() {
+type Params = Promise<{
+  projectId: string;
+}>;
+
+export default async function ProjectPage(props: { params: Params }) {
+  const params = await props.params;
+  const projectId = params.projectId;
+
+  //   const { result: project } = await getProject(projectId);
+
   return (
     <div className="min-h-screen">
       <div className="relative flex items-center text-white h-108">
@@ -26,7 +36,7 @@ export default async function ProjectPage() {
           </p>
         </div>
       </div>
-      <TabsContainer />
+      <ProjectTabsContainer project={[]} />
     </div>
   );
 }

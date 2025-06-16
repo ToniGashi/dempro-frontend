@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ButtonLink } from "./links";
+import { Clock, MessageSquare } from "lucide-react";
 
 export const MainCard = ({
   title,
@@ -47,6 +48,35 @@ export const SecondaryCard = ({
       <div className="p-19 flex flex-col gap-10">
         <p className="font-bold text-white text-3xl">{title}</p>
         <ButtonLink title={buttonTitle} variant="secondary" href={buttonHref} />
+      </div>
+    </div>
+  );
+};
+
+export const DiscussionCard = ({
+  title,
+  content,
+  nrOfComments,
+  lastPosted,
+}: {
+  title: string;
+  content: string;
+  nrOfComments: number;
+  lastPosted: number;
+}) => {
+  return (
+    <div className="flex flex-col gap-4 border-2 border-[#050316] rounded-xl p-6">
+      <MessageSquare size={28} />
+      <div className="text-sm font-bold">{title}</div>
+      <div className="text-xs">{content}</div>
+      <div className="flex justify-between text-dpro-primary text-xs">
+        <div className="flex gap-2 items-center">
+          <MessageSquare /> <span>{nrOfComments}</span>
+        </div>
+        <div className="flex gap-2 items-center">
+          <Clock />
+          {lastPosted} hours ago
+        </div>
       </div>
     </div>
   );
