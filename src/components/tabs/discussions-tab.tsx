@@ -3,50 +3,42 @@
 import { useState } from "react";
 import { RoundedPrimaryInput } from "@/components/custom-inputs";
 import { Button } from "../ui/button";
+import FilteredDiscussionsTabContainer from "./filtered-discussions-container";
 
-interface Thread {
+export interface Thread {
   title: string;
   content: string;
   category: string;
 }
+
+//TODO:remove after endpoint integration
+const threads: Thread[] = [
+  {
+    title: "How did you execute the formative study for this project?",
+    content:
+      "I'm curious about the methodology used for the formative research phase.",
+    category: "Question",
+  },
+  {
+    title: "Best practices for mobile journalism interviews",
+    content:
+      "What are the key considerations when conducting interviews for mobile journalism pieces?",
+    category: "Advice",
+  },
+  {
+    title: "Digital marketing strategies discussion",
+    content:
+      "Let's discuss the most effective digital marketing approaches for refugee businesses.",
+    category: "Discussion",
+  },
+];
+
 export default function DiscussionsTab() {
-  const [threadFilter, setThreadFilter] = useState("Recent");
   const [newThread, setNewThread] = useState({
     category: "Question",
     title: "",
     content: "",
   });
-  const [threads, setThreads] = useState<Thread[]>([
-    {
-      title: "How did you execute the formative study for this project?",
-      content:
-        "I'm curious about the methodology used for the formative research phase.",
-      category: "Question",
-    },
-    {
-      title: "Best practices for mobile journalism interviews",
-      content:
-        "What are the key considerations when conducting interviews for mobile journalism pieces?",
-      category: "Advice",
-    },
-    {
-      title: "Digital marketing strategies discussion",
-      content:
-        "Let's discuss the most effective digital marketing approaches for refugee businesses.",
-      category: "Discussion",
-    },
-  ]);
-  const handlePostThread = () => {
-    if (newThread.title.trim() && newThread.content.trim()) {
-      const thread: Thread = {
-        title: newThread.title,
-        content: newThread.content,
-        category: newThread.category,
-      };
-      setThreads([thread, ...threads]);
-      setNewThread({ category: "Question", title: "", content: "" });
-    }
-  };
 
   return (
     <div className="space-y-8 max-w-200 mt-16">
@@ -98,7 +90,10 @@ export default function DiscussionsTab() {
               }
             />
           </div>
-          <Button onClick={handlePostThread} className="rounded-full">
+          <Button
+            // onClick={handlePostThread}
+            className="rounded-full"
+          >
             Post Thread
           </Button>
         </div>
@@ -106,44 +101,8 @@ export default function DiscussionsTab() {
           <p className="text-[28px] text-dpro-dark-blue font-medium mb-4">
             Recent Threads in this project
           </p>
-
-          <div className="flex gap-6 mb-6">
-            {["Recent", "Unanswered", "Unresolved", "Solved"].map((filter) => (
-              <button
-                key={filter}
-                onClick={() => setThreadFilter(filter)}
-                className={`pt-4 border-b font-medium text-dpro-primary text-xl ${
-                  threadFilter === filter
-                    ? "border-dpro-primary"
-                    : "border-transparent hover:border-gray-300"
-                }`}
-              >
-                {filter}
-              </button>
-            ))}
-          </div>
-
-          <div className="space-y-4">
-            {threads.map((thread, index) => (
-              <div
-                key={index}
-                className="border-2 border-dpro-primary rounded-3xl p-4 hover:shadow-sm transition-shadow cursor-pointer"
-              >
-                <div className="flex items-center gap-4">
-                  <div
-                    className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                    aria-hidden="true"
-                  />
-                  <div className="flex flex-col  gap-2">
-                    <span className="font-semibold text-gray-900">
-                      {thread.title}
-                    </span>
-                    <p className="text-gray-600 text-sm">{thread.content}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          {/* //TODO:remove after endpoint integration */}
+          <FilteredDiscussionsTabContainer endpoint="test" threads={threads} />
         </div>
       </div>
     </div>

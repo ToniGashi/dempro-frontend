@@ -1,6 +1,31 @@
 import { DiscussionCard } from "@/components/cards";
 import { RoundedPrimaryInput } from "@/components/custom-inputs";
+import { Thread } from "@/components/tabs/discussions-tab";
+import FilteredDiscussionsTabContainer from "@/components/tabs/filtered-discussions-container";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+//TODO:remove after endpoint integration
+const threads: Thread[] = [
+  {
+    title: "How did you execute the formative study for this project?",
+    content:
+      "I'm curious about the methodology used for the formative research phase.",
+    category: "Question",
+  },
+  {
+    title: "Best practices for mobile journalism interviews",
+    content:
+      "What are the key considerations when conducting interviews for mobile journalism pieces?",
+    category: "Advice",
+  },
+  {
+    title: "Digital marketing strategies discussion",
+    content:
+      "Let's discuss the most effective digital marketing approaches for refugee businesses.",
+    category: "Discussion",
+  },
+];
 
 export default function DiscussionsPage() {
   return (
@@ -86,10 +111,105 @@ export default function DiscussionsPage() {
         </div>
         <Button className="bg-dpro-accent text-black">View more</Button>
       </div>
-      <div className="p-16">
+      <div className="p-16 flex flex-col gap-6">
         <p className="text-2xl text-dpro-primary font-bold">
           Recent Discussions
         </p>
+        <FilteredDiscussionsTabContainer
+          endpoint="teste"
+          threads={threads}
+          className={"border-dpro-secondary"}
+        />
+        <div className="flex justify-center">
+          <Button className="bg-dpro-accent text-black">View more</Button>
+        </div>
+      </div>
+      <div className="p-16">
+        <div className="grid grid-cols-3 gap-10">
+          <div className="p-6 flex flex-col gap-2 max-h-min text-dpro-primary text-lg border-4 border-dpro-dark-green rounded-2xl">
+            <p className="font-bold text-xl">Important Links</p>
+            <Link href="/">Community Guidelines</Link>
+            <Link href="/">Community Code of Conduct</Link>
+          </div>
+          <div className="p-6 flex max-h-min flex-col gap-2 text-dpro-primary text-lg border-4 border-dpro-dark-green rounded-2xl">
+            <p className="font-bold text-xl">Most Popular Topic Categories</p>
+            <div className="font-bold items-center flex gap-2">
+              <span>#1</span>
+              <div
+                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
+                aria-hidden="true"
+              />
+              Elections
+            </div>
+            <div className="font-bold items-center flex gap-2">
+              <span>#2</span>
+              <div
+                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
+                aria-hidden="true"
+              />
+              Democracy in Bulgaria
+            </div>
+            <div className="font-bold items-center flex gap-2">
+              <span>#3</span>
+              <div
+                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
+                aria-hidden="true"
+              />
+              Balkan Region Politics
+            </div>
+            <div className="font-bold items-center flex gap-2">
+              <span>#4</span>
+              <div
+                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
+                aria-hidden="true"
+              />
+              Education on Civic Engagement
+            </div>
+            <div className="font-bold items-center flex gap-2">
+              <span>#5</span>
+              <div
+                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
+                aria-hidden="true"
+              />
+              Community Building
+            </div>
+          </div>
+          <div className="p-6 flex max-h-min flex-col gap-2 text-dpro-primary text-lg border-4 border-dpro-dark-green rounded-2xl">
+            <p className="font-bold text-xl">Top Contributors</p>
+            <div className="font-bold items-center flex gap-2">
+              <span>#1</span>
+              <div
+                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
+                aria-hidden="true"
+              />
+              JuliaW
+            </div>
+            <div className="font-bold items-center flex gap-2">
+              <span>#2</span>
+              <div
+                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
+                aria-hidden="true"
+              />
+              JacobJ
+            </div>
+            <div className="font-bold items-center flex gap-2">
+              <span>#3</span>
+              <div
+                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
+                aria-hidden="true"
+              />
+              KleaM
+            </div>
+            <div className="font-bold items-center flex gap-2">
+              <span>#4</span>
+              <div
+                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
+                aria-hidden="true"
+              />
+              Beni
+            </div>
+          </div>
+        </div>
       </div>
     </main>
   );

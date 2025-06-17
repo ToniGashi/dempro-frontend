@@ -36,6 +36,7 @@
   --color-dpro-light-gray: oklch(0.9067 0 0);
   --color-dpro-gray: oklch(0.7889 0 0);
   --color-dpro-dark-blue: oklch(0.3238 0.0875 253.97);
+  --color-dpro-dark-green: oklch(0.4286 0.1013 154.45);
   --font-roboto: "Roboto", sans-serif; 
 }
 
