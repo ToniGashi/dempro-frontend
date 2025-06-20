@@ -1,7 +1,7 @@
+import { getProjects } from "@/lib/actions";
+
 import { MainCard } from "@/components/cards";
 import NewProjectDialog from "@/components/create-new-project-dialog";
-
-import { getProjects } from "@/lib/actions";
 
 export default async function Projects() {
   const { result: projects } = await getProjects();

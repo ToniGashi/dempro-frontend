@@ -1,10 +1,9 @@
-import ProjectTabsContainer from "@/components/tabs/project-tabs-container";
-import { getProject, getProjectBrief } from "@/lib/actions";
 import Image from "next/image";
 
-type Params = Promise<{
-  projectId: string;
-}>;
+import ProjectTabsContainer from "@/components/tabs/project-tabs-container";
+import { getProject, getProjectBrief } from "@/lib/actions";
+
+type Params = Promise<{ projectId: string }>;
 
 export default async function ProjectPage(props: { params: Params }) {
   const params = await props.params;
@@ -14,7 +13,7 @@ export default async function ProjectPage(props: { params: Params }) {
     getProject(projectId),
     getProjectBrief(projectId),
   ]);
-  console.log(projectBrief, "projectBrief");
+
   return (
     <div className="min-h-screen">
       <div className="relative flex items-center text-white h-108">

@@ -13,8 +13,9 @@ import {
   Undo,
   Redo,
 } from "lucide-react";
-import { Button } from "../ui/button";
+
 import { createProjectBrief } from "@/lib/actions";
+import { Button } from "../ui/button";
 
 export default function BriefTab({
   projectBrief,
@@ -71,7 +72,6 @@ export default function BriefTab({
       `
   );
 
-  // Update the onSubmit function to use createProjectBrief
   const onSubmit = useCallback(async () => {
     setIsSubmitting(true);
     try {
@@ -86,7 +86,7 @@ export default function BriefTab({
         {
           loading: "Updating project brief...",
           success: () => {
-            setIsEditing(false); // Exit edit mode on success
+            setIsEditing(false);
             return "Project brief updated successfully";
           },
           error: (err) => `Something went wrong: ${err.message}`,
@@ -241,7 +241,6 @@ export default function BriefTab({
       setContent(editor.getHTML());
     },
   });
-  console.log(content, "ss");
 
   useEffect(() => {
     if (editor) {
@@ -258,7 +257,6 @@ export default function BriefTab({
 
   const handleCancel = () => {
     setIsEditing(false);
-    // Reset content to original projectBrief
     setContent(projectBrief);
     if (editor) {
       editor.commands.setContent(projectBrief);
