@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Thread } from "./discussions-tab";
+import { Thread } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 export default function FilteredDiscussionsTabContainer({
@@ -52,7 +52,7 @@ export default function FilteredDiscussionsTabContainer({
                 <span className="font-semibold text-gray-900">
                   {thread.title}
                 </span>
-                <p className="text-gray-600 text-sm">{thread.content}</p>
+                <p className="text-gray-600 text-sm">{thread.description}</p>
               </div>
             </div>
           </div>

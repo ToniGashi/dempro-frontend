@@ -9,3 +9,10 @@ export const createProjectSchema = z.object({
   tags: z.array(z.string()),
   topic: requiredString("Topic"),
 });
+
+export const createProjectThreadSchema = z.object({
+  title: requiredString("Title"),
+  description: requiredString("Description"),
+  projectId: z.coerce.number(),
+  category: z.enum(["Question", "Discussion", "Advice"]),
+});

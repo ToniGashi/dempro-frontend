@@ -14,7 +14,7 @@ import { Input } from "./ui/input";
 interface StandardFormFieldProps<T extends FieldValues> {
   form: UseFormReturn<T, any, T>;
   name: Path<T>;
-  label: string;
+  label?: string;
   disabled?: boolean;
   required?: boolean;
 }
@@ -22,6 +22,7 @@ interface StandardFormFieldProps<T extends FieldValues> {
 type FormFieldInputProps<T extends FieldValues> = StandardFormFieldProps<T> & {
   type?: React.HTMLInputTypeAttribute;
   className?: string;
+  placeholder?: string;
   onBlur?: React.FocusEventHandler<HTMLInputElement>;
 };
 
@@ -32,6 +33,7 @@ export function FormFieldInput<T extends FieldValues>({
   type,
   disabled,
   className,
+  placeholder,
   onBlur,
 }: FormFieldInputProps<T>) {
   return (
@@ -40,10 +42,10 @@ export function FormFieldInput<T extends FieldValues>({
       name={name}
       render={({ field }) => (
         <FormItem className={className}>
-          <FormLabel className="text-base">{label}</FormLabel>
+          {label && <FormLabel className="text-base">{label}</FormLabel>}
           <FormControl>
             <Input
-              placeholder={label}
+              placeholder={label ?? placeholder}
               type={type}
               className={cn(
                 "w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-dpro-primary border-[2px] rounded-full focus:outline-none focus:ring-1",

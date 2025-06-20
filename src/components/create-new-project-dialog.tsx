@@ -44,7 +44,6 @@ export default function NewProjectDialog() {
   const onSubmit = useCallback(
     async (values: Omit<Project, "id">) => {
       setIsSubmitting(true);
-      console.log(values, "values");
       try {
         toast.promise(
           (async () => {
@@ -105,7 +104,6 @@ export default function NewProjectDialog() {
               placeholder="Select tags"
               form={form}
               onValueChange={(selected) => {
-                console.log(selected, "selected");
                 form.setValue("tags", selected);
               }}
             />

@@ -235,7 +235,6 @@ export const MultiSelect = React.forwardRef<
                         <XCircle
                           className="ml-2 h-4 w-4 cursor-pointer!"
                           onClick={(event) => {
-                            console.log("runs here");
                             event.stopPropagation();
                             toggleOption(value);
                           }}

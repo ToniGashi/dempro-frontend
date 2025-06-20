@@ -1,7 +1,7 @@
 "use server";
 
 import { createApiOperation, createReadOperation } from "./api-helpers";
-import { Project } from "./types";
+import { CreateThread, Project, Thread } from "./types";
 
 // =============================================
 // Project Operations
@@ -38,4 +38,14 @@ export const createProjectBrief = createApiOperation<
   tags: ["project"],
   transform: ({ content }) => content,
   sendRawContent: true, // Add this flag
+});
+
+// =============================================
+// Thread Operations
+// =============================================
+
+export const createProjectThread = createApiOperation<CreateThread, Thread>({
+  url: "threads",
+  method: "POST",
+  tags: ["project-threads"],
 });

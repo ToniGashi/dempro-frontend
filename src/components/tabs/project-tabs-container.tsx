@@ -43,7 +43,9 @@ export default function ProjectTabsContainer({
             projectId={project.id.toString()}
           />
         )}
-        {activeTab === "Discussions" && <DiscussionsTab />}
+        {activeTab === "Discussions" && (
+          <DiscussionsTab projectId={project.id} />
+        )}
         {activeTab === "Media" && (
           <div className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Media</h2>

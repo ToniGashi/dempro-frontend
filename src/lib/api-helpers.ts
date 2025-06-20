@@ -65,7 +65,6 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
     // Handle HTML responses
     if (expectHtml) {
       const htmlContent = await res.text();
-      console.log(htmlContent, "html");
       return { result: htmlContent as T["result"], success: true };
     }
 

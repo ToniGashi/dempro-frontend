@@ -5,3 +5,21 @@ export interface Project {
   topic: string;
   subtitle: string;
 }
+
+export type ThreadCategory = "Discussion" | "Question" | "Advice";
+
+export interface CreateThread {
+  title: string;
+  description: string;
+  projectId: number;
+  category: ThreadCategory;
+}
+
+export interface Thread extends CreateThread {
+  isResolved: boolean;
+  createdById: string | null;
+  comments: string[];
+  numberOfComments: number;
+  threadTime: string;
+  id: number;
+}
