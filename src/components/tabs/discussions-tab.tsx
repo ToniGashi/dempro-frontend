@@ -44,7 +44,7 @@ export default function DiscussionsTab() {
     <div className="space-y-8 max-w-200 mt-16">
       <div>
         <p className="text-4xl font-bold text-dpro-dark-blue mb-6">
-          Discussion Board
+          Thread Board
         </p>
         <div className="mb-8">
           <p className="text-[28px] text-dpro-dark-blue font-medium mb-4">

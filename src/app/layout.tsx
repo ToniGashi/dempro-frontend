@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
+import { Toaster } from "sonner";
 import { Lato } from "next/font/google";
+
 import "./globals.css";
 
 const lato = Lato({
@@ -21,7 +23,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${lato.variable} antialiased`}>{children}</body>
+      <body className={`${lato.variable} antialiased`}>
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            classNames: {
+              loading: "!bg-dpro-secondary !text-sm !font-bold",
+              success: "!bg-dpro-secondary !text-sm !font-bold",
+              error: "!bg-dpro-secondary !text-sm !font-bold",
+            },
+          }}
+        />
+        {children}
+      </body>
     </html>
   );
 }

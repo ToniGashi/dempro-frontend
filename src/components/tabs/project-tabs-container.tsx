@@ -4,10 +4,17 @@ import { useState } from "react";
 
 import DiscussionsTab from "@/components/tabs/discussions-tab";
 import BriefTab from "@/components/tabs/brief-tab";
+import { Project } from "@/lib/types";
 
 const tabs = ["Brief", "Discussions", "Media", "Timeline", "Other"];
 
-export default function ProjectTabsContainer({ project }: { project: any }) {
+export default function ProjectTabsContainer({
+  project,
+  projectBrief,
+}: {
+  project: Project;
+  projectBrief: string;
+}) {
   const [activeTab, setActiveTab] = useState("Brief");
 
   return (
@@ -30,7 +37,12 @@ export default function ProjectTabsContainer({ project }: { project: any }) {
         </nav>
       </div>
       <div className="px-16 mt-16">
-        {activeTab === "Brief" && <BriefTab />}
+        {activeTab === "Brief" && (
+          <BriefTab
+            projectBrief={projectBrief}
+            projectId={project.id.toString()}
+          />
+        )}
         {activeTab === "Discussions" && <DiscussionsTab />}
         {activeTab === "Media" && (
           <div className="mb-16">

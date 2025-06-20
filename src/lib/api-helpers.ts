@@ -13,9 +13,12 @@ export interface DemProAPIResponse {
 
 export async function enhancedFetcher<T extends DemProAPIResponse>(
   url: string,
-  options: RequestInit & { cache?: RequestCache } = {}
+  options: RequestInit & {
+    cache?: RequestCache;
+    expectHtml?: boolean;
+  } = {}
 ) {
-  const { cache = "force-cache", ...restOptions } = options;
+  const { cache = "force-cache", expectHtml = false, ...restOptions } = options;
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
   const headers = {
@@ -38,11 +41,19 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
       try {
         const text = await res.text();
         if (text) {
-          const errorData = JSON.parse(text);
-          errorMessage =
-            process.env.NODE_ENV === "development"
-              ? errorData.error || errorMessage
-              : "An error occurred";
+          try {
+            const errorData = JSON.parse(text);
+            errorMessage =
+              process.env.NODE_ENV === "development"
+                ? errorData.error || errorMessage
+                : "An error occurred";
+          } catch {
+            // HTML error response
+            errorMessage =
+              process.env.NODE_ENV === "development"
+                ? text.slice(0, 200) + "..."
+                : "An error occurred";
+          }
         }
       } catch (parseError) {
         if (process.env.NODE_ENV === "development") {
@@ -52,6 +63,14 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
       throw new Error(errorMessage, { cause: res.status });
     }
 
+    // Handle HTML responses
+    if (expectHtml) {
+      const htmlContent = await res.text();
+      console.log(htmlContent, "html");
+      return { result: htmlContent as T["result"], success: true };
+    }
+
+    // Default JSON handling
     const data = (await res.json()) as T;
     if (!data.success) {
       throw new Error(data.error || "Unknown API error");
@@ -69,39 +88,50 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
     };
   }
 }
-
 export function createApiOperation<TInput, TOutput>({
   url,
   method,
   tags = [],
   transform,
   cache = "force-cache",
+  sendRawContent = false, // Add this flag
 }: {
   url: string | ((input: TInput) => string);
   method: "GET" | "POST" | "PUT" | "DELETE";
   tags?: string[];
   transform?: (input: TInput) => any;
   cache?: RequestCache;
+  sendRawContent?: boolean; // Add this flag
 }) {
-  // We return a Server Action
   return async (input: TInput) => {
     const resolvedUrl = typeof url === "function" ? url(input) : url;
 
     let body: string | FormData | undefined;
+    let headers: Record<string, string> = {};
+
     if (input instanceof FormData) {
       body = input;
     } else if (input && method !== "GET" && method !== "DELETE") {
-      body = JSON.stringify(transform ? transform(input) : input);
+      const transformedInput = transform ? transform(input) : input;
+
+      if (sendRawContent) {
+        // Send raw content (like HTML) without JSON.stringify
+        body =
+          typeof transformedInput === "string"
+            ? transformedInput
+            : String(transformedInput);
+        headers["Content-Type"] = "text/plain";
+      } else {
+        // Normal JSON handling
+        body = JSON.stringify(transformedInput);
+        headers["Content-Type"] = "application/json";
+      }
     }
 
     const options: RequestInit = {
       method,
       cache,
-      ...(body && !(body instanceof FormData)
-        ? {
-            headers: { "Content-Type": "application/json" },
-          }
-        : {}),
+      headers,
       ...(body ? { body } : {}),
     };
 
@@ -127,10 +157,12 @@ export function createReadOperation<TInput = void, TOutput = any>({
   url,
   tags = [],
   cache = "force-cache",
+  expectHtml = false, // Add this option
 }: {
   url: string | ((first: TInput, ...rest: any[]) => string);
   tags?: string[];
   cache?: RequestCache;
+  expectHtml?: boolean; // Add this option
 }) {
   return async (first?: TInput, ...rest: any[]) => {
     let resolvedUrl: string;
@@ -148,9 +180,10 @@ export function createReadOperation<TInput = void, TOutput = any>({
       resolvedUrl = (url as Function)(first, ...rest);
     }
 
-    const options: RequestInit = {
+    const options: RequestInit & { expectHtml?: boolean } = {
       method: "GET",
       cache,
+      expectHtml,
       next: { tags },
     };
 

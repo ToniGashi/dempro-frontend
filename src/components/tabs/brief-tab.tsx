@@ -1,3 +1,5 @@
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Link from "@tiptap/extension-link";
@@ -12,12 +14,21 @@ import {
   Redo,
 } from "lucide-react";
 import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
+import { createProjectBrief } from "@/lib/actions";
 
-export default function BriefTab() {
-  const [isEditing, setIsEditing] = useState(false);
+export default function BriefTab({
+  projectBrief,
+  projectId,
+}: {
+  projectBrief: string;
+  projectId: string;
+}) {
+  const [isEditing, setIsEditing] = useState(!projectBrief ? true : false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [content, setContent] = useState(`
+  const [content, setContent] = useState(
+    projectBrief ||
+      `
       <h2>Description</h2>
       <p>
         The Vienna Summer School, hosted by the American University in Bulgaria, offers a transformative one-month learning experience for a cohort of 20 students. This program provides intensive training in Digital Marketing and Mobile Journalism, equipping students with the necessary tools, skills, and techniques to thrive in these fields. The school adopts an applied learning approach where students use their newly acquired knowledge to work on real-world projects that have a direct civic impact. This year, the focus is on supporting refugee businesses and showcasing the humanity and resilience of refugees settled in Austria.
@@ -57,7 +68,38 @@ export default function BriefTab() {
         <li><strong>Build Community Understanding:</strong> The showcase event invites local community members to engage with refugees and learn about their contributions to society.</li>
         <li><strong>Inspire Long-Term Change:</strong> Students and community members alike leave with a greater awareness of refugee issues and the role they can play in fostering inclusion.</li>
       </ul>
-      `);
+      `
+  );
+
+  // Update the onSubmit function to use createProjectBrief
+  const onSubmit = useCallback(async () => {
+    setIsSubmitting(true);
+    try {
+      toast.promise(
+        (async () => {
+          const result = await createProjectBrief({ id: projectId, content });
+          if (!result.success) {
+            throw new Error(result.error || "Failed to update project brief");
+          }
+          return result;
+        })(),
+        {
+          loading: "Updating project brief...",
+          success: () => {
+            setIsEditing(false); // Exit edit mode on success
+            return "Project brief updated successfully";
+          },
+          error: (err) => `Something went wrong: ${err.message}`,
+        }
+      );
+    } catch (error) {
+      console.error("Error updating project brief:", error);
+      toast.error("Failed to update project brief. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [projectId, content]);
+
   const MenuBar = () => {
     if (!editor || !isEditing) return null;
 
@@ -199,26 +241,48 @@ export default function BriefTab() {
       setContent(editor.getHTML());
     },
   });
+  console.log(content, "ss");
+
   useEffect(() => {
     if (editor) {
       editor.setEditable(isEditing);
     }
   }, [isEditing, editor]);
   const toggleEdit = () => {
-    const newEditingState = !isEditing;
-    setIsEditing(newEditingState);
+    setIsEditing(!isEditing);
+  };
+
+  const handleSave = () => {
+    onSubmit();
+  };
+
+  const handleCancel = () => {
+    setIsEditing(false);
+    // Reset content to original projectBrief
+    setContent(projectBrief);
+    if (editor) {
+      editor.commands.setContent(projectBrief);
+    }
   };
 
   return (
     <>
       <div className="flex justify-end ml-auto -mt-16 gap-2 mb-4">
         {isEditing && (
-          <Button variant="secondary" onClick={toggleEdit}>
+          <Button variant="secondary" onClick={handleCancel}>
             Cancel
           </Button>
         )}
-        <Button onClick={toggleEdit} className="bg-dpro-primary text-white">
-          {isEditing ? "Save Changes" : "Edit Content"}
+        <Button
+          onClick={isEditing ? handleSave : toggleEdit}
+          className="bg-dpro-primary text-white"
+          disabled={isSubmitting}
+        >
+          {isSubmitting
+            ? "Saving..."
+            : isEditing
+            ? "Save Changes"
+            : "Edit Content"}
         </Button>
       </div>
       {isEditing && <MenuBar />}
