@@ -187,7 +187,7 @@ export const MultiSelect = React.forwardRef<
     };
 
     const toggleAll = () => {
-      if (selectedValues.length === options.length) {
+      if (selectedValues?.length === options?.length) {
         handleClear();
       } else {
         const allValues = options.map((option) => option.value);
@@ -212,7 +212,7 @@ export const MultiSelect = React.forwardRef<
               className
             )}
           >
-            {selectedValues.length > 0 ? (
+            {selectedValues?.length > 0 ? (
               <div className="flex justify-between items-center w-full">
                 <div className="flex flex-wrap items-center">
                   {selectedValues.slice(0, maxCount).map((value) => {
@@ -243,7 +243,7 @@ export const MultiSelect = React.forwardRef<
                       </Badge>
                     );
                   })}
-                  {selectedValues.length > maxCount && (
+                  {selectedValues?.length > maxCount && (
                     <Badge
                       className={cn(
                         "bg-transparent text-foreground border-foreground/1 hover:bg-transparent",
@@ -252,7 +252,7 @@ export const MultiSelect = React.forwardRef<
                       )}
                       style={{ animationDuration: `${animation}s` }}
                     >
-                      {`+ ${selectedValues.length - maxCount} more`}
+                      {`+ ${selectedValues?.length - maxCount} more`}
                       <XCircle
                         className="ml-2 h-4 w-4 cursor-pointer"
                         onClick={(event) => {
@@ -309,7 +309,7 @@ export const MultiSelect = React.forwardRef<
                   <div
                     className={cn(
                       "mr-2 flex h-4 w-4 items-center justify-center rounded-sm border border-primary",
-                      selectedValues.length === options.length
+                      selectedValues?.length === options.length
                         ? "bg-dpro-secondary text-primary-foreground"
                         : "opacity-50 [&_svg]:invisible"
                     )}
@@ -347,7 +347,7 @@ export const MultiSelect = React.forwardRef<
               <CommandSeparator />
               <CommandGroup>
                 <div className="flex items-center justify-between">
-                  {selectedValues.length > 0 && (
+                  {selectedValues?.length > 0 && (
                     <>
                       <CommandItem
                         onSelect={handleClear}

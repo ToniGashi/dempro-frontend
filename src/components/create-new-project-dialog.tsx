@@ -120,7 +120,7 @@ export default function NewProjectDialog() {
                 disabled={isSubmitting}
                 className="bg-dpro-primary text-white"
               >
-                Save changes
+                Create project
               </Button>
             </DialogFooter>
           </form>
