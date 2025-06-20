@@ -89,7 +89,7 @@ export function FormFieldMultiSelect<T extends FieldValues>({
       render={({ field }) => {
         // field.value is an array of OptionType objects
         const selectedOptions = Array.isArray(field.value)
-          ? field.value.map((value: any, index: number) => {
+          ? field.value.map((value: any) => {
               if (
                 value &&
                 typeof value === "object" &&

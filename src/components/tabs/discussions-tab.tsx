@@ -102,7 +102,10 @@ export default function DiscussionsTab() {
             Recent Threads in this project
           </p>
           {/* //TODO:remove after endpoint integration */}
-          <FilteredDiscussionsTabContainer endpoint="test" threads={threads} />
+          <FilteredDiscussionsTabContainer
+            // endpoint="test"
+            threads={threads}
+          />
         </div>
       </div>
     </div>

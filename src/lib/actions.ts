@@ -8,7 +8,7 @@ import { Project } from "./types";
 // =============================================
 
 export const getProjects = createReadOperation<string, Project[]>({
-  url: (id) => `projects?Page=1&PageSize=6`,
+  url: () => `projects?Page=1&PageSize=6`,
   tags: ["projects"],
 });
 

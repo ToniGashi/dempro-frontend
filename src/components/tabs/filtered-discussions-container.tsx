@@ -1,16 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { useCustomSWR } from "@/hooks/use-custom-swr";
 import { Thread } from "./discussions-tab";
 import { cn } from "@/lib/utils";
 
 export default function FilteredDiscussionsTabContainer({
-  endpoint,
+  //   endpoint,
   threads,
   className,
 }: {
-  endpoint: string;
+  //   endpoint: string;
   threads?: Thread[];
   className?: string;
 }) {

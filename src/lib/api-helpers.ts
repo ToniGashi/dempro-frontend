@@ -48,7 +48,6 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
                 ? errorData.error || errorMessage
                 : "An error occurred";
           } catch {
-            // HTML error response
             errorMessage =
               process.env.NODE_ENV === "development"
                 ? text.slice(0, 200) + "..."
@@ -94,14 +93,14 @@ export function createApiOperation<TInput, TOutput>({
   tags = [],
   transform,
   cache = "force-cache",
-  sendRawContent = false, // Add this flag
+  sendRawContent = false,
 }: {
   url: string | ((input: TInput) => string);
   method: "GET" | "POST" | "PUT" | "DELETE";
   tags?: string[];
   transform?: (input: TInput) => any;
   cache?: RequestCache;
-  sendRawContent?: boolean; // Add this flag
+  sendRawContent?: boolean;
 }) {
   return async (input: TInput) => {
     const resolvedUrl = typeof url === "function" ? url(input) : url;
@@ -115,7 +114,7 @@ export function createApiOperation<TInput, TOutput>({
       const transformedInput = transform ? transform(input) : input;
 
       if (sendRawContent) {
-        // Send raw content (like HTML) without JSON.stringify
+        // We are sending raw content (like HTML) without JSON.stringify
         body =
           typeof transformedInput === "string"
             ? transformedInput
@@ -157,12 +156,12 @@ export function createReadOperation<TInput = void, TOutput = any>({
   url,
   tags = [],
   cache = "force-cache",
-  expectHtml = false, // Add this option
+  expectHtml = false,
 }: {
   url: string | ((first: TInput, ...rest: any[]) => string);
   tags?: string[];
   cache?: RequestCache;
-  expectHtml?: boolean; // Add this option
+  expectHtml?: boolean;
 }) {
   return async (first?: TInput, ...rest: any[]) => {
     let resolvedUrl: string;
