@@ -1,13 +1,14 @@
 import Link from "next/link";
+
+import { getThreads } from "@/lib/actions";
+
 import { DiscussionCard } from "@/components/cards";
 import { RoundedPrimaryInput } from "@/components/custom-inputs";
-
-import FilteredDiscussionsTabContainer from "@/components/tabs/filtered-discussions-container";
 import { Button } from "@/components/ui/button";
-import { getThreads } from "@/lib/actions";
+import FilteredDiscussionsTabContainer from "@/components/tabs/filtered-discussions-container";
 import NewThreadDialog from "@/components/create-new-thread-dialog";
 
-export default async function DiscussionsPage() {
+export default async function ThreadsPage() {
   const { result: threads } = await getThreads();
 
   return (
