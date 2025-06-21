@@ -23,7 +23,7 @@ export default async function Projects() {
               key={project.id}
               title={project.title}
               description={project.subtitle}
-              buttonHref={`/project/${project.id}`}
+              buttonHref={`/projects/${project.id}`}
               buttonTitle="Open project"
             />
           ))}

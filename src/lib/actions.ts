@@ -47,5 +47,10 @@ export const createProjectBrief = createApiOperation<
 export const createProjectThread = createApiOperation<CreateThread, Thread>({
   url: "threads",
   method: "POST",
-  tags: ["project-threads"],
+  tags: ["threads"],
+});
+
+export const getThreads = createReadOperation<string, Thread[]>({
+  url: () => `threads`,
+  tags: ["threads"],
 });

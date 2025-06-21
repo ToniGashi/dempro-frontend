@@ -62,7 +62,7 @@ export const DiscussionCard = ({
   title: string;
   content: string;
   nrOfComments: number;
-  lastPosted: number;
+  lastPosted: string;
 }) => {
   return (
     <div className="flex flex-col gap-4 border-2 border-[#050316] rounded-xl p-6">
@@ -75,7 +75,7 @@ export const DiscussionCard = ({
         </div>
         <div className="flex gap-2 items-center">
           <Clock />
-          {lastPosted} hours ago
+          {lastPosted}
         </div>
       </div>
     </div>

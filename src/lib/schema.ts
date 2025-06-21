@@ -13,6 +13,6 @@ export const createProjectSchema = z.object({
 export const createProjectThreadSchema = z.object({
   title: requiredString("Title"),
   description: requiredString("Description"),
-  projectId: z.coerce.number(),
+  projectId: z.coerce.number().nullable(),
   category: z.enum(["Question", "Discussion", "Advice"]),
 });

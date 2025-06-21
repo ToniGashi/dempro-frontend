@@ -11,7 +11,7 @@ export type ThreadCategory = "Discussion" | "Question" | "Advice";
 export interface CreateThread {
   title: string;
   description: string;
-  projectId: number;
+  projectId: number | null;
   category: ThreadCategory;
 }
 
