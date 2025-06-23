@@ -4,10 +4,10 @@ import { useCustomSWR } from "@/hooks/use-custom-swr";
 
 import { Thread } from "@/lib/types";
 
-import FilteredDiscussionsTabContainer from "./filtered-discussions-container";
+import FilteredThreadsTabContainer from "./filtered-threads-container";
 import ThreadForm from "../thread-form";
 
-export default function DiscussionsTab({ projectId }: { projectId: number }) {
+export default function ThreadsTab({ projectId }: { projectId: number }) {
   const {
     data: projectThreads,
     isLoading,
@@ -30,7 +30,7 @@ export default function DiscussionsTab({ projectId }: { projectId: number }) {
           <p className="text-[28px] text-dpro-dark-blue font-medium mb-4">
             Recent Threads in this project
           </p>
-          <FilteredDiscussionsTabContainer threads={projectThreads} />
+          <FilteredThreadsTabContainer threads={projectThreads} />
         </div>
       </div>
     </div>

@@ -24,7 +24,7 @@ export function RoundedPrimaryInput({
       value={value}
       onChange={onChange}
       className={cn(
-        "w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-dpro-primary border-[2px] rounded-full focus:outline-none focus:ring-1",
+        "w-full py-2 pl-10 pr-4 text-gray-700 bg-white border-dpro-primary border-[2px] rounded-full focus:outline-none focus:ring-1",
         className
       )}
     />

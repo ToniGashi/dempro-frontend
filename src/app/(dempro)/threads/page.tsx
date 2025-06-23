@@ -2,10 +2,10 @@ import Link from "next/link";
 
 import { getThreads } from "@/lib/actions";
 
-import { DiscussionCard } from "@/components/cards";
+import { ThreadCard } from "@/components/cards";
 import { RoundedPrimaryInput } from "@/components/custom-inputs";
 import { Button } from "@/components/ui/button";
-import FilteredDiscussionsTabContainer from "@/components/tabs/filtered-discussions-container";
+import FilteredThreadsTabContainer from "@/components/tabs/filtered-threads-container";
 import NewThreadDialog from "@/components/create-new-thread-dialog";
 
 export default async function ThreadsPage() {
@@ -22,7 +22,7 @@ export default async function ThreadsPage() {
           All topics related to democracy and civic engagement
         </p>
         <RoundedPrimaryInput
-          name="discussion"
+          name="thread"
           placeholder="Search threads"
           className="rounded-xl flex py-7 items-center border-dpro-primary/60 max-w-177 h-12 placeholder:text-xl placeholder:text-dpro-dark-blue"
         />
@@ -39,7 +39,7 @@ export default async function ThreadsPage() {
         </p>
         <div className="grid grid-cols-4 gap-8 w-full">
           {threads?.slice(0, 8).map((thread) => (
-            <DiscussionCard
+            <ThreadCard
               key={thread.id}
               lastPosted={thread.threadTime}
               nrOfComments={thread.numberOfComments}
@@ -49,20 +49,24 @@ export default async function ThreadsPage() {
           ))}
         </div>
         {threads && threads.length > 8 && (
-          <Button className="bg-dpro-accent text-black">View more</Button>
+          <Link href={"/threads/list"} className="bg-dpro-accent text-black">
+            <Button className=" hover:cursor-pointer">View more</Button>
+          </Link>
         )}
       </div>
       <div className="p-16 flex flex-col gap-6">
-        <p className="text-2xl text-dpro-primary font-bold">
-          Recent Discussions
-        </p>
-        <FilteredDiscussionsTabContainer
+        <FilteredThreadsTabContainer
           // endpoint="teste"
           threads={threads}
           className="border-dpro-secondary"
         />
         <div className="flex justify-center">
-          <Button className="bg-dpro-accent text-black">View more</Button>
+          <Link
+            href={"/threads/list"}
+            className="bg-dpro-accent text-black hover:cursor-pointer"
+          >
+            <Button className=" hover:cursor-pointer">View more</Button>
+          </Link>
         </div>
       </div>
       <div className="p-16">

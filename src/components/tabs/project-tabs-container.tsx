@@ -2,11 +2,11 @@
 
 import { useState } from "react";
 
-import DiscussionsTab from "@/components/tabs/discussions-tab";
+import ThreadsTab from "@/components/tabs/threads-tab";
 import BriefTab from "@/components/tabs/brief-tab";
 import { Project } from "@/lib/types";
 
-const tabs = ["Brief", "Discussions", "Media", "Timeline", "Other"];
+const tabs = ["Brief", "Threads", "Media", "Timeline", "Other"];
 
 export default function ProjectTabsContainer({
   project,
@@ -43,9 +43,7 @@ export default function ProjectTabsContainer({
             projectId={project.id.toString()}
           />
         )}
-        {activeTab === "Discussions" && (
-          <DiscussionsTab projectId={project.id} />
-        )}
+        {activeTab === "Threads" && <ThreadsTab projectId={project.id} />}
         {activeTab === "Media" && (
           <div className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Media</h2>

@@ -53,7 +53,7 @@ export const SecondaryCard = ({
   );
 };
 
-export const DiscussionCard = ({
+export const ThreadCard = ({
   title,
   content,
   nrOfComments,

@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Thread } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
-export default function FilteredDiscussionsTabContainer({
+export default function FilteredThreadsTabContainer({
   //   endpoint,
   threads,
   className,
@@ -20,6 +20,7 @@ export default function FilteredDiscussionsTabContainer({
 
   return (
     <>
+      <p className="text-2xl text-dpro-primary font-bold">Recent Threads</p>
       <div className="flex gap-6 mb-6">
         {["Recent", "Unanswered", "Unresolved", "Solved"].map((filter) => (
           <button
