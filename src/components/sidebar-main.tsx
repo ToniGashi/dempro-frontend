@@ -3,14 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 
-import {
-  UserRound,
-  Bell,
-  File,
-  MessageCircle,
-  Users,
-  CalendarPlus2,
-} from "lucide-react";
+import { UserRound, File, CalendarPlus2, MessagesSquare } from "lucide-react";
 
 import {
   SidebarMenu,
@@ -27,37 +20,36 @@ const useMenuItems = () => {
         title: "Profile",
         icon: <UserRound stroke="#3c6e71" />,
         url: `/profile`,
-        route: "dashboard",
       },
+      // {
+      //   title: "Notifications",
+      //   icon: <Bell stroke="#3c6e71" />,
+      //   url: `/notifications`,
+      // },
       {
-        title: "Notifications",
-        icon: <Bell stroke="#3c6e71" />,
-        url: `/notifications`,
-        route: "dashboard",
-      },
-      {
-        title: "Documents",
+        title: "Projects",
         icon: <File stroke="#3c6e71" />,
-        url: `/documents`,
-        route: "dashboard",
+        url: `/projects`,
       },
+      // {
+      //   title: "Chat",
+      //   icon: <MessageCircle stroke="#3c6e71" />,
+      //   url: `/chat`,
+      // },
       {
-        title: "Chat",
-        icon: <MessageCircle stroke="#3c6e71" />,
-        url: `/chat`,
-        route: "dashboard",
+        title: "Threads",
+        icon: <MessagesSquare stroke="#3c6e71" />,
+        url: `/threads`,
       },
-      {
-        title: "Groups",
-        icon: <Users stroke="#3c6e71" />,
-        url: `/groups`,
-        route: "dashboard",
-      },
+      // {
+      //   title: "Community",
+      //   icon: <Users stroke="#3c6e71" />,
+      //   url: `/community`,
+      // },
       {
         title: "Calendar",
         icon: <CalendarPlus2 stroke="#3c6e71" />,
         url: `/calendar`,
-        route: "dashboard",
       },
     ];
 

@@ -15,11 +15,11 @@ const links = [
 export default function NavBar() {
   const pathname = usePathname();
   return (
-    <nav className="flex h-24 bg-dpro-primary w-full z-100 justify-between items-center p-10 fixed">
-      <Link href="/" className="text-5xl font-extrabold text-white">
+    <nav className="flex h-8 bg-dpro-primary w-full z-100 justify-between items-center p-10 fixed">
+      <Link href="/" className="text-3xl font-extrabold text-white">
         DemPro
       </Link>
-      <div className="flex gap-5 text-white text-3xl font-bold">
+      <div className="flex gap-8 text-white text-xl font-bold">
         {links.map((link) => {
           return (
             <Link

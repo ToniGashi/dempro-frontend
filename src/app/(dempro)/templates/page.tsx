@@ -1,8 +1,11 @@
 import { MainCard } from "@/components/cards";
 import HeroSection from "@/components/hero-section";
 import { Button } from "@/components/ui/button";
+import { getProjects } from "@/lib/actions";
+import Link from "next/link";
 
 export default async function Templates() {
+  const { result: projects } = await getProjects();
   return (
     <main className="flex flex-col">
       <HeroSection
@@ -21,7 +24,7 @@ export default async function Templates() {
             <input
               type="text"
               placeholder="Search Templates by keywords"
-              className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border border-dpro-primary border-[2px] rounded-full focus:outline-none focus:ring-1"
+              className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border-dpro-primary border-[2px] rounded-full focus:outline-none focus:ring-1"
             />
           </div>
           <Button className="rounded-full border-[2px] font-bold">
@@ -31,30 +34,11 @@ export default async function Templates() {
       </div>
       <div className="p-16">
         <div className="grid grid-cols-3 gap-10">
-          <MainCard
-            title="Youth Activism Guide"
-            description=" Start your own movement and build your community"
-          />
-          <MainCard
-            title="Youth Activism Guide"
-            description=" Start your own movement and build your community"
-          />
-          <MainCard
-            title="Youth Activism Guide"
-            description=" Start your own movement and build your community"
-          />
-          <MainCard
-            title="Youth Activism Guide"
-            description=" Start your own movement and build your community"
-          />
-          <MainCard
-            title="Youth Activism Guide"
-            description=" Start your own movement and build your community"
-          />
-          <MainCard
-            title="Youth Activism Guide"
-            description=" Start your own movement and build your community"
-          />
+          {projects?.map((el) => (
+            <Link key={el.id} href={`/templates/${el.id}`}>
+              <MainCard title={el.title} description={el.subtitle} />
+            </Link>
+          ))}
         </div>
         <div className="flex justify-center my-10">
           <Button>Expand</Button>

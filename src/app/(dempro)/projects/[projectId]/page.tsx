@@ -1,5 +1,4 @@
 import Image from "next/image";
-
 import ProjectTabsContainer from "@/components/tabs/project-tabs-container";
 import { getProject, getProjectBrief } from "@/lib/actions";
 
@@ -13,7 +12,6 @@ export default async function ProjectPage(props: { params: Params }) {
     getProject(projectId),
     getProjectBrief(projectId),
   ]);
-
   return (
     <div className="min-h-screen">
       <div className="relative flex items-center text-white h-108">
