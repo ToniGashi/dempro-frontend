@@ -8,8 +8,12 @@ const defaultConfig: SWRConfiguration = {
 };
 
 export function useCustomSWR<T>(
-  key: string | null,
+  key: string[] | null,
+  url: string,
   config?: SWRConfiguration
 ): SWRResponse<T, any> {
-  return useSWR<T>(key, swrFetcher, { ...defaultConfig, ...config });
+  return useSWR<T>(key, () => swrFetcher(url), {
+    ...defaultConfig,
+    ...config,
+  });
 }

@@ -1,19 +1,7 @@
-"use client";
-
-import { useCustomSWR } from "@/hooks/use-custom-swr";
-
-import { Thread } from "@/lib/types";
-
 import FilteredThreadsTabContainer from "./filtered-threads-container";
 import ThreadForm from "../thread-form";
 
 export default function ThreadsTab({ projectId }: { projectId: number }) {
-  const {
-    data: projectThreads,
-    isLoading,
-    mutate,
-  } = useCustomSWR<Thread[]>(`threads?projectId=${projectId}`);
-
   return (
     <div className="space-y-8 max-w-200 mt-16">
       <div>
@@ -24,13 +12,10 @@ export default function ThreadsTab({ projectId }: { projectId: number }) {
           <p className="text-[28px] text-dpro-dark-blue font-medium mb-4">
             Create a new thread
           </p>
-          <ThreadForm projectId={projectId} mutate={mutate} />
+          <ThreadForm projectId={projectId} />
         </div>
         <div>
-          <p className="text-[28px] text-dpro-dark-blue font-medium mb-4">
-            Recent Threads in this project
-          </p>
-          <FilteredThreadsTabContainer threads={projectThreads} />
+          <FilteredThreadsTabContainer threadCount={3} projectId={projectId} />
         </div>
       </div>
     </div>

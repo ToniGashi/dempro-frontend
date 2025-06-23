@@ -4,40 +4,52 @@ import { useState } from "react";
 
 import { Thread } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { useCustomSWR } from "@/hooks/use-custom-swr";
 
 export default function FilteredThreadsTabContainer({
-  //   endpoint,
-  threads,
+  threadCount,
   className,
+  projectId,
 }: {
-  //   endpoint: string;
-  threads?: Thread[];
+  projectId?: number;
+  threadCount?: number;
   className?: string;
 }) {
   const [threadFilter, setThreadFilter] = useState("Recent");
 
-  //   const { data, isLoading } = useCustomSWR<any>(`${endpoint}/${threadFilter}`);
+  const { data, isLoading } = useCustomSWR<Thread[]>(
+    ["threads", `${projectId}`, threadFilter],
+    `threads?status=${threadFilter}&pageSize=${threadCount}&page=1${
+      !!projectId ? `&projectId=${projectId}` : ""
+    }`
+  )!;
+
+  if (isLoading) return <div>Loading</div>;
+
+  if (!data) return <div>No data available</div>;
 
   return (
     <>
       <p className="text-2xl text-dpro-primary font-bold">Recent Threads</p>
       <div className="flex gap-6 mb-6">
-        {["Recent", "Unanswered", "Unresolved", "Solved"].map((filter) => (
-          <button
-            key={filter}
-            onClick={() => setThreadFilter(filter)}
-            className={`pt-4 border-b font-medium text-dpro-primary text-xl ${
-              threadFilter === filter
-                ? "border-dpro-primary"
-                : "border-transparent hover:border-gray-300"
-            }`}
-          >
-            {filter}
-          </button>
-        ))}
+        {["All", "Recent", "Unanswered", "Unresolved", "Solved"].map(
+          (filter) => (
+            <button
+              key={filter}
+              onClick={() => setThreadFilter(filter)}
+              className={`pt-4 border-b font-medium text-dpro-primary text-xl ${
+                threadFilter === filter
+                  ? "border-dpro-primary"
+                  : "border-transparent hover:border-gray-300"
+              }`}
+            >
+              {filter}
+            </button>
+          )
+        )}
       </div>
       <div className="space-y-4">
-        {threads?.map((thread, index) => (
+        {data.map((thread, index) => (
           <div
             key={index}
             className={cn(

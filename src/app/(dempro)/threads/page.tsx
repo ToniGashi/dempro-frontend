@@ -56,8 +56,7 @@ export default async function ThreadsPage() {
       </div>
       <div className="p-16 flex flex-col gap-6">
         <FilteredThreadsTabContainer
-          // endpoint="teste"
-          threads={threads}
+          threadCount={5}
           className="border-dpro-secondary"
         />
         <div className="flex justify-center">
