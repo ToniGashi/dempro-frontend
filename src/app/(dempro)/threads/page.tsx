@@ -24,7 +24,7 @@ export default async function ThreadsPage() {
         <RoundedPrimaryInput
           name="thread"
           placeholder="Search threads"
-          className="rounded-xl flex py-7 items-center border-dpro-primary/60 max-w-177 h-12 placeholder:text-xl placeholder:text-dpro-dark-blue"
+          className="rounded-xl flex py-7 items-center border-dpro-primary/60 h-12 placeholder:text-xl placeholder:text-dpro-dark-blue"
         />
         <div className="px-16 rounded-3xl py-8 bg-dpro-secondary text-3xl mt-10 font-normal">
           <span className="font-bold">Question of the week:</span>{" "}

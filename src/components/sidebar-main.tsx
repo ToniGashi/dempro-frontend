@@ -46,11 +46,11 @@ const useMenuItems = () => {
       //   icon: <Users stroke="#3c6e71" />,
       //   url: `/community`,
       // },
-      {
-        title: "Calendar",
-        icon: <CalendarPlus2 stroke="#3c6e71" />,
-        url: `/calendar`,
-      },
+      // {
+      //   title: "Calendar",
+      //   icon: <CalendarPlus2 stroke="#3c6e71" />,
+      //   url: `/calendar`,
+      // },
     ];
 
     // const mainItems = allItems.filter((item) => hasAccess(item.route));

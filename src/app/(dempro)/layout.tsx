@@ -11,7 +11,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
   return (
     <div className="flex flex-col relative">
       <NavBar />
-      <SidebarProvider defaultOpen={!isCollapsed} className="mt-24">
+      <SidebarProvider defaultOpen={!isCollapsed} className="mt-20">
         <AppSidebar className="pt-24 bg-dpro-secondary" />
         <SidebarInset>{props.children}</SidebarInset>
       </SidebarProvider>

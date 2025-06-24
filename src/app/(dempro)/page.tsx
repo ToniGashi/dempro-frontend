@@ -1,9 +1,13 @@
 import { MainCard, SecondaryCard } from "@/components/cards";
 import HeroSection from "@/components/hero-section";
 import { Button } from "@/components/ui/button";
+import { getProjects } from "@/lib/actions";
 import Image from "next/image";
+import Link from "next/link";
 
 export default async function DashboardPage() {
+  const { result: projects } = await getProjects();
+
   return (
     <main className="flex flex-col">
       <HeroSection
@@ -18,21 +22,18 @@ export default async function DashboardPage() {
           Featured Resources
         </h3>
         <div className="grid grid-cols-3 gap-10">
-          <MainCard
-            title="Youth Activism Guide"
-            description=" Start your own movement and build your community"
-          />
-          <MainCard
-            title="Youth Activism Guide"
-            description=" Start your own movement and build your community"
-          />
-          <MainCard
-            title="Youth Activism Guide"
-            description=" Start your own movement and build your community"
-          />
+          {projects?.slice(0, 3)?.map((el) => (
+            <Link key={el.id} href={`/templates/${el.id}`}>
+              <MainCard title={el.title} description={el.subtitle} />
+            </Link>
+          ))}
         </div>
         <div className="flex justify-center">
-          <Button className="max-w-min">Discover More</Button>
+          <Link href={`/templates`}>
+            <Button className="max-w-min hover:cursor-pointer">
+              Discover More
+            </Button>
+          </Link>
         </div>
       </div>
       <div className="flex gap-10 p-16 items-center">

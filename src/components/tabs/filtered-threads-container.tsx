@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Thread } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useCustomSWR } from "@/hooks/use-custom-swr";
+import { ThreadsSkeleton } from "../ui/skeleton";
 
 export default function FilteredThreadsTabContainer({
   threadCount,
@@ -24,7 +25,7 @@ export default function FilteredThreadsTabContainer({
     }`
   )!;
 
-  if (isLoading) return <div>Loading</div>;
+  if (isLoading) return <ThreadsSkeleton threadCount={threadCount || 5} />;
 
   if (!data) return <div>No data available</div>;
 

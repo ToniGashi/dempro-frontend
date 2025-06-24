@@ -48,16 +48,16 @@ export default function RenderFolderItems({
           return (
             <li
               key={item.id}
-              className="border border-sky-500 rounded-md overflow-hidden"
+              className="border border-dpro-primary rounded-md overflow-hidden"
             >
               <div
                 onClick={() => isFolder && toggleFolder(item.id)}
                 className="flex items-center justify-between p-4 cursor-pointer hover:bg-sky-50"
               >
                 <div className="flex items-center gap-3">
-                  <FolderIcon className="text-sky-600 text-lg" />
+                  <FolderIcon className="text-dpro-primary text-lg" />
                   <span className="text-md font-medium text-gray-800">
-                    {item.name}
+                    {item.name[0].toUpperCase() + item.name.substring(1)}
                   </span>
                 </div>
                 {isFolder && (
@@ -90,7 +90,7 @@ export default function RenderFolderItems({
                           <div className="flex items-center gap-6">
                             <button
                               onClick={() => setSelectedFile(child)}
-                              className="text-sm text-sky-600 hover:underline"
+                              className="text-sm text-dpro-primary hover:underline hover:cursor-pointer"
                             >
                               Preview
                             </button>
@@ -99,7 +99,7 @@ export default function RenderFolderItems({
                               download
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="text-sm text-sky-600 hover:underline"
+                              className="text-sm text-dpro-primary hover:underline"
                             >
                               Download
                             </a>
