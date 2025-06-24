@@ -10,7 +10,7 @@ const links = [
     name: "About us",
     href: "/about-us",
   },
-  { name: "Resources", href: "/resources" },
+  { name: "Templates", href: "/templates" },
 ];
 export default function NavBar() {
   const pathname = usePathname();
