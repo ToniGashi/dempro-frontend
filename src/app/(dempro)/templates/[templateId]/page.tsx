@@ -1,25 +1,14 @@
-import { BlobServiceClient } from "@azure/storage-blob";
-import RenderFolderItems from "./RenderFolderItems";
-export default async function TemplatePage() {
-  const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING!;
-  const containerName = process.env.AZURE_STORAGE_CONTAINER || "templatemedia";
+import { getContainerClient } from "@/lib/blob-service-client";
+import RenderFolderItems from "../../../../components/view-render-folder-items";
+import { FolderType } from "@/lib/types";
 
-  const blobServiceClient =
-    BlobServiceClient.fromConnectionString(connectionString);
-  const containerClient = blobServiceClient.getContainerClient(containerName);
-  interface Child {
-    id: string;
-    url: string;
-    name: string;
-    folder?: boolean;
+export default async function TemplatePage() {
+  const folderMap: Record<string, FolderType> = {};
+  const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
+  if (!connectionString) {
+    throw new Error("no connection string found");
   }
-  interface ItemType {
-    id: string;
-    folder: boolean;
-    name: string;
-    children: Child[];
-  }
-  const folderMap: Record<string, ItemType> = {};
+  const containerClient = getContainerClient(connectionString);
 
   for await (const blob of containerClient.listBlobsFlat()) {
     const [folderName, ...rest] = blob.name.split("/");

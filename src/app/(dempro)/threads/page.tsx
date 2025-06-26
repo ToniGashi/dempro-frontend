@@ -7,6 +7,8 @@ import { RoundedPrimaryInput } from "@/components/custom-inputs";
 import { Button } from "@/components/ui/button";
 import FilteredThreadsTabContainer from "@/components/tabs/filtered-threads-container";
 import NewThreadDialog from "@/components/create-new-thread-dialog";
+import { Suspense } from "react";
+import SummarySection from "./SummarySection";
 
 export default async function ThreadsPage() {
   const { result: threads } = await getThreads();
@@ -69,91 +71,9 @@ export default async function ThreadsPage() {
         </div>
       </div>
       <div className="p-16">
-        <div className="grid grid-cols-3 gap-10">
-          <div className="p-6 flex flex-col gap-2 max-h-min text-dpro-primary text-lg border-4 border-dpro-dark-green rounded-2xl">
-            <p className="font-bold text-xl">Important Links</p>
-            <Link href="/">Community Guidelines</Link>
-            <Link href="/">Community Code of Conduct</Link>
-          </div>
-          <div className="p-6 flex max-h-min flex-col gap-2 text-dpro-primary text-lg border-4 border-dpro-dark-green rounded-2xl">
-            <p className="font-bold text-xl">Most Popular Topic Categories</p>
-            <div className="font-bold items-center flex gap-2">
-              <span>#1</span>
-              <div
-                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                aria-hidden="true"
-              />
-              Elections
-            </div>
-            <div className="font-bold items-center flex gap-2">
-              <span>#2</span>
-              <div
-                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                aria-hidden="true"
-              />
-              Democracy in Bulgaria
-            </div>
-            <div className="font-bold items-center flex gap-2">
-              <span>#3</span>
-              <div
-                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                aria-hidden="true"
-              />
-              Balkan Region Politics
-            </div>
-            <div className="font-bold items-center flex gap-2">
-              <span>#4</span>
-              <div
-                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                aria-hidden="true"
-              />
-              Education on Civic Engagement
-            </div>
-            <div className="font-bold items-center flex gap-2">
-              <span>#5</span>
-              <div
-                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                aria-hidden="true"
-              />
-              Community Building
-            </div>
-          </div>
-          <div className="p-6 flex max-h-min flex-col gap-2 text-dpro-primary text-lg border-4 border-dpro-dark-green rounded-2xl">
-            <p className="font-bold text-xl">Top Contributors</p>
-            <div className="font-bold items-center flex gap-2">
-              <span>#1</span>
-              <div
-                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                aria-hidden="true"
-              />
-              JuliaW
-            </div>
-            <div className="font-bold items-center flex gap-2">
-              <span>#2</span>
-              <div
-                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                aria-hidden="true"
-              />
-              JacobJ
-            </div>
-            <div className="font-bold items-center flex gap-2">
-              <span>#3</span>
-              <div
-                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                aria-hidden="true"
-              />
-              KleaM
-            </div>
-            <div className="font-bold items-center flex gap-2">
-              <span>#4</span>
-              <div
-                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                aria-hidden="true"
-              />
-              Beni
-            </div>
-          </div>
-        </div>
+        <Suspense fallback={<div>Loading...</div>}>
+          <SummarySection />
+        </Suspense>
       </div>
     </main>
   );

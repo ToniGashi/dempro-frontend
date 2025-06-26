@@ -5,8 +5,9 @@ import { useState } from "react";
 import ThreadsTab from "@/components/tabs/threads-tab";
 import BriefTab from "@/components/tabs/brief-tab";
 import { Project } from "@/lib/types";
+import MediaTab from "./media-tab";
 
-const tabs = ["Brief", "Threads", "Media", "Timeline", "Other"];
+const tabs = ["Brief", "Threads", "Media", "Team", "Other"];
 
 export default function ProjectTabsContainer({
   project,
@@ -16,7 +17,6 @@ export default function ProjectTabsContainer({
   projectBrief: string;
 }) {
   const [activeTab, setActiveTab] = useState("Brief");
-
   return (
     <div>
       <div className="px-16 pt-16">
@@ -45,15 +45,12 @@ export default function ProjectTabsContainer({
         )}
         {activeTab === "Threads" && <ThreadsTab projectId={project.id} />}
         {activeTab === "Media" && (
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Media</h2>
-            <p className="text-gray-600">Media content coming soon...</p>
-          </div>
+          <MediaTab projectId={project.id} projectTitle={project.title} />
         )}
-        {activeTab === "Timeline" && (
+        {activeTab === "Team" && (
           <div className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Timeline</h2>
-            <p className="text-gray-600">Timeline content coming soon...</p>
+            <h2 className="text-3xl font-bold text-gray-900 mb-6">Team</h2>
+            <p className="text-gray-600">Team content coming soon...</p>
           </div>
         )}
         {activeTab === "Other" && (

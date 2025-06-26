@@ -1,7 +1,7 @@
 "use server";
 
 import { createApiOperation, createReadOperation } from "./api-helpers";
-import { CreateThread, Project, Thread } from "./types";
+import { CreateThread, Project, Thread, ThreadSummary } from "./types";
 
 // =============================================
 // Project Operations
@@ -53,4 +53,9 @@ export const createProjectThread = createApiOperation<CreateThread, Thread>({
 export const getThreads = createReadOperation<string, Thread[]>({
   url: () => `threads`,
   tags: ["threads"],
+});
+
+export const getThreadSummary = createReadOperation<string, ThreadSummary>({
+  url: () => `threads/summary`,
+  tags: ["threadSummary"],
 });

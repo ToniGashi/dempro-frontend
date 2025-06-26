@@ -23,3 +23,21 @@ export interface Thread extends CreateThread {
   threadTime: string;
   id: number;
 }
+
+export interface ThreadSummary {
+  mostPopularCategories: string[];
+  topContributors: string[];
+}
+
+export interface FolderChild {
+  id: string;
+  url: string;
+  name: string;
+  folder?: boolean;
+}
+export interface FolderType {
+  id: string;
+  folder: boolean;
+  name: string;
+  children: FolderChild[];
+}
