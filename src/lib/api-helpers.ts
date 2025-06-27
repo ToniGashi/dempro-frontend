@@ -24,6 +24,8 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
   const headers = {
     ...(restOptions.headers || {}),
     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+    Authorization:
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTEwNjYyMDgsImV4cCI6MTc1MTE1MjYwOCwiaWF0IjoxNzUxMDY2MjA4LCJpc3MiOiJEZW1Qcm8ifQ.B6OoBr4Tp_BU72oM8WmcA-KNlUtS-bpsUQ4qdOFY86s",
   };
 
   try {
@@ -35,7 +37,6 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
         headers,
       }
     );
-
     if (!res.ok) {
       let errorMessage = `API error: ${res.status} ${res.statusText}`;
       try {
@@ -95,7 +96,7 @@ export function createApiOperation<TInput, TOutput>({
   sendRawContent = false,
 }: {
   url: string | ((input: TInput) => string);
-  method: "GET" | "POST" | "PUT" | "DELETE";
+  method: "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
   tags?: string[];
   transform?: (input: TInput) => any;
   cache?: RequestCache;
@@ -113,18 +114,18 @@ export function createApiOperation<TInput, TOutput>({
       const transformedInput = transform ? transform(input) : input;
 
       if (sendRawContent) {
-        // We are sending raw content (like HTML) without JSON.stringify
         body =
           typeof transformedInput === "string"
             ? transformedInput
             : String(transformedInput);
         headers["Content-Type"] = "text/plain";
+        headers["Authorization"] =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTEwNjYyMDgsImV4cCI6MTc1MTE1MjYwOCwiaWF0IjoxNzUxMDY2MjA4LCJpc3MiOiJEZW1Qcm8ifQ.B6OoBr4Tp_BU72oM8WmcA-KNlUtS-bpsUQ4qdOFY86s";
       } else {
-        // Normal JSON handling
         body = JSON.stringify(transformedInput);
         headers["Content-Type"] = "application/json";
         headers["Authorization"] =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTA5Nzk0MDksImV4cCI6MTc1MTA2NTgwOSwiaWF0IjoxNzUwOTc5NDA5LCJpc3MiOiJEZW1Qcm8ifQ.DaU7IrkomstfM81PeorONAcg_Yd3gtg6oBqiq6pUtqE";
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTEwNjYyMDgsImV4cCI6MTc1MTE1MjYwOCwiaWF0IjoxNzUxMDY2MjA4LCJpc3MiOiJEZW1Qcm8ifQ.B6OoBr4Tp_BU72oM8WmcA-KNlUtS-bpsUQ4qdOFY86s";
       }
     }
 
@@ -140,9 +141,8 @@ export function createApiOperation<TInput, TOutput>({
       options
     );
 
-    // we revalidate only for mutations (POST, PUT, DELETE) and only after successful operations
+    console.log({ resolvedUrl, options });
     if (result.success && method !== "GET" && tags.length > 0) {
-      // This must only run after mutations, not during initial render
       for (const tag of tags) {
         revalidateTag(tag);
       }

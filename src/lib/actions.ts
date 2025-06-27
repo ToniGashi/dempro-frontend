@@ -1,7 +1,15 @@
 "use server";
 
 import { createApiOperation, createReadOperation } from "./api-helpers";
-import { CreateThread, Project, Thread, ThreadSummary } from "./types";
+import {
+  Comment,
+  CreateThread,
+  LikeComment,
+  PostComment,
+  Project,
+  Thread,
+  ThreadSummary,
+} from "./types";
 
 // =============================================
 // Project Operations
@@ -58,4 +66,38 @@ export const getThreads = createReadOperation<string, Thread[]>({
 export const getThreadSummary = createReadOperation<string, ThreadSummary>({
   url: () => `threads/summary`,
   tags: ["threadSummary"],
+});
+
+export const getThread = createReadOperation<string, Thread>({
+  url: (id) => `threads/${id}`,
+  tags: ["thread"],
+});
+
+export const getCommentsFromThreadId = createReadOperation<string, Comment[]>({
+  url: (id) => `comments/thread?threadId=${id}&page=1&pageSize=10`,
+  cache: "no-store",
+  tags: ["commentsFromThread"],
+});
+
+export const getCommentById = createReadOperation<string, Comment>({
+  url: (id) => `comments/${id}`,
+  cache: "no-store",
+  tags: ["commentById"],
+});
+
+export const likeComment = createApiOperation<string, LikeComment>({
+  url: (id) => `comments/${id}/like`,
+  method: "PATCH",
+  tags: ["comLike"],
+});
+export const dislikeComment = createApiOperation<string, LikeComment>({
+  url: (id) => `comments/${id}/unlike`,
+  method: "PATCH",
+  tags: ["unLike"],
+});
+
+export const postReplyToThread = createApiOperation<PostComment, Comment>({
+  url: () => `/comments`,
+  method: "POST",
+  tags: ["comments"],
 });

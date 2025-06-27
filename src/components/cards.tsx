@@ -55,17 +55,23 @@ export const SecondaryCard = ({
 
 export const ThreadCard = ({
   title,
+  id,
   content,
   nrOfComments,
   lastPosted,
 }: {
   title: string;
+  id: number;
   content: string;
   nrOfComments: number;
   lastPosted: string;
 }) => {
   return (
-    <div className="flex flex-col gap-4 border-2 border-[#050316] rounded-xl p-6">
+    <Link
+      key={id}
+      href={`threads/${id}`}
+      className="flex flex-col gap-4 border-2 border-[#050316] rounded-xl p-6"
+    >
       <MessageSquare size={28} />
       <div className="text-sm font-bold">{title}</div>
       <div className="text-xs">{content}</div>
@@ -78,6 +84,6 @@ export const ThreadCard = ({
           {lastPosted}
         </div>
       </div>
-    </div>
+    </Link>
   );
 };

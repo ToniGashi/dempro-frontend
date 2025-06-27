@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 export default async function HeroSection({
   title_one,
@@ -37,7 +38,11 @@ export default async function HeroSection({
               </h1>
             )}
           </div>
-          {buttonText && <Button className="max-w-min">{buttonText}</Button>}
+          {buttonText && (
+            <Link href="/about-us">
+              <Button className="max-w-min">{buttonText}</Button>
+            </Link>
+          )}
         </div>
         <Image src={imageSrc} alt={imageAlt} width={476} height={476} />
       </div>

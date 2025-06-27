@@ -6,6 +6,38 @@ export interface Project {
   subtitle: string;
 }
 
+export interface Comment {
+  id: number;
+  content: string;
+  createdById: string;
+  postedByName: string;
+  currentUserAlreadyLiked: boolean;
+  createdAt: string; // ISO 8601 timestamp
+  threadId: number;
+  replyToId: number | null;
+  replies: Comment[]; // nested replies
+  numberOfReplies: number;
+  likes: number;
+}
+
+export interface Thread {
+  isResolved: boolean;
+  createdById: string | null;
+  createdAt: string; // ISO 8601 timestamp
+  resolvedAt: string | null; // ISO 8601 timestamp
+  resolvedById: string | null;
+  comments: Comment[];
+  numberOfComments: number;
+  numberOfParticipants: number;
+  lastComment: Comment;
+  threadTime: string; // e.g. "4 days ago"
+  id: number;
+  title: string;
+  description: string;
+  projectId: string | null;
+  category: string;
+}
+
 export type ThreadCategory = "Discussion" | "Question" | "Advice";
 
 export interface CreateThread {
@@ -13,15 +45,6 @@ export interface CreateThread {
   description: string;
   projectId: number | null;
   category: ThreadCategory;
-}
-
-export interface Thread extends CreateThread {
-  isResolved: boolean;
-  createdById: string | null;
-  comments: string[];
-  numberOfComments: number;
-  threadTime: string;
-  id: number;
 }
 
 export interface ThreadSummary {
@@ -40,4 +63,16 @@ export interface FolderType {
   folder: boolean;
   name: string;
   children: FolderChild[];
+}
+
+export interface LikeComment {
+  success: boolean;
+  message: string;
+  error: string | null;
+}
+
+export interface PostComment {
+  threadId: string;
+  content: string;
+  replyToId: number;
 }

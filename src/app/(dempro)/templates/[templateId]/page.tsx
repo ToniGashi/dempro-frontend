@@ -2,13 +2,22 @@ import { getContainerClient } from "@/lib/blob-service-client";
 import RenderFolderItems from "../../../../components/view-render-folder-items";
 import { FolderType } from "@/lib/types";
 
-export default async function TemplatePage() {
+type Params = Promise<{ templateId: string }>;
+export default async function TemplatePage(props: { params: Params }) {
+  const params = await props.params;
+  const templateId = params.templateId;
+  if (!templateId) {
+    return console.log("no project id");
+  }
+
+  // ensure valid length ≥ 3:
+  const containerName = `${templateId}-projectId`.toLowerCase();
   const folderMap: Record<string, FolderType> = {};
   const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
   if (!connectionString) {
     throw new Error("no connection string found");
   }
-  const containerClient = getContainerClient(connectionString);
+  const containerClient = getContainerClient(connectionString, containerName);
 
   for await (const blob of containerClient.listBlobsFlat()) {
     const [folderName, ...rest] = blob.name.split("/");

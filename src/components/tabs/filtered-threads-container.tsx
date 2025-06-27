@@ -6,6 +6,7 @@ import { Thread } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { useCustomSWR } from "@/hooks/use-custom-swr";
 import { ThreadsSkeleton } from "../ui/skeleton";
+import Link from "next/link";
 
 export default function FilteredThreadsTabContainer({
   threadCount,
@@ -58,18 +59,20 @@ export default function FilteredThreadsTabContainer({
               className
             )}
           >
-            <div className="flex items-center gap-4">
-              <div
-                className="w-12 h-12 bg-[#D9D9D9] rounded-full"
-                aria-hidden="true"
-              />
-              <div className="flex flex-col  gap-2">
-                <span className="font-semibold text-gray-900">
-                  {thread.title}
-                </span>
-                <p className="text-gray-600 text-sm">{thread.description}</p>
+            <Link href={`/threads/${thread.id}`}>
+              <div className="flex items-center gap-4">
+                <div
+                  className="w-12 h-12 bg-[#D9D9D9] rounded-full"
+                  aria-hidden="true"
+                />
+                <div className="flex flex-col  gap-2">
+                  <span className="font-semibold text-gray-900">
+                    {thread.title}
+                  </span>
+                  <p className="text-gray-600 text-sm">{thread.description}</p>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
         ))}
       </div>

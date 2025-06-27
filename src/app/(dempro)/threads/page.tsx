@@ -43,6 +43,7 @@ export default async function ThreadsPage() {
           {threads?.slice(0, 8).map((thread) => (
             <ThreadCard
               key={thread.id}
+              id={thread.id}
               lastPosted={thread.threadTime}
               nrOfComments={thread.numberOfComments}
               title={thread.title}
