@@ -2,22 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import { FolderType } from "@/lib/types";
-import MediaTabWithUpload from "../edit-render-folder-items";
 import RenderFolderItems from "../edit-render-folder-items";
 
-export default function MediaTab({
-  projectId,
-  projectTitle,
-}: {
-  projectId: number;
-  projectTitle: string;
-}) {
+export default function MediaTab({ projectId }: { projectId: number }) {
   const [folders, setFolders] = useState<FolderType[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch("/api/media")
+    fetch(`/api/media?id=${projectId}`)
       .then((res) => {
         if (!res.ok) throw new Error(res.statusText);
         return res.json();
@@ -41,5 +34,5 @@ export default function MediaTab({
     return <p className="p-8 text-red-500">{error}</p>;
   }
 
-  return <RenderFolderItems items={folders} />;
+  return <RenderFolderItems items={folders} projectId={projectId} />;
 }

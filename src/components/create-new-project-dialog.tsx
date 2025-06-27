@@ -55,8 +55,29 @@ export default function NewProjectDialog() {
           })(),
           {
             loading: "Creating project...",
-            success: (res) => {
+            success: async (res) => {
               router.push(`/projects/${res.result?.id}`);
+
+              const result = await fetch("/api/projects", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  projectId: res.result?.id,
+                }),
+              });
+
+              if (!result.ok) {
+                const { error } = await result.json();
+                console.error("Project creation failed:", error);
+                return;
+              }
+
+              const { success } = await result.json();
+              if (success) {
+                console.log(
+                  "Project created and storage container initialized!"
+                );
+              }
               return "Project created successfully";
             },
             error: (err) => `Something went wrong: ${err.message}`,

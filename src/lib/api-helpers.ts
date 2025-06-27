@@ -123,6 +123,8 @@ export function createApiOperation<TInput, TOutput>({
         // Normal JSON handling
         body = JSON.stringify(transformedInput);
         headers["Content-Type"] = "application/json";
+        headers["Authorization"] =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTA5Nzk0MDksImV4cCI6MTc1MTA2NTgwOSwiaWF0IjoxNzUwOTc5NDA5LCJpc3MiOiJEZW1Qcm8ifQ.DaU7IrkomstfM81PeorONAcg_Yd3gtg6oBqiq6pUtqE";
       }
     }
 

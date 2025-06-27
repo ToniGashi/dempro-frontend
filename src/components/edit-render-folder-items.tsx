@@ -22,7 +22,13 @@ interface ItemType {
   children: Child[];
 }
 
-export default function RenderFolderItems({ items }: { items: ItemType[] }) {
+export default function RenderFolderItems({
+  items,
+  projectId,
+}: {
+  items: ItemType[];
+  projectId: number;
+}) {
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
   const [selectedFile, setSelectedFile] = useState<Child | null>(null);
   const [folderItems, setFolderItems] = useState<ItemType[]>(items);
@@ -30,7 +36,6 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
     {}
   );
 
-  // Sync local state when props change
   useEffect(() => {
     setFolderItems(items);
   }, [items]);
@@ -45,7 +50,7 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
     async (folderId: string, childId: string) => {
       try {
         const res = await fetch(
-          `/api/media?file=${encodeURIComponent(childId)}`,
+          `/api/media?file=${encodeURIComponent(childId)}&id=${projectId}`,
           { method: "DELETE" }
         );
         if (!res.ok) throw new Error("Delete failed");
@@ -60,29 +65,36 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
         console.error(err);
       }
     },
-    []
+    [projectId]
   );
 
   const uploadFiles = async (folderId: string, files: File[]) => {
     if (files.length === 0) return;
     const form = new FormData();
-    files.forEach((file) => form.append("files", file));
+    files.forEach((file) => form.append("files", file, file.name));
 
     try {
       const res = await fetch(
-        `/api/media/upload?folder=${encodeURIComponent(folderId)}`,
+        `/api/media/upload?id=${projectId}&folder=${encodeURIComponent(
+          folderId
+        )}`,
         { method: "POST", body: form }
       );
       if (!res.ok) throw new Error(await res.text());
-      const uploaded: Child[] = await res.json();
+      // Map returned name/url to include folder in ID
+      const uploadedRaw = (await res.json()) as { name: string; url: string }[];
+      const newChildren: Child[] = uploadedRaw.map((u) => ({
+        id: `${folderId}/${u.name}`,
+        name: u.name,
+        url: u.url,
+      }));
       setFolderItems((prev) =>
         prev.map((it) =>
           it.id === folderId
-            ? { ...it, children: [...it.children, ...uploaded] }
+            ? { ...it, children: [...it.children, ...newChildren] }
             : it
         )
       );
-      // Clear pending after successful upload
       setPendingUploads((prev) => ({ ...prev, [folderId]: [] }));
     } catch (err) {
       console.error("Upload failed", err);
@@ -121,7 +133,6 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
 
               {isOpen && (
                 <div className="bg-white px-12 py-2">
-                  {/* Select files button */}
                   <div className="mb-4 flex items-center gap-3">
                     <button
                       onClick={() => fileInputRef.current?.click()}
@@ -147,7 +158,6 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
                     />
                   </div>
 
-                  {/* Preview & remove before upload */}
                   {queue.length > 0 && (
                     <div className="mb-4 p-4 border border-gray-200 rounded">
                       <h3 className="text-sm font-medium mb-2">
@@ -156,7 +166,7 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
                       <ul className="space-y-1">
                         {queue.map((file, idx) => (
                           <li
-                            key={idx}
+                            key={`${item.id}-${file.name}-${idx}`}
                             className="flex items-center justify-between"
                           >
                             <span className="text-sm text-gray-700">
@@ -179,7 +189,7 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
                         ))}
                       </ul>
                       <button
-                        onClick={() => uploadFiles(item.name, queue)}
+                        onClick={() => uploadFiles(item.id, queue)}
                         className="mt-3 px-4 py-2 bg-dpro-primary text-white rounded-md text-sm font-medium hover:opacity-90"
                       >
                         Upload Selected Files
@@ -187,12 +197,11 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
                     </div>
                   )}
 
-                  {/* Existing files */}
                   {item.children.length > 0 ? (
                     <ul className="space-y-2">
                       {item.children.map((child) => (
                         <li
-                          key={child.id}
+                          key={`${item.id}-${child.id}`}
                           className="flex items-center justify-between py-3 border-b border-gray-200"
                         >
                           <div className="flex items-center gap-3">
@@ -204,7 +213,7 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
                           <div className="flex items-center gap-4">
                             <button
                               onClick={() => setSelectedFile(child)}
-                              className="text-sm text-dpro-primary hover:underline"
+                              className="text-sm text-dpro-primary hover:underline hover:cursor-pointer"
                             >
                               Preview
                             </button>
@@ -219,7 +228,7 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
                             </a>
                             <button
                               onClick={() => deleteHandler(item.id, child.id)}
-                              className="flex items-center gap-1 text-red-500 hover:text-red-700"
+                              className="flex items-center gap-1 text-red-500 hover:text-red-700 hover:cursor-pointer"
                             >
                               <Trash2Icon className="w-4 h-4" /> Remove
                             </button>
@@ -237,7 +246,6 @@ export default function RenderFolderItems({ items }: { items: ItemType[] }) {
         })}
       </ul>
 
-      {/* Preview Modal */}
       {selectedFile && (
         <div className="fixed inset-0 backdrop-blur-sm bg-black/10 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl relative">

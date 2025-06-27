@@ -3,23 +3,24 @@ export const runtime = "nodejs";
 
 import { NextResponse } from "next/server";
 import { getContainerClient } from "@/lib/blob-service-client";
-import { FolderType } from "@/lib/types";
 import { BlobServiceClient } from "@azure/storage-blob";
 
-export async function GET() {
-  const folderMap: Record<string, FolderType> = {};
+const conn = process.env.AZURE_STORAGE_CONNECTION_STRING!;
 
-  // use your secret var, not NEXT_PUBLIC_…
-  const connectionString = process.env.AZURE_STORAGE_CONNECTION_STRING;
-  if (!connectionString) {
-    return NextResponse.json(
-      { error: "AZURE_STORAGE_CONNECTION_STRING not set" },
-      { status: 500 }
-    );
+export async function GET(req: Request) {
+  const { searchParams } = new URL(req.url);
+  const rawId = searchParams.get("id");
+  if (!rawId) {
+    return NextResponse.json({ error: "Missing `id` param" }, { status: 400 });
   }
 
-  const containerClient = getContainerClient(connectionString);
+  // ensure valid length ≥ 3:
+  const containerName = `${rawId}-projectId`.toLowerCase();
 
+  // this now returns a ContainerClient for your named container
+  const containerClient = getContainerClient(conn, containerName);
+
+  const folderMap: Record<string, any> = {};
   for await (const blob of containerClient.listBlobsFlat()) {
     const [folderName, ...rest] = blob.name.split("/");
     if (!folderMap[folderName]) {
@@ -39,31 +40,70 @@ export async function GET() {
       });
     }
   }
-
   return NextResponse.json({ folders: Object.values(folderMap) });
 }
 
 export async function DELETE(req: Request) {
   const { searchParams } = new URL(req.url);
-  const file = searchParams.get("file");
-  if (!file) {
-    return NextResponse.json({ error: "Missing file param" }, { status: 400 });
+
+  const containerName = searchParams.get("id");
+  if (!containerName) {
+    return NextResponse.json(
+      { error: "Missing `id` query parameter" },
+      { status: 400 }
+    );
   }
 
-  const conn = process.env.AZURE_STORAGE_CONNECTION_STRING;
-  if (!conn) {
+  const filePath = searchParams.get("file");
+  if (!filePath) {
     return NextResponse.json(
-      { error: "Storage connection not configured" },
+      { error: "Missing `file` query parameter" },
+      { status: 400 }
+    );
+  }
+
+  // only allow deleting real files (must include a folder prefix)
+  const [folderPrefix, ...rest] = filePath.split("/");
+  if (!rest.length || rest.join("") === "") {
+    return NextResponse.json(
+      { error: "Cannot delete a folder placeholder" },
+      { status: 400 }
+    );
+  }
+
+  const conn = process.env.AZURE_STORAGE_CONNECTION_STRING!;
+  const blobService = BlobServiceClient.fromConnectionString(conn);
+  const container = blobService.getContainerClient(
+    `${containerName}-projectid`
+  );
+
+  // 1) Delete the requested blob
+  const blobClient = container.getBlobClient(filePath);
+  const result = await blobClient.deleteIfExists();
+  if (!result.succeeded) {
+    return NextResponse.json(
+      { error: `Failed to delete file: ${filePath}` },
       { status: 500 }
     );
   }
 
-  const blobService = BlobServiceClient.fromConnectionString(conn);
-  const container = blobService.getContainerClient(
-    process.env.AZURE_STORAGE_CONTAINER!
-  );
-  const client = container.getBlobClient(file);
+  // 2) Check whether the folder is now empty
+  let anyLeft = false;
+  for await (const blob of container.listBlobsFlat({
+    prefix: `${folderPrefix}/`,
+  })) {
+    // skip the “directory marker” itself
+    if (blob.name !== `${folderPrefix}/`) {
+      anyLeft = true;
+      break;
+    }
+  }
 
-  await client.deleteIfExists();
+  // 3) If empty, re-create the folder marker
+  if (!anyLeft) {
+    const marker = container.getBlockBlobClient(`${folderPrefix}`);
+    await marker.uploadData(Buffer.alloc(0));
+  }
+
   return NextResponse.json({ success: true });
 }
