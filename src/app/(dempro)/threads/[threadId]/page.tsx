@@ -44,12 +44,6 @@ export default async function TemplatePage(props: { params: Params }) {
         </div>
       </div>
       <CommentsSection threadId={threadId} />
-
-      <div className="mt-12 text-center">
-        <button className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
-          Add your thoughts
-        </button>
-      </div>
     </div>
   );
 }

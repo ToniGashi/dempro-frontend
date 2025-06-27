@@ -6,7 +6,7 @@ import { Comment } from "@/lib/types";
 
 type ReplyFormProps = {
   threadId: string;
-  parentId: number;
+  parentId: number | null;
   onSuccess: (newReply: Comment) => void;
 };
 
@@ -49,7 +49,7 @@ export default function ReplyForm({
       <button
         type="submit"
         disabled={submitting}
-        className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+        className="px-4 py-2  text-white rounded bg-dpro-primary hover:bg-dpro-dark hover:cursor-pointer disabled:opacity-50"
       >
         {submitting ? "Posting…" : "Post Reply"}
       </button>

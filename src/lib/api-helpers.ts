@@ -141,7 +141,6 @@ export function createApiOperation<TInput, TOutput>({
       options
     );
 
-    console.log({ resolvedUrl, options });
     if (result.success && method !== "GET" && tags.length > 0) {
       for (const tag of tags) {
         revalidateTag(tag);

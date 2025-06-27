@@ -74,5 +74,5 @@ export interface LikeComment {
 export interface PostComment {
   threadId: string;
   content: string;
-  replyToId: number;
+  replyToId: number | null;
 }
