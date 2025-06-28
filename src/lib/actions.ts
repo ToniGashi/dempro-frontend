@@ -16,7 +16,8 @@ import {
 // =============================================
 
 export const getProjects = createReadOperation<string, Project[]>({
-  url: () => `projects?Page=1&PageSize=6`,
+  url: (tag = "", topic = "") =>
+    `projects?Page=1&PageSize=6&topic=${topic}&tag=${tag}`,
   tags: ["projects"],
 });
 

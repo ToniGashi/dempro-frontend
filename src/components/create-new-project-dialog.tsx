@@ -13,6 +13,7 @@ import { Project } from "@/lib/types";
 import {
   FormFieldInput,
   FormFieldMultiSelect,
+  FormFieldSelect,
 } from "@/components/custom-form-fields";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +27,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
+import { tags, topics } from "./tagsAndTopics";
 
 export default function NewProjectDialog() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -116,10 +118,7 @@ export default function NewProjectDialog() {
             <FormFieldInput name="title" label="Title" form={form} />
             <FormFieldInput name="subtitle" label="Subtitle" form={form} />
             <FormFieldMultiSelect
-              options={[
-                { value: "1", label: "test" },
-                { value: "2", label: "test2" },
-              ]}
+              options={tags}
               name="tags"
               label="Tags"
               placeholder="Select tags"
@@ -128,7 +127,15 @@ export default function NewProjectDialog() {
                 form.setValue("tags", selected);
               }}
             />
-            <FormFieldInput name="topic" label="Topic" form={form} />
+            <FormFieldSelect
+              options={topics}
+              name="topic"
+              label="Topic"
+              onValueChange={(selected) => {
+                form.setValue("topic", selected);
+              }}
+              form={form}
+            />
             <DialogFooter>
               <DialogClose asChild>
                 <Button variant="secondary">Cancel</Button>

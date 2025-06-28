@@ -12,15 +12,16 @@ export default async function CommentsSection({
 }: CommentsSectionProps) {
   const { result: comments } = await getCommentsFromThreadId(threadId);
 
-  if (!comments || comments.length === 0) {
-    return <div className="text-gray-500">No comments yet.</div>;
-  }
   return (
     <div>
       <div className="space-y-8">
-        {comments.map((c: Comment) => (
-          <CommentItem key={c.id} comment={c} threadId={threadId} />
-        ))}
+        {!comments || comments.length === 0 ? (
+          <div className="text-gray-500">No comments yet.</div>
+        ) : (
+          comments.map((c: Comment) => (
+            <CommentItem key={c.id} comment={c} threadId={threadId} />
+          ))
+        )}
       </div>
       <AddCommentSection threadId={threadId} />
     </div>

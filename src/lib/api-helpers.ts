@@ -25,7 +25,7 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
     ...(restOptions.headers || {}),
     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     Authorization:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTEwNjYyMDgsImV4cCI6MTc1MTE1MjYwOCwiaWF0IjoxNzUxMDY2MjA4LCJpc3MiOiJEZW1Qcm8ifQ.B6OoBr4Tp_BU72oM8WmcA-KNlUtS-bpsUQ4qdOFY86s",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTExMjI0MzAsImV4cCI6MTc1MTIwODgzMCwiaWF0IjoxNzUxMTIyNDMwLCJpc3MiOiJEZW1Qcm8ifQ.Pkx3j8PK7pDs4K8VAZ3sDAX6OFjz-N34vXDh6lKpGno",
   };
 
   try {
@@ -120,12 +120,12 @@ export function createApiOperation<TInput, TOutput>({
             : String(transformedInput);
         headers["Content-Type"] = "text/plain";
         headers["Authorization"] =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTEwNjYyMDgsImV4cCI6MTc1MTE1MjYwOCwiaWF0IjoxNzUxMDY2MjA4LCJpc3MiOiJEZW1Qcm8ifQ.B6OoBr4Tp_BU72oM8WmcA-KNlUtS-bpsUQ4qdOFY86s";
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTExMjI0MzAsImV4cCI6MTc1MTIwODgzMCwiaWF0IjoxNzUxMTIyNDMwLCJpc3MiOiJEZW1Qcm8ifQ.Pkx3j8PK7pDs4K8VAZ3sDAX6OFjz-N34vXDh6lKpGno";
       } else {
         body = JSON.stringify(transformedInput);
         headers["Content-Type"] = "application/json";
         headers["Authorization"] =
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTEwNjYyMDgsImV4cCI6MTc1MTE1MjYwOCwiaWF0IjoxNzUxMDY2MjA4LCJpc3MiOiJEZW1Qcm8ifQ.B6OoBr4Tp_BU72oM8WmcA-KNlUtS-bpsUQ4qdOFY86s";
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTExMjI0MzAsImV4cCI6MTc1MTIwODgzMCwiaWF0IjoxNzUxMTIyNDMwLCJpc3MiOiJEZW1Qcm8ifQ.Pkx3j8PK7pDs4K8VAZ3sDAX6OFjz-N34vXDh6lKpGno";
       }
     }
 

@@ -9,7 +9,25 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Input } from "./ui/input";
+
+export interface FormFieldSelectProps<T extends FieldValues> {
+  form: any; // your React Hook Form instance
+  name: Path<T>;
+  label?: string;
+  options: { value: string; label: string }[];
+  disabled?: boolean;
+  className?: string;
+  placeholder?: string;
+  onValueChange?: (value: string) => void;
+}
 
 interface StandardFormFieldProps<T extends FieldValues> {
   form: UseFormReturn<T, any, T>;
@@ -114,7 +132,7 @@ export function FormFieldMultiSelect<T extends FieldValues>({
                 options={options}
                 defaultValue={selectedOptions}
                 placeholder={placeholder}
-                maxCount={2}
+                maxCount={1}
                 disabled={disabled}
                 variant="inverted"
                 onValueChange={(selected) => {
@@ -129,6 +147,51 @@ export function FormFieldMultiSelect<T extends FieldValues>({
           </FormItem>
         );
       }}
+    />
+  );
+}
+
+export function FormFieldSelect<T extends FieldValues>({
+  form,
+  name,
+  label,
+  options,
+  disabled,
+  className,
+  placeholder,
+  onValueChange,
+}: FormFieldSelectProps<T>) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className={className}>
+          {label && <FormLabel className="text-base w-full">{label}</FormLabel>}
+          <FormControl>
+            <Select
+              disabled={disabled}
+              value={field.value}
+              onValueChange={(value: string) => {
+                field.onChange(value);
+                onValueChange?.(value);
+              }}
+            >
+              <SelectTrigger className="w-full text-md py-5 pl-8 pr-7 text-gray-700 bg-white border-dpro-primary border-[2px] rounded-full focus:outline-none focus:ring-1">
+                <SelectValue placeholder={placeholder ?? label} />
+              </SelectTrigger>
+              <SelectContent>
+                {options.map((opt) => (
+                  <SelectItem key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </FormControl>
+          <FormMessage className="text-xs font-semibold" />
+        </FormItem>
+      )}
     />
   );
 }
