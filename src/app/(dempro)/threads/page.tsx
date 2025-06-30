@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import FilteredThreadsTabContainer from "@/components/tabs/filtered-threads-container";
 import NewThreadDialog from "@/components/create-new-thread-dialog";
 import SearchThreadsInput from "@/components/search-thread-input";
+import { Suspense } from "react";
+import SummarySection from "./SummarySection";
 
 export default async function ThreadsPage() {
   const { result: threads } = await getThreads();
@@ -61,6 +63,11 @@ export default async function ThreadsPage() {
             <Button className=" hover:cursor-pointer">View more</Button>
           </Link>
         </div>
+      </div>
+      <div className="p-16">
+        <Suspense fallback={<div>Loading...</div>}>
+          <SummarySection />
+        </Suspense>
       </div>
     </main>
   );
