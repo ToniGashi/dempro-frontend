@@ -9,10 +9,10 @@ const defaultConfig: SWRConfiguration = {
 
 export function useCustomSWR<T>(
   key: string[] | null,
-  url: string,
+  url: string | null,
   config?: SWRConfiguration
 ): SWRResponse<T, any> {
-  return useSWR<T>(key, () => swrFetcher(url), {
+  return useSWR<T>(key, url ? () => swrFetcher(url) : null, {
     ...defaultConfig,
     ...config,
   });

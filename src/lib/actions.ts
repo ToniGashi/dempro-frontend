@@ -46,7 +46,7 @@ export const createProjectBrief = createApiOperation<
   method: "PUT",
   tags: ["project"],
   transform: ({ content }) => content,
-  sendRawContent: true, // Add this flag
+  sendRawContent: true,
 });
 
 // =============================================

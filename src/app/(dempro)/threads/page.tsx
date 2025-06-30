@@ -3,12 +3,10 @@ import Link from "next/link";
 import { getThreads } from "@/lib/actions";
 
 import { ThreadCard } from "@/components/cards";
-import { RoundedPrimaryInput } from "@/components/custom-inputs";
 import { Button } from "@/components/ui/button";
 import FilteredThreadsTabContainer from "@/components/tabs/filtered-threads-container";
 import NewThreadDialog from "@/components/create-new-thread-dialog";
-import { Suspense } from "react";
-import SummarySection from "./SummarySection";
+import SearchThreadsInput from "@/components/search-thread-input";
 
 export default async function ThreadsPage() {
   const { result: threads } = await getThreads();
@@ -23,11 +21,7 @@ export default async function ThreadsPage() {
         <p className="text-3xl font-bold text-dpro-primary">
           All topics related to democracy and civic engagement
         </p>
-        <RoundedPrimaryInput
-          name="thread"
-          placeholder="Search threads"
-          className="rounded-xl flex py-7 items-center border-dpro-primary/60 h-12 placeholder:text-xl placeholder:text-dpro-dark-blue"
-        />
+        <SearchThreadsInput />
         <div className="px-16 rounded-3xl py-8 bg-dpro-secondary text-3xl mt-10 font-normal">
           <span className="font-bold">Question of the week:</span>{" "}
           {`"What are the
@@ -58,10 +52,7 @@ export default async function ThreadsPage() {
         )}
       </div>
       <div className="p-16 flex flex-col gap-6">
-        <FilteredThreadsTabContainer
-          threadCount={5}
-          className="border-dpro-secondary"
-        />
+        <FilteredThreadsTabContainer threadCount={5} />
         <div className="flex justify-center">
           <Link
             href={"/threads/list"}
@@ -70,11 +61,6 @@ export default async function ThreadsPage() {
             <Button className=" hover:cursor-pointer">View more</Button>
           </Link>
         </div>
-      </div>
-      <div className="p-16">
-        <Suspense fallback={<div>Loading...</div>}>
-          <SummarySection />
-        </Suspense>
       </div>
     </main>
   );
