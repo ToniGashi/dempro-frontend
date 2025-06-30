@@ -26,7 +26,7 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
     ...(restOptions.headers || {}),
     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     Authorization:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTExMjI0MzAsImV4cCI6MTc1MTIwODgzMCwiaWF0IjoxNzUxMTIyNDMwLCJpc3MiOiJEZW1Qcm8ifQ.Pkx3j8PK7pDs4K8VAZ3sDAX6OFjz-N34vXDh6lKpGno",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzIxMjc3LCJleHAiOjE3NTE0MDc2NzcsImlhdCI6MTc1MTMyMTI3NywiaXNzIjoiRGVtUHJvIn0.MzzgaG7TsMX3FQpQsDSVtRsU9jQ5EQsEC6jhZrZJ8Ys",
   };
 
   try {
@@ -122,11 +122,15 @@ export function createApiOperation<TInput, TOutput>({
             ? transformedInput
             : String(transformedInput);
         headers["Content-Type"] = "text/plain";
-        headers["Authorization"] = `Bearer ${accessToken}`;
+        headers[
+          "Authorization"
+        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzIxMjc3LCJleHAiOjE3NTE0MDc2NzcsImlhdCI6MTc1MTMyMTI3NywiaXNzIjoiRGVtUHJvIn0.MzzgaG7TsMX3FQpQsDSVtRsU9jQ5EQsEC6jhZrZJ8Ys`;
       } else {
         body = JSON.stringify(transformedInput);
         headers["Content-Type"] = "application/json";
-        headers["Authorization"] = `Bearer ${accessToken}`;
+        headers[
+          "Authorization"
+        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzIxMjc3LCJleHAiOjE3NTE0MDc2NzcsImlhdCI6MTc1MTMyMTI3NywiaXNzIjoiRGVtUHJvIn0.MzzgaG7TsMX3FQpQsDSVtRsU9jQ5EQsEC6jhZrZJ8Ys`;
       }
     }
 

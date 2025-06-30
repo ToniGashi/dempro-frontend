@@ -2,9 +2,18 @@ export interface Project {
   id: number;
   title: string;
   tags: string[];
+  media: FileNode[];
   topic: string;
   subtitle: string;
 }
+
+export type FileNode = {
+  id: string;
+  name: string;
+  folder: boolean;
+  url: string | null;
+  children: FileNode[];
+};
 
 export interface Comment {
   id: number;

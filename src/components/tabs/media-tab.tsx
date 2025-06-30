@@ -1,38 +1,12 @@
-"use client";
+import { Project } from "@/lib/types";
+import FileUploadSection from "../file-upload-section";
+import ViewRenderFolderItems from "../view-render-folder-items";
 
-import React, { useEffect, useState } from "react";
-import { FolderType } from "@/lib/types";
-import RenderFolderItems from "../edit-render-folder-items";
-
-export default function MediaTab({ projectId }: { projectId: number }) {
-  const [folders, setFolders] = useState<FolderType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    fetch(`/api/media?id=${projectId}`)
-      .then((res) => {
-        if (!res.ok) throw new Error(res.statusText);
-        return res.json();
-      })
-      .then((data: { folders: FolderType[] }) => {
-        setFolders(data.folders);
-      })
-      .catch((err) => {
-        console.error(err);
-        setError("Failed to load media.");
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) {
-    return <p className="p-8 text-gray-500">Loading media…</p>;
-  }
-  if (error) {
-    return <p className="p-8 text-red-500">{error}</p>;
-  }
-
-  return <RenderFolderItems items={folders} projectId={projectId} />;
+export default function MediaTab({ project }: { project: Project }) {
+  return (
+    <>
+      <ViewRenderFolderItems items={project.media} />
+      <FileUploadSection projectId={project.id.toString()} />
+    </>
+  );
 }

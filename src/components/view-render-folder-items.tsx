@@ -1,49 +1,42 @@
 "use client";
 
+import React, { useState, useEffect, useCallback } from "react";
 import {
   ChevronDownIcon,
   FolderIcon,
   PlayIcon,
-  ThumbsUpIcon,
   XIcon,
+  Trash2Icon,
 } from "lucide-react";
-import Link from "next/link";
-import { useState } from "react";
+import { FileNode } from "@/lib/types";
 
-interface Child {
-  id: string;
-  url: string;
-  name: string;
+interface ViewRenderFolderItemsProps {
+  items: FileNode[];
 }
 
-interface ItemType {
-  id: string;
-  folder: boolean;
-  name: string;
-  children: Child[];
-}
-
-export default function RenderFolderItems({
+export default function ViewRenderFolderItems({
   items,
-  depth = 0,
-}: {
-  items: ItemType[];
-  depth?: number;
-}) {
+}: ViewRenderFolderItemsProps) {
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
-  const [selectedFile, setSelectedFile] = useState<Child | null>(null);
+  const [folderItems, setFolderItems] = useState<FileNode[]>(items || []);
+  const [selectedFile, setSelectedFile] = useState<FileNode | null>(null);
+
+  // Keep local state in sync when `items` changes
+  useEffect(() => {
+    if (items) setFolderItems(items);
+  }, [items]);
 
   const toggleFolder = (id: string) => {
     setOpenFolders((prev) => ({ ...prev, [id]: !prev[id] }));
   };
 
   const closeModal = () => setSelectedFile(null);
-
   return (
     <>
       <ul className="space-y-2">
-        {items.map((item) => {
+        {folderItems.map((item) => {
           const isFolder = item.folder;
+          const isOpen = !!openFolders[item.id];
 
           return (
             <li
@@ -57,37 +50,34 @@ export default function RenderFolderItems({
                 <div className="flex items-center gap-3">
                   <FolderIcon className="text-dpro-primary text-lg" />
                   <span className="text-md font-medium text-gray-800">
-                    {item.name[0].toUpperCase() + item.name.substring(1)}
+                    {item.name[0].toUpperCase() + item.name.slice(1)}
                   </span>
                 </div>
                 {isFolder && (
                   <ChevronDownIcon
                     className={`transition-transform ${
-                      openFolders[item.id] ? "rotate-180" : ""
+                      isOpen ? "rotate-180" : ""
                     } text-gray-500`}
                   />
                 )}
               </div>
 
-              {isFolder && openFolders[item.id] && (
+              {isFolder && isOpen && (
                 <div className="bg-white px-12 py-2">
                   {item.children.length > 0 ? (
                     <ul className="space-y-2">
-                      {item.children.map((child: Child) => (
-                        <div
-                          key={child.id}
+                      {item.children.map((child) => (
+                        <li
+                          key={`${item.id}-${child.id}`}
                           className="flex items-center justify-between py-3 border-b border-gray-200"
                         >
-                          {/* Left: Icon + Name */}
                           <div className="flex items-center gap-3">
                             <PlayIcon className="text-gray-500" />
                             <span className="text-sm text-gray-700">
                               {child.name}
                             </span>
                           </div>
-
-                          {/* Right: Actions */}
-                          <div className="flex items-center gap-6">
+                          <div className="flex items-center gap-4">
                             <button
                               onClick={() => setSelectedFile(child)}
                               className="text-sm text-dpro-primary hover:underline hover:cursor-pointer"
@@ -95,7 +85,7 @@ export default function RenderFolderItems({
                               Preview
                             </button>
                             <a
-                              href={child.url}
+                              href={child.url ?? ""}
                               download
                               target="_blank"
                               rel="noopener noreferrer"
@@ -103,8 +93,14 @@ export default function RenderFolderItems({
                             >
                               Download
                             </a>
+                            <button
+                              onClick={() => console.log("remove")}
+                              className="flex items-center gap-1 text-red-500 hover:text-red-700 hover:cursor-pointer"
+                            >
+                              <Trash2Icon className="w-4 h-4" /> Remove
+                            </button>
                           </div>
-                        </div>
+                        </li>
                       ))}
                     </ul>
                   ) : (
@@ -117,7 +113,7 @@ export default function RenderFolderItems({
         })}
       </ul>
 
-      {/* 🪟 Preview Modal */}
+      {/* Preview Modal */}
       {selectedFile && (
         <div className="fixed inset-0 backdrop-blur-sm bg-black/10 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-2xl relative">
@@ -128,12 +124,12 @@ export default function RenderFolderItems({
               <XIcon className="w-6 h-6" />
             </button>
             <h2 className="text-lg font-semibold mb-4">{selectedFile.name}</h2>
-            {selectedFile.url.match(/\.(mp4|webm|ogg)$/i) ? (
+            {selectedFile.url?.match(/\.(mp4|webm|ogg)$/i) ? (
               <video controls className="w-full rounded max-h-[70vh]">
                 <source src={selectedFile.url} />
                 Your browser does not support the video tag.
               </video>
-            ) : selectedFile.url.match(/\.(png|jpe?g|webp|gif)$/i) ? (
+            ) : selectedFile.url?.match(/\.(png|jpe?g|webp|gif)$/i) ? (
               <img
                 src={selectedFile.url}
                 alt={selectedFile.name}
@@ -141,7 +137,7 @@ export default function RenderFolderItems({
               />
             ) : (
               <iframe
-                src={selectedFile.url}
+                src={selectedFile.url ?? ""}
                 className="w-full h-[70vh] rounded"
                 allow="autoplay"
               />
