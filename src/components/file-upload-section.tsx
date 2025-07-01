@@ -34,7 +34,7 @@ export default function FileUploadSection({
         {
           method: "POST",
           headers: {
-            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzI1MTE3LCJleHAiOjE3NTE0MTE1MTcsImlhdCI6MTc1MTMyNTExNywiaXNzIjoiRGVtUHJvIn0.mLFUvinOVwrOTc-Ast_fH3jGyRxPRKHH7BuadlRJ0Zo`,
+            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzMwOTA4LCJleHAiOjE3NTE0MTczMDgsImlhdCI6MTc1MTMzMDkwOCwiaXNzIjoiRGVtUHJvIn0.hMmyNWrFJaN9AA_jfi95JCR6fCMpUCmpHozQ0GCEvJg`,
           },
           body: form,
         }

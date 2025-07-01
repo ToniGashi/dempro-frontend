@@ -14,6 +14,18 @@ export type FileNode = {
   url: string | null;
   children: FileNode[];
 };
+export interface CreateProjectResponse {
+  result: Project;
+  success: boolean;
+  message: string;
+  error: string | null;
+}
+export type NewProjectFormValues = {
+  title: string;
+  subtitle: string;
+  topic: string;
+  tags: string[];
+};
 
 export interface Comment {
   id: number;

@@ -8,7 +8,6 @@ import { toast } from "sonner";
 
 import { createProjectSchema } from "@/lib/schema";
 import { createProject } from "@/lib/actions";
-import { Project } from "@/lib/types";
 
 import {
   FormFieldInput,
@@ -28,12 +27,13 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { tags, topics } from "./tagsAndTopics";
+import { NewProjectFormValues } from "@/lib/types";
 
 export default function NewProjectDialog() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const form = useForm<Omit<Project, "id">>({
+  const form = useForm<NewProjectFormValues>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
       title: "",
@@ -44,14 +44,16 @@ export default function NewProjectDialog() {
   });
 
   const onSubmit = useCallback(
-    async (values: Omit<Project, "id">) => {
+    async (values: NewProjectFormValues) => {
       setIsSubmitting(true);
       try {
         toast.promise(
           (async () => {
-            const result = await createProject(values);
-            if (!result.success) {
-              throw new Error(result.error || "Failed to create work order");
+            const result = await createProject({ ...values });
+            if (!result || !("success" in result) || !result.success) {
+              throw new Error(
+                (result as any)?.error || "Failed to create project"
+              );
             }
             return result;
           })(),
@@ -59,27 +61,6 @@ export default function NewProjectDialog() {
             loading: "Creating project...",
             success: async (res) => {
               router.push(`/projects/${res.result?.id}`);
-
-              const result = await fetch("/api/projects", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                  projectId: res.result?.id,
-                }),
-              });
-
-              if (!result.ok) {
-                const { error } = await result.json();
-                console.error("Project creation failed:", error);
-                return;
-              }
-
-              const { success } = await result.json();
-              if (success) {
-                console.log(
-                  "Project created and storage container initialized!"
-                );
-              }
               return "Project created successfully";
             },
             error: (err) => `Something went wrong: ${err.message}`,

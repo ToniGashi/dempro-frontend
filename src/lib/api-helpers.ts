@@ -20,13 +20,10 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
   } = {}
 ) {
   const { cache = "force-cache", expectHtml = false, ...restOptions } = options;
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("accessToken")?.value;
   const headers = {
     ...(restOptions.headers || {}),
-    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
     Authorization:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzIxMjc3LCJleHAiOjE3NTE0MDc2NzcsImlhdCI6MTc1MTMyMTI3NywiaXNzIjoiRGVtUHJvIn0.MzzgaG7TsMX3FQpQsDSVtRsU9jQ5EQsEC6jhZrZJ8Ys",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzMwOTA4LCJleHAiOjE3NTE0MTczMDgsImlhdCI6MTc1MTMzMDkwOCwiaXNzIjoiRGVtUHJvIn0.hMmyNWrFJaN9AA_jfi95JCR6fCMpUCmpHozQ0GCEvJg",
   };
 
   try {
@@ -124,13 +121,13 @@ export function createApiOperation<TInput, TOutput>({
         headers["Content-Type"] = "text/plain";
         headers[
           "Authorization"
-        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzIxMjc3LCJleHAiOjE3NTE0MDc2NzcsImlhdCI6MTc1MTMyMTI3NywiaXNzIjoiRGVtUHJvIn0.MzzgaG7TsMX3FQpQsDSVtRsU9jQ5EQsEC6jhZrZJ8Ys`;
+        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzMwOTA4LCJleHAiOjE3NTE0MTczMDgsImlhdCI6MTc1MTMzMDkwOCwiaXNzIjoiRGVtUHJvIn0.hMmyNWrFJaN9AA_jfi95JCR6fCMpUCmpHozQ0GCEvJg`;
       } else {
         body = JSON.stringify(transformedInput);
         headers["Content-Type"] = "application/json";
         headers[
           "Authorization"
-        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzIxMjc3LCJleHAiOjE3NTE0MDc2NzcsImlhdCI6MTc1MTMyMTI3NywiaXNzIjoiRGVtUHJvIn0.MzzgaG7TsMX3FQpQsDSVtRsU9jQ5EQsEC6jhZrZJ8Ys`;
+        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzMwOTA4LCJleHAiOjE3NTE0MTczMDgsImlhdCI6MTc1MTMzMDkwOCwiaXNzIjoiRGVtUHJvIn0.hMmyNWrFJaN9AA_jfi95JCR6fCMpUCmpHozQ0GCEvJg`;
       }
     }
 
@@ -201,44 +198,28 @@ export class FetchError extends Error {
     this.name = "FetchError";
   }
 }
-export async function postFetch<T>(
+export async function postFetch<R, B = Record<string, any>>(
   url: string,
-  body:
-    | Record<string, string | Record<string, string> | number | undefined>
-    | FormData
-    | T,
+  body: B | FormData,
   method?: string
-): Promise<T | FetchError | null> {
-  const session = await auth();
-
+): Promise<R | FetchError | null> {
   const headers = new Headers({
-    Authorization: `Bearer ${session?.user?.accessToken}`,
+    Authorization: `…`,
   });
-
   if (!(body instanceof FormData)) {
     headers.append("Content-Type", "application/json");
   }
-  try {
-    const res = await fetch(`${API_BASE_URL}/api${url}`, {
-      method: method ?? "POST",
-      headers: headers,
-      body: body instanceof FormData ? body : JSON.stringify(body),
-    });
-    //if error in response,throw the custom error
-    if (!res.ok) {
-      const errResponse = await res.text();
-      const errorText = JSON.parse(errResponse);
-      throw new FetchError(errorText?.error ?? errorText?.message);
-    }
-    //if successful response,return the data
-    const text = await res.text();
-    const data = text ? (JSON.parse(text) as T) : null;
-    return data;
-  } catch (err) {
-    if (err instanceof FetchError) {
-      return err;
-    } else {
-      return new FetchError("An unknown error occurred");
-    }
+
+  const res = await fetch(`${API_BASE_URL}/api${url}`, {
+    method: method ?? "POST",
+    headers,
+    body: body instanceof FormData ? body : JSON.stringify(body),
+  });
+  if (!res.ok) {
+    const errText = await res.text();
+    const errJson = JSON.parse(errText);
+    throw new FetchError(errJson.error ?? errJson.message);
   }
+  const text = await res.text();
+  return text ? (JSON.parse(text) as R) : null;
 }
