@@ -6,6 +6,7 @@ import ThreadsTab from "@/components/tabs/threads-tab";
 import BriefTab from "@/components/tabs/brief-tab";
 import { Project } from "@/lib/types";
 import MediaTab from "./media-tab";
+import TeamTab from "./team-tab";
 
 const tabs = ["Brief", "Threads", "Media", "Team", "Other"];
 
@@ -45,12 +46,7 @@ export default function ProjectTabsContainer({
         )}
         {activeTab === "Threads" && <ThreadsTab projectId={project.id} />}
         {activeTab === "Media" && <MediaTab project={project} />}
-        {activeTab === "Team" && (
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Team</h2>
-            <p className="text-gray-600">Team content coming soon...</p>
-          </div>
-        )}
+        {activeTab === "Team" && <TeamTab team={project.team} />}
         {activeTab === "Other" && (
           <div className="mb-16">
             <h2 className="text-3xl font-bold text-gray-900 mb-6">Other</h2>

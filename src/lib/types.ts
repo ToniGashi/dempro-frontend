@@ -3,6 +3,7 @@ export interface Project {
   title: string;
   tags: string[];
   media: FileNode[];
+  team: TeamMember[];
   topic: string;
   subtitle: string;
 }
@@ -21,6 +22,21 @@ export type CreateProject = {
   topic: string;
   tags: string[];
 };
+
+export type InviteUser = {
+  projectId: number;
+  email: string;
+  role: string; // e.g. "Viewer", "Admin"
+};
+
+export interface TeamMember {
+  projectId: number;
+  projectName: string;
+  userEmail: string;
+  userName: string;
+  teamRole: string;
+  invitedAt: string; // ISO timestamp
+}
 
 export type DeleteMediaInput = {
   projectId: string;

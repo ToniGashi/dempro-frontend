@@ -7,6 +7,7 @@ import {
   CreateThread,
   DeleteMediaInput,
   FileNode,
+  InviteUser,
   LikeComment,
   PostComment,
   Project,
@@ -92,12 +93,12 @@ export const dislikeComment = createApiOperation<string, LikeComment>({
 });
 
 export const postReplyToThread = createApiOperation<PostComment, Comment>({
-  url: () => `/comments`,
+  url: () => `comments`,
   method: "POST",
 });
 
 export const createProject = createApiOperation<CreateProject, Project>({
-  url: () => `/projects`,
+  url: () => `projects`,
   method: "POST",
 });
 
@@ -107,7 +108,7 @@ export const postMediaToProject = createApiOperation<FormData, FileNode>({
     if (typeof projectId !== "string") {
       throw new Error("projectId must be appended to the FormData");
     }
-    return `/projects/${projectId}/media`;
+    return `projects/${projectId}/media`;
   },
   method: "POST",
 });
@@ -117,7 +118,12 @@ export const deleteMediaFromProject = createApiOperation<
   Project
 >({
   url: ({ projectId, mediaId }) => {
-    return `/projects/${projectId}/media/${mediaId}`;
+    return `projects/${projectId}/media/${mediaId}`;
   },
   method: "DELETE",
+});
+
+export const updateRole = createApiOperation<InviteUser, any>({
+  url: () => `ProjectTeams/invite`,
+  method: "POST",
 });
