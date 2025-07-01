@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect, useCallback } from "react";
 import {
   ChevronDownIcon,
@@ -8,14 +7,19 @@ import {
   XIcon,
   Trash2Icon,
 } from "lucide-react";
-import { FileNode } from "@/lib/types";
+import { DeleteMediaInput, FileNode } from "@/lib/types";
+import { deleteMediaFromProject } from "@/lib/actions";
 
 interface ViewRenderFolderItemsProps {
+  projectId: string;
   items: FileNode[];
+  isFromProjectMedia?: boolean;
 }
 
 export default function ViewRenderFolderItems({
+  projectId,
   items,
+  isFromProjectMedia = false,
 }: ViewRenderFolderItemsProps) {
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
   const [folderItems, setFolderItems] = useState<FileNode[]>(items || []);
@@ -26,11 +30,43 @@ export default function ViewRenderFolderItems({
     if (items) setFolderItems(items);
   }, [items]);
 
-  const toggleFolder = (id: string) => {
+  const toggleFolder = (id: string) =>
     setOpenFolders((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
 
   const closeModal = () => setSelectedFile(null);
+
+  const hasPermissionToRemove = isFromProjectMedia; // TODO: Add condition to check if user is admin
+
+  // 3) New handler
+  const handleRemove = useCallback(
+    async (file: FileNode) => {
+      if (!confirm(`Remove “${file.name}” from this project?`)) return;
+      try {
+        const input: DeleteMediaInput = {
+          projectId,
+          mediaId: file.id,
+        };
+        const { success } = await deleteMediaFromProject(input);
+        if (success) {
+          // remove it from our nested state
+          setFolderItems((folders) =>
+            folders.map((f) =>
+              f.folder
+                ? {
+                    ...f,
+                    children: f.children.filter((c) => c.id !== file.id),
+                  }
+                : f
+            )
+          );
+        }
+      } catch (err) {
+        console.error("Failed to delete media:", err);
+      }
+    },
+    [projectId]
+  );
+
   return (
     <>
       <ul className="space-y-2">
@@ -80,7 +116,7 @@ export default function ViewRenderFolderItems({
                           <div className="flex items-center gap-4">
                             <button
                               onClick={() => setSelectedFile(child)}
-                              className="text-sm text-dpro-primary hover:underline hover:cursor-pointer"
+                              className="text-sm text-dpro-primary hover:underline"
                             >
                               Preview
                             </button>
@@ -93,12 +129,14 @@ export default function ViewRenderFolderItems({
                             >
                               Download
                             </a>
-                            <button
-                              onClick={() => console.log("remove")}
-                              className="flex items-center gap-1 text-red-500 hover:text-red-700 hover:cursor-pointer"
-                            >
-                              <Trash2Icon className="w-4 h-4" /> Remove
-                            </button>
+                            {hasPermissionToRemove && (
+                              <button
+                                onClick={() => handleRemove(child)} // ← call it
+                                className="flex items-center gap-1 text-red-500 hover:text-red-700"
+                              >
+                                <Trash2Icon className="w-4 h-4" /> Remove
+                              </button>
+                            )}
                           </div>
                         </li>
                       ))}

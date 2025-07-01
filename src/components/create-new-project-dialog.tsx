@@ -27,13 +27,13 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { tags, topics } from "./tagsAndTopics";
-import { NewProjectFormValues } from "@/lib/types";
+import { CreateProject } from "@/lib/types";
 
 export default function NewProjectDialog() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
-  const form = useForm<NewProjectFormValues>({
+  const form = useForm<CreateProject>({
     resolver: zodResolver(createProjectSchema),
     defaultValues: {
       title: "",
@@ -44,7 +44,7 @@ export default function NewProjectDialog() {
   });
 
   const onSubmit = useCallback(
-    async (values: NewProjectFormValues) => {
+    async (values: CreateProject) => {
       setIsSubmitting(true);
       try {
         toast.promise(

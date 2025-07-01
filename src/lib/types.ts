@@ -14,17 +14,17 @@ export type FileNode = {
   url: string | null;
   children: FileNode[];
 };
-export interface CreateProjectResponse {
-  result: Project;
-  success: boolean;
-  message: string;
-  error: string | null;
-}
-export type NewProjectFormValues = {
+
+export type CreateProject = {
   title: string;
   subtitle: string;
   topic: string;
   tags: string[];
+};
+
+export type DeleteMediaInput = {
+  projectId: string;
+  mediaId: string;
 };
 
 export interface Comment {

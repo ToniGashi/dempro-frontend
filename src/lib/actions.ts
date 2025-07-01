@@ -1,16 +1,13 @@
 "use server";
 
-import {
-  createApiOperation,
-  createReadOperation,
-  postFetch,
-} from "./api-helpers";
+import { createApiOperation, createReadOperation } from "./api-helpers";
 import {
   Comment,
-  CreateProjectResponse,
+  CreateProject,
   CreateThread,
+  DeleteMediaInput,
+  FileNode,
   LikeComment,
-  NewProjectFormValues,
   PostComment,
   Project,
   Thread,
@@ -37,30 +34,6 @@ export const getProjectBrief = createReadOperation<string, string>({
   tags: ["project"],
   expectHtml: true,
 });
-
-export const createProject = async (
-  body: NewProjectFormValues
-): Promise<CreateProjectResponse> => {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/projects`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzI5MjMxLCJleHAiOjE3NTE0MTU2MzEsImlhdCI6MTc1MTMyOTIzMSwiaXNzIjoiRGVtUHJvIn0.h0rLcX4eOlsnA8P07DsUilcIl1InWHDJ7hvKWDrmv0A`,
-      },
-      body: JSON.stringify(body),
-    }
-  );
-  if (!res.ok) {
-    const err = await res.json().catch(() => ({} as any));
-    throw new Error(err.error || err.message || "Failed to create project");
-  }
-
-  const data = (await res.json()) as CreateProjectResponse;
-  return data;
-};
-
 export const createProjectBrief = createApiOperation<
   { id: string; content: string },
   string
@@ -112,16 +85,39 @@ export const getCommentById = createReadOperation<string, Comment>({
 export const likeComment = createApiOperation<string, LikeComment>({
   url: (id) => `comments/${id}/like`,
   method: "PATCH",
-  tags: ["comLike"],
 });
 export const dislikeComment = createApiOperation<string, LikeComment>({
   url: (id) => `comments/${id}/unlike`,
   method: "PATCH",
-  tags: ["unLike"],
 });
 
 export const postReplyToThread = createApiOperation<PostComment, Comment>({
   url: () => `/comments`,
   method: "POST",
-  tags: ["comments"],
+});
+
+export const createProject = createApiOperation<CreateProject, Project>({
+  url: () => `/projects`,
+  method: "POST",
+});
+
+export const postMediaToProject = createApiOperation<FormData, FileNode>({
+  url: (form) => {
+    const projectId = form.get("projectId");
+    if (typeof projectId !== "string") {
+      throw new Error("projectId must be appended to the FormData");
+    }
+    return `/projects/${projectId}/media`;
+  },
+  method: "POST",
+});
+
+export const deleteMediaFromProject = createApiOperation<
+  DeleteMediaInput,
+  Project
+>({
+  url: ({ projectId, mediaId }) => {
+    return `/projects/${projectId}/media/${mediaId}`;
+  },
+  method: "DELETE",
 });

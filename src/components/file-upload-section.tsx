@@ -1,5 +1,6 @@
 "use client";
 
+import { postMediaToProject } from "@/lib/actions";
 import { Trash2Icon } from "lucide-react";
 import React, { useRef, useState } from "react";
 
@@ -26,20 +27,11 @@ export default function FileUploadSection({
     setIsUploading(true);
 
     const form = new FormData();
+    form.append("projectId", projectId.toString());
     pendingUploads.forEach((file) => form.append("files", file, file.name));
 
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/Projects/${projectId}/media`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzMwOTA4LCJleHAiOjE3NTE0MTczMDgsImlhdCI6MTc1MTMzMDkwOCwiaXNzIjoiRGVtUHJvIn0.hMmyNWrFJaN9AA_jfi95JCR6fCMpUCmpHozQ0GCEvJg`,
-          },
-          body: form,
-        }
-      );
-      if (!res.ok) throw new Error(await res.text());
+      await postMediaToProject(form);
       setPendingUploads([]);
     } catch (err) {
       console.error("Upload failed", err);

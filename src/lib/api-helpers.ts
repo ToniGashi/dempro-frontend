@@ -23,7 +23,7 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
   const headers = {
     ...(restOptions.headers || {}),
     Authorization:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzMwOTA4LCJleHAiOjE3NTE0MTczMDgsImlhdCI6MTc1MTMzMDkwOCwiaXNzIjoiRGVtUHJvIn0.hMmyNWrFJaN9AA_jfi95JCR6fCMpUCmpHozQ0GCEvJg",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTEzODQyNzIsImV4cCI6MTc1MTQ3MDY3MiwiaWF0IjoxNzUxMzg0MjcyLCJpc3MiOiJEZW1Qcm8ifQ.MSAJEgz8OH0pR1V9GAz-93qIY8yCtb8R2K3gN9Zn4VM",
   };
 
   try {
@@ -35,6 +35,7 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
         headers,
       }
     );
+
     if (!res.ok) {
       let errorMessage = `API error: ${res.status} ${res.statusText}`;
       try {
@@ -106,8 +107,8 @@ export function createApiOperation<TInput, TOutput>({
 
     let body: string | FormData | undefined;
     let headers: Record<string, string> = {};
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("accessToken")?.value || "";
+    // const cookieStore = await cookies();
+    // const accessToken = cookieStore.get("accessToken")?.value || "";
     if (input instanceof FormData) {
       body = input;
     } else if (input && method !== "GET" && method !== "DELETE") {
@@ -121,13 +122,13 @@ export function createApiOperation<TInput, TOutput>({
         headers["Content-Type"] = "text/plain";
         headers[
           "Authorization"
-        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzMwOTA4LCJleHAiOjE3NTE0MTczMDgsImlhdCI6MTc1MTMzMDkwOCwiaXNzIjoiRGVtUHJvIn0.hMmyNWrFJaN9AA_jfi95JCR6fCMpUCmpHozQ0GCEvJg`;
+        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTEzODQyNzIsImV4cCI6MTc1MTQ3MDY3MiwiaWF0IjoxNzUxMzg0MjcyLCJpc3MiOiJEZW1Qcm8ifQ.MSAJEgz8OH0pR1V9GAz-93qIY8yCtb8R2K3gN9Zn4VM`;
       } else {
         body = JSON.stringify(transformedInput);
         headers["Content-Type"] = "application/json";
         headers[
           "Authorization"
-        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Imp1YW5kYm1AZ21haWwuY29tIiwibmJmIjoxNzUxMzMwOTA4LCJleHAiOjE3NTE0MTczMDgsImlhdCI6MTc1MTMzMDkwOCwiaXNzIjoiRGVtUHJvIn0.hMmyNWrFJaN9AA_jfi95JCR6fCMpUCmpHozQ0GCEvJg`;
+        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTEzODQyNzIsImV4cCI6MTc1MTQ3MDY3MiwiaWF0IjoxNzUxMzg0MjcyLCJpc3MiOiJEZW1Qcm8ifQ.MSAJEgz8OH0pR1V9GAz-93qIY8yCtb8R2K3gN9Zn4VM`;
       }
     }
 
@@ -137,7 +138,6 @@ export function createApiOperation<TInput, TOutput>({
       headers,
       ...(body ? { body } : {}),
     };
-
     const result = await enhancedFetcher<{ result: TOutput }>(
       resolvedUrl,
       options
