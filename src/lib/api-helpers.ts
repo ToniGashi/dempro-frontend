@@ -20,10 +20,12 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
   } = {}
 ) {
   const { cache = "force-cache", expectHtml = false, ...restOptions } = options;
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+
   const headers = {
     ...(restOptions.headers || {}),
-    Authorization:
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTE0MDg5NjAsImV4cCI6MTc1MTQ5NTM2MCwiaWF0IjoxNzUxNDA4OTYwLCJpc3MiOiJEZW1Qcm8ifQ.qLGFdTMTOVpPFiXYdPEf-cLgy6q-pOQJ2a3Me9OyrJo",
+    ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
   };
 
   try {
@@ -120,15 +122,9 @@ export function createApiOperation<TInput, TOutput>({
             ? transformedInput
             : String(transformedInput);
         headers["Content-Type"] = "text/plain";
-        headers[
-          "Authorization"
-        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTE0MDg5NjAsImV4cCI6MTc1MTQ5NTM2MCwiaWF0IjoxNzUxNDA4OTYwLCJpc3MiOiJEZW1Qcm8ifQ.qLGFdTMTOVpPFiXYdPEf-cLgy6q-pOQJ2a3Me9OyrJo`;
       } else {
         body = JSON.stringify(transformedInput);
         headers["Content-Type"] = "application/json";
-        headers[
-          "Authorization"
-        ] = `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InRvbmlnYXNoaTk5OUBnbWFpbC5jb20iLCJuYmYiOjE3NTE0MDg5NjAsImV4cCI6MTc1MTQ5NTM2MCwiaWF0IjoxNzUxNDA4OTYwLCJpc3MiOiJEZW1Qcm8ifQ.qLGFdTMTOVpPFiXYdPEf-cLgy6q-pOQJ2a3Me9OyrJo`;
       }
     }
 
