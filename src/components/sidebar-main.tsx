@@ -16,11 +16,6 @@ import Link from "next/link";
 const useMenuItems = () => {
   return useMemo(() => {
     const allItems = [
-      {
-        title: "Profile",
-        icon: <UserRound stroke="#3c6e71" />,
-        url: `/profile`,
-      },
       // {
       //   title: "Notifications",
       //   icon: <Bell stroke="#3c6e71" />,

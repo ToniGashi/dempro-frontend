@@ -44,7 +44,13 @@ export default async function HeroSection({
             </Link>
           )}
         </div>
-        <Image src={imageSrc} alt={imageAlt} width={476} height={476} />
+        <Image
+          src={imageSrc}
+          alt={imageAlt}
+          width={476}
+          height={476}
+          priority
+        />
       </div>
     </div>
   );

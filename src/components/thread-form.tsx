@@ -20,7 +20,7 @@ export default function ThreadForm({
   projectId?: number;
   setOpenDialog?: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const { mutate } = useSWRConfig(); // ✅ access global mutate
+  const { mutate } = useSWRConfig();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<CreateThread>({

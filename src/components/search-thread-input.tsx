@@ -28,7 +28,7 @@ export default function SearchThreadsInput({
     debouncedSearchTerm.trim().length > 0
       ? `threads?keyword=${debouncedSearchTerm.trim()}`
       : null;
-  console.log(swrKey, "swr");
+
   const {
     data: threads,
     isLoading,

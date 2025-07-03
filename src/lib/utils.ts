@@ -30,3 +30,10 @@ export async function swrFetcher<T extends DemProAPIResponse>(url: string) {
 
   return result.result ?? result;
 }
+
+export function getCookie(name: string): string | undefined {
+  if (typeof document === "undefined") return undefined;
+  const cookies = document.cookie.split("; ");
+  const cookie = cookies.find((c) => c.startsWith(`${name}=`));
+  return cookie ? decodeURIComponent(cookie.split("=")[1]) : undefined;
+}

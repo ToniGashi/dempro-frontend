@@ -1,6 +1,7 @@
 "use server";
 
 import { createApiOperation, createReadOperation } from "./api-helpers";
+import { SignInUser, SignUpUser } from "./schema";
 import {
   Comment,
   CreateProject,
@@ -125,5 +126,19 @@ export const deleteMediaFromProject = createApiOperation<
 
 export const updateRole = createApiOperation<InviteUser, any>({
   url: () => `ProjectTeams/invite`,
+  method: "POST",
+});
+
+// =============================================
+// User Operations
+// =============================================
+
+export const createUser = createApiOperation<SignUpUser, SignUpUser>({
+  url: () => `/user`,
+  method: "POST",
+});
+
+export const signInUser = createApiOperation<SignInUser, SignInUser>({
+  url: () => `/Auth`,
   method: "POST",
 });

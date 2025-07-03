@@ -113,3 +113,39 @@ export interface PostComment {
   content: string;
   replyToId: number | null;
 }
+
+export interface AuthResponse {
+  accessToken: string;
+  accessTokenExpiresAt: string;
+  signedInWith: string;
+  profile: UserProfile;
+}
+
+export interface UserProfile {
+  fullName: string;
+  userCanBeDeleted: boolean;
+  createdAt: string;
+  updatedAt: string;
+  id: string;
+  firstName: string;
+  lastName: string;
+  personalPhone: string;
+  workPhone: string;
+  email: string;
+  note: string;
+  isActivated: boolean;
+}
+export interface LimitedUserProfile {
+  fullName: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  isActivated: boolean;
+}
+
+export interface AuthContextType {
+  user: LimitedUserProfile | null;
+  isLoading: boolean;
+  logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
+}

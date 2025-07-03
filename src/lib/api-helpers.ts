@@ -1,6 +1,7 @@
-import { auth } from "@/auth";
 import { revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
+import { LimitedUserProfile } from "./types";
+
 export interface DemProAPIResponse {
   page?: number;
   pageSize?: number;
@@ -191,35 +192,19 @@ export function createReadOperation<TInput = void, TOutput = any>({
     return enhancedFetcher<{ result: TOutput }>(resolvedUrl, options);
   };
 }
-export class FetchError extends Error {
-  constructor(public error?: string, public status?: number) {
-    super(error);
-    this.status = status;
-    this.name = "FetchError";
+
+export async function getUserFromCookie() {
+  const cookieStore = await cookies();
+  const userCookie = cookieStore.get("user")?.value;
+  if (!userCookie) return null;
+  try {
+    return JSON.parse(userCookie) as LimitedUserProfile;
+  } catch {
+    return null;
   }
 }
-export async function postFetch<R, B = Record<string, any>>(
-  url: string,
-  body: B | FormData,
-  method?: string
-): Promise<R | FetchError | null> {
-  const headers = new Headers({
-    Authorization: `…`,
-  });
-  if (!(body instanceof FormData)) {
-    headers.append("Content-Type", "application/json");
-  }
 
-  const res = await fetch(`${API_BASE_URL}/api${url}`, {
-    method: method ?? "POST",
-    headers,
-    body: body instanceof FormData ? body : JSON.stringify(body),
-  });
-  if (!res.ok) {
-    const errText = await res.text();
-    const errJson = JSON.parse(errText);
-    throw new FetchError(errJson.error ?? errJson.message);
-  }
-  const text = await res.text();
-  return text ? (JSON.parse(text) as R) : null;
+export async function getServerUser() {
+  const user = await getUserFromCookie();
+  return { user };
 }

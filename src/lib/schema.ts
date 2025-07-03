@@ -16,3 +16,24 @@ export const createProjectThreadSchema = z.object({
   projectId: z.coerce.number().nullable(),
   category: z.enum(["Question", "Discussion", "Advice"]),
 });
+
+export const signInUserSchema = z.object({
+  email: z
+    .string()
+    .email({ message: "Invalid email address" })
+    .min(1, { message: `Email is required` }),
+  password: requiredString("Password"),
+});
+
+export const signUpUserSchema = z.object({
+  email: z
+    .string()
+    .email({ message: "Invalid email address" })
+    .min(1, { message: `Email is required` }),
+  password: requiredString("Password"),
+  firstName: requiredString("First Name"),
+  lastName: requiredString("Last Name"),
+});
+
+export type SignUpUser = z.infer<typeof signUpUserSchema>;
+export type SignInUser = z.infer<typeof signInUserSchema>;
