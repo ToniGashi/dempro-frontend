@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import {
   AuthenticationResult,
   PublicClientApplication,
-  InteractionRequiredAuthError,
 } from "@azure/msal-browser";
 import { loginRequest, msalConfig } from "@/lib/msal-config";
 import { MicrosoftIcon, TriangeErrorIcon } from "./icons";
@@ -60,27 +59,28 @@ export default function MicrosoftLoginButton({
     setError("");
 
     try {
-      // First, attempt to get token silently (if user is already signed in)
       let authResult: AuthenticationResult;
-
-      try {
-        const accounts = msalInstanceRef.current.getAllAccounts();
-        if (accounts.length > 0) {
+      const accounts = msalInstanceRef.current.getAllAccounts();
+      if (accounts.length > 0) {
+        // Try silent token acquisition
+        try {
           const silentRequest = {
             scopes: loginRequest.scopes,
             account: accounts[0],
           };
-
           authResult = await msalInstanceRef.current.acquireTokenSilent(
             silentRequest
           );
-        } else {
-          // No accounts found, need interactive login
-          throw new InteractionRequiredAuthError();
+        } catch (e) {
+          // If silent fails, fallback to interactive
+          console.error(
+            "Silent token acquisition failed, falling back to popup:",
+            e
+          );
+          authResult = await msalInstanceRef.current.loginPopup(loginRequest);
         }
-      } catch (e) {
-        // Silent acquisition failed, fall back to popup
-        console.error(e);
+      } else {
+        // No accounts, do interactive login
         authResult = await msalInstanceRef.current.loginPopup(loginRequest);
       }
       if (authResult.accessToken) {
@@ -97,7 +97,7 @@ export default function MicrosoftLoginButton({
   };
 
   return (
-    <div>
+    <div className="flex flex-col gap-2">
       <button
         onClick={handleMicrosoftLogin}
         disabled={isLoading || !isInitialized}
