@@ -4,6 +4,9 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { GoogleLogin } from "@react-oauth/google";
+import { toast } from "sonner";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 import MicrosoftLoginButton from "@/components/microsoft-login-button";
 import {
@@ -12,18 +15,14 @@ import {
   EyeIcon,
   EyeSlashIcon,
 } from "@/components/icons";
-
 import { FormFieldInput } from "@/components/custom-form-fields";
 import { Form } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import {
   SignInUser,
   signInUserSchema,
   SignUpUser,
   signUpUserSchema,
 } from "@/lib/schema";
-import { toast } from "sonner";
 
 export default function AuthPage() {
   const router = useRouter();
@@ -127,8 +126,13 @@ export default function AuthPage() {
     }
   };
 
-  const resetForm = () => {
-    form.reset();
+  const resetForm = (isSignUpMode: boolean) => {
+    form.reset(
+      isSignUpMode
+        ? //@ts-expect-error we know this is available only when isSignUp is true
+          { email: "", password: "", firstName: "", lastName: "" }
+        : { email: "", password: "" }
+    );
     setError("");
     setIsSubmitting(false);
   };
@@ -155,7 +159,7 @@ export default function AuthPage() {
             type="button"
             onClick={() => {
               setIsSignUp(false);
-              resetForm();
+              resetForm(false);
             }}
             className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ${
               !isSignUp
@@ -169,7 +173,7 @@ export default function AuthPage() {
             type="button"
             onClick={() => {
               setIsSignUp(true);
-              resetForm();
+              resetForm(true);
             }}
             className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-all duration-200 ${
               isSignUp
