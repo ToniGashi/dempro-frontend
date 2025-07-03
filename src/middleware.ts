@@ -5,6 +5,7 @@ const publicOnlyRoutes = [
   "/signin",
   "/account-verification",
   "/forgotten-password",
+  "/awaiting-confirmation",
 ];
 
 export function middleware(request: NextRequest) {
@@ -20,5 +21,10 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/signin", "/account-verification", "/forgotten-password"],
+  matcher: [
+    "/signin",
+    "/account-verification",
+    "/forgotten-password",
+    "/awaiting-confirmation",
+  ],
 };

@@ -87,11 +87,17 @@ export default function AuthPage() {
           throw new Error(data.error || "Authentication failed");
         }
 
-        toast.success(
-          isSignUp ? "Account created successfully!" : "Welcome back!"
-        );
-        form.reset();
-        router.replace("/");
+        if (isSignUp) {
+          toast.success(
+            "Account created! Please check your email for verification."
+          );
+          form.reset();
+          router.replace("/awaiting-confirmation");
+        } else {
+          toast.success("Welcome back!");
+          form.reset();
+          router.replace("/");
+        }
       } catch (error: any) {
         console.error("Error authenticating:", error);
         const errorMessage =
