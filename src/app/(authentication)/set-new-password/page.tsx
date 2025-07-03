@@ -1,6 +1,4 @@
 import { type Metadata } from "next";
-import { Logo } from "@/components/authentication/common/Logo";
-import SetNewPasswordForm from "@/components/authentication/SetNewPasswordForm";
 
 export const metadata: Metadata = {
   title: `Set New Password`,
@@ -10,7 +8,7 @@ export const metadata: Metadata = {
 export default function SetNewPassword() {
   return (
     <div className="flex flex-col gap-20">
-      <Logo />
+      {/* <Logo /> */}
       <div className="flex flex-col gap-8">
         <div>
           <h1 className="mb-4 text-3xl">Set a new password</h1>
@@ -18,7 +16,7 @@ export default function SetNewPassword() {
             Your new password must be different to previously used passwords.
           </p>
         </div>
-        <SetNewPasswordForm />
+        {/* <SetNewPasswordForm /> */}
       </div>
     </div>
   );

@@ -11,7 +11,6 @@ export interface DemProAPIResponse {
   error?: string | null;
   result: any;
 }
-const API_BASE_URL = process.env.API_URL;
 
 export async function enhancedFetcher<T extends DemProAPIResponse>(
   url: string,

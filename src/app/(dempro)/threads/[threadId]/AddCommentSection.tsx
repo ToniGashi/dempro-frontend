@@ -2,7 +2,6 @@
 
 import React, { useState } from "react";
 import ReplyForm from "./ReplyForm";
-import { postReplyToThread } from "@/lib/actions";
 
 type AddCommentSectionProps = {
   threadId: string;

@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 
-import { UserRound, File, CalendarPlus2, MessagesSquare } from "lucide-react";
+import { File, MessagesSquare } from "lucide-react";
 
 import {
   SidebarMenu,

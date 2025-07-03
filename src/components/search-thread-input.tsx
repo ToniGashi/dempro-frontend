@@ -149,7 +149,7 @@ export default function SearchThreadsInput({
             </div>
           ) : (
             <div className="p-4 text-center text-dpro-primary/60">
-              No threads found for "{debouncedSearchTerm}"
+              {`No threads found for "${debouncedSearchTerm}"`}
             </div>
           )}
         </div>

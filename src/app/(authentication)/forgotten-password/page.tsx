@@ -1,5 +1,3 @@
-import { ForgotPasswordForm } from "@/components/authentication";
-import { Logo } from "@/components/authentication/common/Logo";
 import { type Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -10,7 +8,7 @@ export const metadata: Metadata = {
 function ForgottenPassword() {
   return (
     <div className="flex flex-col gap-20">
-      <Logo />
+      {/* <Logo /> */}
       <div className="flex flex-col gap-8">
         <div>
           <h1 className="mb-4 text-3xl">Forgot password?</h1>
@@ -20,7 +18,7 @@ function ForgottenPassword() {
             }
           </p>
         </div>
-        <ForgotPasswordForm />
+        {/* <ForgotPasswordForm /> */}
       </div>
     </div>
   );
