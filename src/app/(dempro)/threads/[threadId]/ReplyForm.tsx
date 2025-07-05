@@ -28,9 +28,14 @@ export default function ReplyForm({
         replyToId: parentId,
         content,
       });
-      if (newReply.result) {
-        onSuccess(newReply.result);
+      if (newReply.success) {
+        if (newReply.result) {
+          onSuccess(newReply.result);
+        }
         setContent("");
+      } else {
+        console.error("Failed to post reply:", newReply.error);
+        alert("Failed to post reply. Please try again.");
       }
     } finally {
       setSubmitting(false);

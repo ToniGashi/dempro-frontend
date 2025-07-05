@@ -43,6 +43,7 @@ export default function CommentItem({
       setHasLiked(prevLiked);
       setLikesCount(prevCount);
       console.error("Toggling like failed:", error);
+      alert("Failed to perform action. Please try again.");
     } finally {
       setIsLiking(false);
     }
