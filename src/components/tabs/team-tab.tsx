@@ -9,11 +9,20 @@ interface TeamListProps {
 }
 
 export default function TeamTab({ team }: TeamListProps) {
-  // local state to track edited roles before pushing up
+  // local member list
+  const [members, setMembers] = useState<TeamMember[]>(team);
+  // track individual roles
   const [roles, setRoles] = useState<Record<string, string>>({});
+  // invite form fields
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviteRole, setInviteRole] = useState<"Admin" | "Viewer">("Viewer");
 
-  // initialize state from incoming team prop
+  // derive projectId from the first member
+  const projectId = members[0]?.projectId;
+
+  // sync incoming prop->state on mount/prop change
   useEffect(() => {
+    setMembers(team);
     const map: Record<string, string> = {};
     team.forEach((m) => {
       map[m.userEmail] = m.teamRole;
@@ -21,6 +30,7 @@ export default function TeamTab({ team }: TeamListProps) {
     setRoles(map);
   }, [team]);
 
+  // role-change handler
   const handleRoleSelect = async (
     projectId: number,
     role: string,
@@ -28,54 +38,99 @@ export default function TeamTab({ team }: TeamListProps) {
   ) => {
     try {
       const result = await updateRole({ projectId, role, email });
-      // if your action returns an error field, bail out here:
       if ("error" in result && result.error) {
         console.error("Update failed:", result.error);
         return;
       }
+      setRoles((prev) => ({ ...prev, [email]: role }));
+    } catch (err) {
+      console.error("Network/server error:", err);
+    }
+  };
 
-      // otherwise it's successful—update local state
+  // invite-user handler
+  const handleInvite = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!projectId) return;
+
+    try {
+      const result = await updateRole({
+        projectId,
+        email: inviteEmail,
+        role: inviteRole,
+      });
+      if ("error" in result && result.error) {
+        console.error("Invite failed:", result.error);
+        return;
+      }
+      // assume result.result is the new TeamMember
+      const newMember: TeamMember = result.result;
+      setMembers((prev) => [...prev, newMember]);
       setRoles((prev) => ({
         ...prev,
-        [email]: role, // keep using projectId as the key
+        [newMember.userEmail]: newMember.teamRole,
       }));
+      setInviteEmail("");
     } catch (err) {
-      console.error("Network or server error:", err);
-      // optionally show an error toast/alert here
+      console.error("Network/server error:", err);
     }
   };
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          <tr>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-              Name
-            </th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-              Email
-            </th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-              Joined at
-            </th>
-            <th className="px-4 py-2 text-left text-sm font-medium text-gray-700">
-              Role
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {team.map((member) => {
-            return (
-              <tr key={member.userEmail}>
+    <div className="space-y-6">
+      {/* Invite form */}
+      <form onSubmit={handleInvite} className="flex items-center gap-2">
+        <input
+          type="email"
+          required
+          placeholder="user@example.com"
+          value={inviteEmail}
+          onChange={(e) => setInviteEmail(e.target.value)}
+          className="border px-2 py-1 rounded-md flex-1"
+        />
+        <select
+          value={inviteRole}
+          onChange={(e) => setInviteRole(e.target.value as any)}
+          className="border px-2 py-1 rounded-md"
+        >
+          <option value="Viewer">Viewer</option>
+          <option value="Admin">Admin</option>
+        </select>
+        <button
+          type="submit"
+          disabled={!inviteEmail}
+          className="bg-blue-600 text-white px-3 py-1 rounded-md disabled:opacity-50"
+        >
+          Invite
+        </button>
+      </form>
+
+      {/* Team table */}
+      <div className="overflow-x-auto">
+        <table className="min-w-full divide-y divide-gray-200">
+          <thead className="bg-gray-50">
+            <tr>
+              {["Name", "Email", "Joined at", "Role"].map((h) => (
+                <th
+                  key={h}
+                  className="px-4 py-2 text-left text-sm font-medium text-gray-700"
+                >
+                  {h}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody className="bg-white divide-y divide-gray-200">
+            {members.map((m) => (
+              <tr key={m.userEmail}>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                  {member.userName}
+                  {m.userName}
                 </td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                  {member.userEmail}
+                  {m.userEmail}
                 </td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
-                  {new Date(member.invitedAt).toLocaleDateString(undefined, {
+                  {new Date(m.invitedAt).toLocaleDateString(undefined, {
                     year: "numeric",
                     month: "short",
                     day: "numeric",
@@ -83,13 +138,9 @@ export default function TeamTab({ team }: TeamListProps) {
                 </td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
                   <select
-                    value={roles[member.userEmail]}
+                    value={roles[m.userEmail]}
                     onChange={(e) =>
-                      handleRoleSelect(
-                        member.projectId,
-                        e.target.value,
-                        member.userEmail
-                      )
+                      handleRoleSelect(m.projectId, e.target.value, m.userEmail)
                     }
                     className="border border-gray-300 rounded-md px-2 py-1"
                   >
@@ -98,10 +149,10 @@ export default function TeamTab({ team }: TeamListProps) {
                   </select>
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

@@ -20,7 +20,7 @@ export default function AwaitingConfirmationPage() {
           </h1>
 
           <div className="space-y-3 text-gray-600">
-            <p>We've sent an activation link to your email address.</p>
+            <p>{`We've sent an activation link to your email address.`}</p>
             <p>
               Please click the link in your email to verify your account and
               complete the registration process.
