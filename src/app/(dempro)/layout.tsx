@@ -6,7 +6,7 @@ import { getServerUser } from "@/lib/api-helpers";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import NavBar from "@/components/nav-bar";
-import Footer from "@/components/footer";
+// import Footer from "@/components/footer";
 
 export default async function Layout(props: { children: React.ReactNode }) {
   const [cookieStore] = await Promise.all([cookies()]);
