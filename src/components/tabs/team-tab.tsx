@@ -126,7 +126,7 @@ export default function TeamTab({ team }: TeamListProps) {
             {members.map((m) => (
               <tr key={m.userEmail}>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                  {m.userName}
+                  {m.userName.replace(/\b\w/g, (c) => c.toUpperCase())}
                 </td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-500">
                   {m.userEmail}

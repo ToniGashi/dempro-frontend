@@ -138,7 +138,7 @@ export default function ViewRenderFolderItems({
                             {hasPermissionToRemove && (
                               <button
                                 onClick={() => handleRemove(child)}
-                                className="flex items-center gap-1 text-red-500 hover:text-red-700 px-1"
+                                className="flex items-center gap-1 text-red-500 hover:text-red-700 px-1 hover:cursor-pointer"
                               >
                                 <Trash2Icon className="w-4 h-4" />
                                 Remove

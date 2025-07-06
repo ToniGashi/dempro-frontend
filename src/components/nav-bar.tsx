@@ -92,7 +92,7 @@ export default function NavBar() {
                 </Link>
                 <button
                   onClick={logout}
-                  className="flex items-center gap-2 px-3 py-2 text-lg hover:text-red-700 rounded"
+                  className="flex items-center gap-2 px-3 py-2 text-lg hover:text-red-700 rounded hover:cursor-pointer"
                 >
                   <LogIn size={18} /> Logout
                 </button>
@@ -160,7 +160,7 @@ export default function NavBar() {
                   </Link>
                   <button
                     onClick={logout}
-                    className="flex items-center gap-2 px-3 py-2 text-white text-base hover:text-red-400 rounded"
+                    className="flex items-center gap-2 px-3 py-2 text-white text-base hover:text-red-400 rounded hover:cursor-pointer"
                   >
                     <LogIn size={18} /> Logout
                   </button>
