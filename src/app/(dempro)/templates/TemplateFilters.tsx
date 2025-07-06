@@ -28,7 +28,7 @@ export function TemplatesFilters() {
   }
 
   return (
-    <div className="flex justify-center mt-6 gap-4 flex-wrap">
+    <div className="flex justify-left gap-4 flex-wrap items-center">
       {/* Tag Filter */}
       <Select
         value={currentTag}

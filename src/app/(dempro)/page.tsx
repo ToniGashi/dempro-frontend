@@ -21,7 +21,7 @@ export default async function DashboardPage() {
         <h3 className="text-xl text-dpro-primary font-bold">
           Featured Resources
         </h3>
-        <div className="grid grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {projects?.slice(0, 3)?.map((el) => (
             <Link key={el.id} href={`/templates/${el.id}`}>
               <MainCard title={el.title} description={el.subtitle} />
@@ -53,11 +53,12 @@ export default async function DashboardPage() {
         <Image
           src="/inovation.png"
           alt="Inovation image"
+          className="hidden md:block"
           width={563}
           height={550}
         />
       </div>
-      <div className="grid grid-cols-2 gap-10 p-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 p-16">
         <SecondaryCard
           title="Search for your template of interest here!"
           buttonTitle="Search templates"

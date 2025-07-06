@@ -17,7 +17,7 @@ export default async function Projects() {
       </div>
       <div className="text-dpro-primary flex flex-col gap-12 p-16">
         <h3 className="text-3xl text-dpro-primary font-bold">My projects</h3>
-        <div className="grid grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
           {projects?.map((project) => (
             <MainCard
               key={project.id}

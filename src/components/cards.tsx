@@ -44,15 +44,29 @@ export const SecondaryCard = ({
   buttonHref: string;
 }) => {
   return (
-    <div className="rounded-xl flex flex-col justify-center h-75 bg-dpro-primary">
-      <div className="p-19 flex flex-col gap-10">
-        <p className="font-bold text-white text-3xl">{title}</p>
+    <div
+      className="
+        rounded-xl
+        bg-dpro-primary
+        flex items-center justify-center
+        min-h-[200px] sm:min-h-[300px] lg:min-h-[350px]
+      "
+    >
+      <div
+        className="
+          p-6 sm:p-10
+          flex flex-col items-center sm:items-start
+          gap-4 sm:gap-6
+          text-center sm:text-left
+          max-w-md
+        "
+      >
+        <p className="font-bold text-white text-xl sm:text-3xl">{title}</p>
         <ButtonLink title={buttonTitle} variant="secondary" href={buttonHref} />
       </div>
     </div>
   );
 };
-
 export const ThreadCard = ({
   title,
   id,

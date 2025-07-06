@@ -33,7 +33,7 @@ function ThreadOptions({ threadCount }: { threadCount: number }) {
 
 function ThreadsSkeleton({ threadCount }: { threadCount: number }) {
   return (
-    <>
+    <div className="w-full">
       <p className="text-2xl text-dpro-primary font-bold">Recent Threads</p>
 
       <div className="flex gap-6 mb-6">
@@ -50,7 +50,7 @@ function ThreadsSkeleton({ threadCount }: { threadCount: number }) {
       </div>
 
       <ThreadOptions threadCount={threadCount} />
-    </>
+    </div>
   );
 }
 

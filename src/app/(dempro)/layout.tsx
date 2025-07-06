@@ -22,7 +22,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
           <AppSidebar className="pt-24 bg-dpro-secondary" />
           <SidebarInset>{props.children}</SidebarInset>
         </SidebarProvider>
-        <Footer />
+        {/* <Footer /> */}
       </AuthProvider>
     </div>
   );

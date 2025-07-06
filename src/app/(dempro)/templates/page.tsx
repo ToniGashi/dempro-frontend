@@ -15,20 +15,12 @@ interface TemplatesPageProps {
 }
 
 export default async function Templates({ searchParams }: TemplatesPageProps) {
-  // await the promise-wrapped searchParams
   const { tag, topic, q } = await searchParams;
-
-  // (optionally) pass tag/topic into your fetch helper
   const { result: allProjects } = await getProjects(tag, topic);
 
-  // apply any in-memory filters
   let projects = allProjects ?? [];
-  if (tag) {
-    projects = projects.filter((p) => p.tags?.includes(tag));
-  }
-  if (topic) {
-    projects = projects.filter((p) => p.topic?.includes(topic));
-  }
+  if (tag) projects = projects.filter((p) => p.tags?.includes(tag));
+  if (topic) projects = projects.filter((p) => p.topic?.includes(topic));
   if (q) {
     const lower = q.toLowerCase();
     projects = projects.filter(
@@ -47,34 +39,48 @@ export default async function Templates({ searchParams }: TemplatesPageProps) {
         subtitle="Scrolling and filtering through your needs was never easier!"
       />
 
-      <div className="p-16">
+      {/* Search + Filters */}
+      <div className="px-4 py-8 sm:px-16 lg:px-24 flex justify-center">
         <form
           method="get"
-          className="flex w-full justify-center gap-5 flex-wrap"
+          className="flex flex-col justify-center gap-4 sm:gap-6 flex-wrap items-center w-3xl"
         >
-          <div className="relative w-full max-w-100">
-            <div
-              className="absolute left-3 top-1/2 w-5 h-5 -translate-y-1/2 bg-[#D9D9D9] rounded-full"
-              aria-hidden
-            />
-            <input
-              name="q"
-              defaultValue={q ?? ""}
-              type="text"
-              placeholder="Search Templates by keywords"
-              className="w-full py-2 pl-10 pr-4 text-gray-700 bg-white border-dpro-primary border-[2px] rounded-full focus:outline-none focus:ring-1"
-            />
+          <div className="flex gap-4 sm:gap-6">
+            <div className="relative w-full sm:w-auto sm:flex-1 max-w-md">
+              <div
+                className="absolute left-3 top-1/2 w-5 h-5 -translate-y-1/2 bg-[#D9D9D9] rounded-full"
+                aria-hidden
+              />
+              <input
+                name="q"
+                defaultValue={q ?? ""}
+                type="text"
+                placeholder="Search Templates by keywords"
+                className="
+                w-full
+                py-2 pl-10 pr-4
+                text-gray-700 bg-white
+                border-2 border-dpro-primary rounded-full
+                focus:outline-none focus:ring-2 focus:ring-dpro-primary
+              "
+              />
+            </div>
+            <Button
+              type="submit"
+              className="w-full sm:w-auto rounded-full border-2 font-bold px-6 py-2"
+            >
+              Search
+            </Button>
           </div>
-          <Button type="submit" className="rounded-full border-[2px] font-bold">
-            Search
-          </Button>
+          <div className="flex justify-center items-center">
+            <TemplatesFilters />
+          </div>
         </form>
-
-        <TemplatesFilters />
       </div>
 
-      <div className="p-16">
-        <div className="grid grid-cols-3 gap-10">
+      {/* Cards Grid */}
+      <div className="px-4 pb-8 sm:px-16 lg:px-24">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
           {projects.map((el) => (
             <Link key={el.id} href={`/templates/${el.id}`}>
               <MainCard title={el.title} description={el.subtitle} />
@@ -82,8 +88,8 @@ export default async function Templates({ searchParams }: TemplatesPageProps) {
           ))}
         </div>
 
-        <div className="flex justify-center my-10">
-          <Button>Expand</Button>
+        <div className="flex justify-center mt-8">
+          <Button className="px-8 py-2">Expand</Button>
         </div>
       </div>
     </main>

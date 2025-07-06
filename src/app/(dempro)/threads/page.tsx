@@ -1,13 +1,12 @@
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { getThreads } from "@/lib/actions";
-
 import { ThreadCard } from "@/components/cards";
 import { Button } from "@/components/ui/button";
 import FilteredThreadsTabContainer from "@/components/tabs/filtered-threads-container";
 import NewThreadDialog from "@/components/create-new-thread-dialog";
 import SearchThreadsInput from "@/components/search-thread-input";
-import { Suspense } from "react";
 import SummarySection from "./SummarySection";
 
 export default async function ThreadsPage() {
@@ -15,27 +14,35 @@ export default async function ThreadsPage() {
 
   return (
     <main className="flex flex-col">
-      <div className="h-140 justify-center flex gap-30 bg-dpro-accent p-16 w-full items-center">
+      {/* New Thread Banner */}
+      <div className="bg-dpro-accent flex justify-center items-center py-8 sm:py-16 px-4 sm:px-16 gap-4 sm:gap-8">
         <NewThreadDialog />
       </div>
-      <div className="p-16 flex flex-col gap-4 items-center">
-        <p className="text-6xl font-bold text-dpro-primary">Threads</p>
-        <p className="text-3xl font-bold text-dpro-primary">
+
+      {/* Header & Search */}
+      <div className="flex flex-col items-center gap-4 px-4 sm:px-16 py-8">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-dpro-primary">
+          Threads
+        </h1>
+        <p className="text-xl sm:text-2xl md:text-3xl text-center max-w-2xl font-bold text-dpro-primary">
           All topics related to democracy and civic engagement
         </p>
-        <SearchThreadsInput />
-        <div className="px-16 rounded-3xl py-8 bg-dpro-secondary text-3xl mt-10 font-normal">
-          <span className="font-bold">Question of the week:</span>{" "}
-          {`"What are the
-          most effective ways for young Bulgarians to influence political change
-          at a local level?`}
+        <div className="w-full sm:w-2/3 md:w-1/2 lg:w-1/3">
+          <SearchThreadsInput />
+        </div>
+        <div className="mt-8 bg-dpro-secondary text-dpro-primary px-4 sm:px-8 py-4 sm:py-6 rounded-3xl max-w-3xl text-base sm:text-lg">
+          <span className="font-bold">Question of the week:&nbsp;</span>
+          What are the most effective ways for young Bulgarians to influence
+          political change at a local level?
         </div>
       </div>
-      <div className="p-16 items-center flex flex-col gap-16">
-        <p className="text-2xl text-dpro-primary font-bold">
+
+      {/* This Week In Threads */}
+      <div className="flex flex-col items-center gap-8 px-4 sm:px-16 py-8">
+        <h2 className="text-2xl sm:text-3xl font-bold text-dpro-primary">
           This week in threads
-        </p>
-        <div className="grid grid-cols-4 gap-8 w-full">
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 w-full">
           {threads?.slice(0, 8).map((thread) => (
             <ThreadCard
               key={thread.id}
@@ -48,23 +55,24 @@ export default async function ThreadsPage() {
           ))}
         </div>
         {threads && threads.length > 8 && (
-          <Link href={"/threads/list"} className="bg-dpro-accent text-black">
-            <Button className=" hover:cursor-pointer">View more</Button>
+          <Link href="/threads/list" className="w-full sm:w-auto mt-4">
+            <Button className="w-full sm:w-auto">View more</Button>
           </Link>
         )}
       </div>
-      <div className="p-16 flex flex-col gap-6">
+
+      {/* Filtered Tabs */}
+      <div className="flex flex-col w-full gap-6 px-4 sm:px-16 py-8">
         <FilteredThreadsTabContainer threadCount={5} />
-        <div className="flex justify-center">
-          <Link
-            href={"/threads/list"}
-            className="bg-dpro-accent text-black hover:cursor-pointer"
-          >
-            <Button className=" hover:cursor-pointer">View more</Button>
+        <div className="w-full sm:w-auto mt-4">
+          <Link href="/threads/list">
+            <Button className="w-full sm:w-auto">View more</Button>
           </Link>
         </div>
       </div>
-      <div className="p-16">
+
+      {/* Summary Section */}
+      <div className="px-4 sm:px-16 py-8">
         <Suspense fallback={<div>Loading...</div>}>
           <SummarySection />
         </Suspense>

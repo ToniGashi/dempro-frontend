@@ -109,8 +109,8 @@ export function createApiOperation<TInput, TOutput>({
 
     let body: string | FormData | undefined;
     let headers: Record<string, string> = {};
-    const cookieStore = await cookies();
-    const accessToken = cookieStore.get("accessToken")?.value || "";
+    // const cookieStore = await cookies();
+    // const accessToken = cookieStore.get("accessToken")?.value || "";
     if (input instanceof FormData) {
       body = input;
     } else if (input && method !== "GET" && method !== "DELETE") {
@@ -144,7 +144,6 @@ export function createApiOperation<TInput, TOutput>({
         revalidateTag(tag);
       }
     }
-
     return result;
   };
 }

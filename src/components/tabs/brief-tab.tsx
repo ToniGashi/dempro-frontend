@@ -265,7 +265,7 @@ export default function BriefTab({
 
   return (
     <>
-      <div className="flex justify-end ml-auto -mt-16 gap-2 mb-4">
+      <div className="flex justify-end ml-auto gap-2 mb-4">
         {isEditing && (
           <Button variant="secondary" onClick={handleCancel}>
             Cancel

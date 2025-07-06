@@ -18,26 +18,38 @@ export default function ProjectTabsContainer({
   projectBrief: string;
 }) {
   const [activeTab, setActiveTab] = useState("Brief");
+
   return (
     <div>
-      <div className="px-16 pt-16">
-        <nav className="flex max-w-min space-x-8 border-t-4">
+      {/* Tab nav */}
+      <div className="overflow-x-auto px-4 sm:px-16 pt-6 sm:pt-12">
+        <nav className="grid grid-cols-5 border-t-4">
           {tabs.map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`pt-4 pb-2 border-b-4 font-bold text-3xl ${
-                activeTab === tab
-                  ? "border-[#74C7FE]"
-                  : "border-transparent hover:border-gray-300"
-              }`}
+              className={`
+                whitespace-nowrap
+                pb-2 sm:pb-4
+                font-bold
+                text-base sm:text-2xl
+                ${
+                  activeTab === tab
+                    ? "border-[#74C7FE] text-dpro-primary"
+                    : "border-transparent text-gray-600 hover:border-gray-300 hover:text-gray-800"
+                }
+                border-b-4
+                transition-colors
+              `}
             >
               {tab}
             </button>
           ))}
         </nav>
       </div>
-      <div className="px-16 mt-16">
+
+      {/* Tab content */}
+      <div className="px-4 sm:px-16 mt-6 sm:mt-12">
         {activeTab === "Brief" && (
           <BriefTab
             projectBrief={projectBrief}
@@ -48,9 +60,13 @@ export default function ProjectTabsContainer({
         {activeTab === "Media" && <MediaTab project={project} />}
         {activeTab === "Team" && <TeamTab team={project.team} />}
         {activeTab === "Other" && (
-          <div className="mb-16">
-            <h2 className="text-3xl font-bold text-gray-900 mb-6">Other</h2>
-            <p className="text-gray-600">Other content coming soon...</p>
+          <div className="mb-8 sm:mb-16">
+            <h2 className="text-xl sm:text-3xl font-bold text-gray-900 mb-4">
+              Other
+            </h2>
+            <p className="text-sm sm:text-base text-gray-600">
+              Other content coming soon...
+            </p>
           </div>
         )}
       </div>
