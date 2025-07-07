@@ -1,6 +1,7 @@
 import { revalidateTag } from "next/cache";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { LimitedUserProfile } from "./types";
+import { redirect } from "next/navigation";
 
 export interface DemProAPIResponse {
   page?: number;
@@ -23,7 +24,7 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("accessToken")?.value;
 
-  const headers = {
+  const requestHeaders = {
     ...(restOptions.headers || {}),
     ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
   };
@@ -34,11 +35,17 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
       {
         cache,
         ...restOptions,
-        headers,
+        headers: requestHeaders,
       }
     );
 
     if (!res.ok) {
+      if (res.status === 401) {
+        const headersList = await headers();
+        const currentUrl = headersList.get("x-current-path") || "/";
+        redirect(`/signin?returnUrl=${encodeURIComponent(currentUrl)}`);
+      }
+
       let errorMessage = `API error: ${res.status} ${res.statusText}`;
       try {
         const text = await res.text();
@@ -78,6 +85,11 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
 
     return { result: data.result as T["result"], success: true };
   } catch (error: any) {
+    // Check if this is a Next.js redirect error and re-throw it
+    if (error?.digest?.startsWith?.("NEXT_REDIRECT")) {
+      error.message = "Please log in to continue";
+      throw error;
+    }
     if (error.cause === 502) {
       throw new Error(error.message || "Unknown API error");
     }
@@ -109,8 +121,7 @@ export function createApiOperation<TInput, TOutput>({
 
     let body: string | FormData | undefined;
     let headers: Record<string, string> = {};
-    // const cookieStore = await cookies();
-    // const accessToken = cookieStore.get("accessToken")?.value || "";
+
     if (input instanceof FormData) {
       body = input;
     } else if (input && method !== "GET" && method !== "DELETE") {
