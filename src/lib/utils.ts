@@ -12,9 +12,7 @@ interface ApplicationError extends Error {
 }
 
 export async function swrFetcher<T extends DemProAPIResponse>(url: string) {
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/${url}`
-  );
+  const response = await fetch(`/api/proxy/${url}`);
 
   if (!response.ok) {
     const error = new Error(

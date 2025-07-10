@@ -102,9 +102,9 @@ export default function NavBar() {
         ) : (
           <Link
             href="/signin"
-            className="flex items-center gap-2 text-white text-lg hover:underline"
+            className="flex font-bold items-center gap-2 text-white text-lg hover:underline"
           >
-            <LogIn size={20} /> Sign In
+            <LogIn strokeWidth={3} size={20} /> Sign In
           </Link>
         )}
       </div>

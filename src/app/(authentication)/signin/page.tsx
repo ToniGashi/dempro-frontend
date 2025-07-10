@@ -23,9 +23,12 @@ import {
   SignUpUser,
   signUpUserSchema,
 } from "@/lib/schema";
+import { useAuthRedirect } from "@/hooks/use-auth-redirect";
 
 export default function AuthPage() {
   const router = useRouter();
+  const { handleSuccessfulAuth } = useAuthRedirect();
+
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -60,7 +63,7 @@ export default function AuthPage() {
         return;
       }
 
-      router.replace("/");
+      handleSuccessfulAuth();
     } catch (err) {
       console.error(err);
       setError("Something went wrong");
@@ -96,7 +99,7 @@ export default function AuthPage() {
         } else {
           toast.success("Welcome back!");
           form.reset();
-          router.replace("/");
+          handleSuccessfulAuth();
         }
       } catch (error: any) {
         console.error("Error authenticating:", error);
@@ -125,7 +128,7 @@ export default function AuthPage() {
         const errorData = await res.json();
         throw new Error(errorData.error || "Authentication failed");
       }
-      router.replace("/");
+      handleSuccessfulAuth();
     } catch (err: any) {
       setError(err.message || "Failed to authenticate with server");
       console.error("Authentication error:", err);
