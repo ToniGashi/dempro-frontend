@@ -25,15 +25,56 @@ export default function ViewRenderFolderItems({
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
   const [folderItems, setFolderItems] = useState<FileNode[]>(items || []);
   const [selectedFile, setSelectedFile] = useState<FileNode | null>(null);
+  const [csvData, setCsvData] = useState<string[][] | null>(null);
+  const [csvError, setCsvError] = useState<string | null>(null);
 
+  // Sync items
   useEffect(() => {
     setFolderItems(items);
   }, [items]);
 
+  // Fetch and parse CSV when selected
+  useEffect(() => {
+    if (!selectedFile?.url?.match(/\.csv$/i)) {
+      setCsvData(null);
+      setCsvError(null);
+      return;
+    }
+
+    let cancelled = false;
+    async function loadCsv() {
+      setCsvData(null);
+      setCsvError(null);
+      try {
+        const res = await fetch(selectedFile?.url!);
+        if (!res.ok) throw new Error(`Server responded ${res.status}`);
+        const text = await res.text();
+        if (cancelled) return;
+        const rows = text
+          .trim()
+          .split("\n")
+          .map((line) => line.split(","));
+        setCsvData(rows);
+      } catch (err: any) {
+        console.error("Failed to load CSV:", err);
+        if (!cancelled) setCsvError(err.message || "Unknown error");
+      }
+    }
+
+    loadCsv();
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedFile]);
+
   const toggleFolder = (id: string) =>
     setOpenFolders((prev) => ({ ...prev, [id]: !prev[id] }));
 
-  const closeModal = () => setSelectedFile(null);
+  const closeModal = () => {
+    setSelectedFile(null);
+    setCsvData(null);
+    setCsvError(null);
+  };
 
   const hasPermissionToRemove = isFromProjectMedia;
 
@@ -47,10 +88,7 @@ export default function ViewRenderFolderItems({
           setFolderItems((folders) =>
             folders.map((f) =>
               f.folder
-                ? {
-                    ...f,
-                    children: f.children.filter((c) => c.id !== file.id),
-                  }
+                ? { ...f, children: f.children.filter((c) => c.id !== file.id) }
                 : f
             )
           );
@@ -90,10 +128,9 @@ export default function ViewRenderFolderItems({
                 </div>
                 {isFolder && (
                   <ChevronDownIcon
-                    className={`
-                      text-gray-500 transition-transform
-                      ${isOpen ? "rotate-180" : ""}
-                    `}
+                    className={`text-gray-500 transition-transform ${
+                      isOpen ? "rotate-180" : ""
+                    }`}
                     size={20}
                   />
                 )}
@@ -161,7 +198,7 @@ export default function ViewRenderFolderItems({
       {/* Preview Modal */}
       {selectedFile && (
         <div className="fixed inset-0 flex items-center justify-center bg-black/20 z-50 p-4">
-          <div className="relative bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-lg">
+          <div className="relative bg-white rounded-lg shadow-xl p-4 sm:p-6 w-full max-w-lg overflow-auto">
             <button
               className="absolute top-2 right-2 text-gray-600 hover:text-black"
               onClick={closeModal}
@@ -171,22 +208,73 @@ export default function ViewRenderFolderItems({
             <h2 className="text-lg sm:text-xl font-semibold mb-4 truncate">
               {selectedFile.name}
             </h2>
-            {selectedFile.url?.match(/\.(mp4|webm|ogg)$/i) ? (
+            {selectedFile.url?.match(/\.(mp4|webm)$/i) ? (
               <video controls className="w-full rounded max-h-[60vh]">
                 <source src={selectedFile.url} />
                 Your browser does not support the video tag.
               </video>
+            ) : selectedFile.url?.match(/\.(mp3|wav|ogg|aac)$/i) ? (
+              <audio controls className="w-full rounded max-h-[60vh]">
+                <source src={selectedFile.url} />
+                Your browser does not support the audio element.
+              </audio>
             ) : selectedFile.url?.match(/\.(png|jpe?g|webp|gif)$/i) ? (
               <img
                 src={selectedFile.url}
                 alt={selectedFile.name}
                 className="w-full object-contain rounded max-h-[60vh]"
               />
+            ) : selectedFile.url?.match(/\.(docx?|xlsx?|pptx?)$/i) ? (
+              <iframe
+                src={`https://view.officeapps.live.com/op/embed.aspx?src=${encodeURIComponent(
+                  selectedFile.url
+                )}`}
+                className="w-full h-[60vh] rounded"
+                frameBorder="0"
+              />
+            ) : selectedFile.url?.match(/\.pdf$/i) ? (
+              <iframe
+                src={selectedFile.url}
+                className="w-full h-[60vh] rounded"
+                frameBorder="0"
+              />
+            ) : selectedFile.url?.match(/\.csv$/i) ? (
+              csvError ? (
+                <div className="text-red-600">
+                  Failed to load CSV: {csvError}
+                  <div>
+                    <a
+                      href={selectedFile.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline mt-2 block"
+                    >
+                      Download CSV
+                    </a>
+                  </div>
+                </div>
+              ) : csvData ? (
+                <table className="w-full table-auto border-collapse">
+                  <tbody>
+                    {csvData.map((row, i) => (
+                      <tr key={i} className="even:bg-gray-100">
+                        {row.map((cell, j) => (
+                          <td key={j} className="border px-2 py-1 text-sm">
+                            {cell}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p>Loading CSV...</p>
+              )
             ) : (
               <iframe
                 src={selectedFile.url ?? ""}
                 className="w-full h-[60vh] rounded"
-                allow="autoplay"
+                frameBorder="0"
               />
             )}
           </div>
