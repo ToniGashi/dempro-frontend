@@ -140,6 +140,10 @@ export interface LimitedUserProfile {
   email: string;
   firstName: string;
   lastName: string;
+  location?: string;
+  phone?: string;
+  website?: string;
+  avatarUrl?: string;
   isActivated: boolean;
 }
 

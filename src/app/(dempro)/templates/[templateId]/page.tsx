@@ -1,8 +1,10 @@
 import ViewRenderFolderItems from "@/components/view-render-folder-items";
 import { getProject } from "@/lib/actions";
+import { getServerUser } from "@/lib/api-helpers";
 
 type Params = Promise<{ templateId: string }>;
 export default async function TemplatePage(props: { params: Params }) {
+  const { user } = await getServerUser();
   const params = await props.params;
   const templateId = params.templateId;
   if (!templateId) {
@@ -19,7 +21,11 @@ export default async function TemplatePage(props: { params: Params }) {
     <div className="p-8">
       <h1 className="text-2xl font-bold text-gray-800 mb-1">{result?.title}</h1>
       <p className="text-gray-500 mb-6">Marketing campaigns with a purpose.</p>
-      <ViewRenderFolderItems items={result.media} projectId={templateId} />
+      <ViewRenderFolderItems
+        items={result.media}
+        projectId={templateId}
+        user={user}
+      />
     </div>
   );
 }

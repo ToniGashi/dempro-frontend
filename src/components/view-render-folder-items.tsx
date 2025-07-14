@@ -8,19 +8,21 @@ import {
   XIcon,
   Trash2Icon,
 } from "lucide-react";
-import { FileNode, DeleteMediaInput } from "@/lib/types";
+import { FileNode, DeleteMediaInput, LimitedUserProfile } from "@/lib/types";
 import { deleteMediaFromProject } from "@/lib/actions";
 
 interface ViewRenderFolderItemsProps {
   projectId: string;
   items: FileNode[];
   isFromProjectMedia?: boolean;
+  user: LimitedUserProfile | null;
 }
 
 export default function ViewRenderFolderItems({
   projectId,
   items,
   isFromProjectMedia = false,
+  user = null,
 }: ViewRenderFolderItemsProps) {
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
   const [folderItems, setFolderItems] = useState<FileNode[]>(items || []);
@@ -77,7 +79,6 @@ export default function ViewRenderFolderItems({
   };
 
   const hasPermissionToRemove = isFromProjectMedia;
-
   const handleRemove = useCallback(
     async (file: FileNode) => {
       if (!confirm(`Remove “${file.name}” from this project?`)) return;
@@ -156,32 +157,34 @@ export default function ViewRenderFolderItems({
                               {child.name}
                             </span>
                           </div>
-                          <div className="flex flex-wrap gap-2 sm:gap-4 text-sm sm:text-base">
-                            <button
-                              onClick={() => setSelectedFile(child)}
-                              className="text-dpro-primary hover:underline px-1"
-                            >
-                              Preview
-                            </button>
-                            <a
-                              href={child.url ?? ""}
-                              download
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-dpro-primary hover:underline px-1"
-                            >
-                              Download
-                            </a>
-                            {hasPermissionToRemove && (
+                          {user && (
+                            <div className="flex flex-wrap gap-2 sm:gap-4 text-sm sm:text-base">
                               <button
-                                onClick={() => handleRemove(child)}
-                                className="flex items-center gap-1 text-red-500 hover:text-red-700 px-1 hover:cursor-pointer"
+                                onClick={() => setSelectedFile(child)}
+                                className="text-dpro-primary hover:underline px-1"
                               >
-                                <Trash2Icon className="w-4 h-4" />
-                                Remove
+                                Preview
                               </button>
-                            )}
-                          </div>
+                              <a
+                                href={child.url ?? ""}
+                                download
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-dpro-primary hover:underline px-1"
+                              >
+                                Download
+                              </a>
+                              {hasPermissionToRemove && (
+                                <button
+                                  onClick={() => handleRemove(child)}
+                                  className="flex items-center gap-1 text-red-500 hover:text-red-700 px-1 hover:cursor-pointer"
+                                >
+                                  <Trash2Icon className="w-4 h-4" />
+                                  Remove
+                                </button>
+                              )}
+                            </div>
+                          )}
                         </li>
                       ))}
                     </ul>

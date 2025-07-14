@@ -11,7 +11,6 @@ import NavBar from "@/components/nav-bar";
 export default async function Layout(props: { children: React.ReactNode }) {
   const [cookieStore] = await Promise.all([cookies()]);
   const { user } = await getServerUser();
-
   const isCollapsed = cookieStore.get("sidebar_state")?.value !== "true";
 
   return (
@@ -19,7 +18,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
       <AuthProvider userData={user}>
         <NavBar />
         <SidebarProvider defaultOpen={!isCollapsed} className="mt-17">
-          <AppSidebar className="pt-24 bg-dpro-secondary" />
+          {user && <AppSidebar className="pt-24 bg-dpro-secondary" />}
           <SidebarInset>{props.children}</SidebarInset>
         </SidebarProvider>
         {/* <Footer /> */}
