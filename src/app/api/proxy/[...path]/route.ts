@@ -80,6 +80,7 @@ async function handleRequest(
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { error: "Internal Server Error" },
       { status: 500 }

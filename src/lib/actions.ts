@@ -8,6 +8,7 @@ import {
   CreateThread,
   DeleteMediaInput,
   FileNode,
+  FlagAction,
   FlaggedItem,
   FlagThread,
   InviteUser,
@@ -116,13 +117,7 @@ export const createProject = createApiOperation<CreateProject, Project>({
 });
 
 export const postMediaToProject = createApiOperation<FormData, FileNode>({
-  url: (form) => {
-    const projectId = form.get("projectId");
-    if (typeof projectId !== "string") {
-      throw new Error("projectId must be appended to the FormData");
-    }
-    return `projects/${projectId}/media`;
-  },
+  url: () => `projects/media`,
   method: "POST",
 });
 
@@ -156,5 +151,15 @@ export const signInUser = createApiOperation<SignInUser, SignInUser>({
 });
 
 export const getFlaggedContent = createReadOperation<any, FlaggedItem[]>({
-  url: () => "contentflags/pending?Page=1&PageSize=10",
+  url: () => "contentflags/pending?page=1&pageSize=10",
+});
+
+export const dismissFlag = createApiOperation<FlagAction, any>({
+  url: () => `contentflags/dismiss`,
+  method: "POST",
+});
+
+export const removeContent = createApiOperation<FlagAction, any>({
+  url: () => `contentflags/remove`,
+  method: "POST",
 });

@@ -48,7 +48,8 @@ export default function ViewRenderFolderItems({
       setCsvData(null);
       setCsvError(null);
       try {
-        const res = await fetch(selectedFile?.url!);
+        if (!selectedFile?.url) throw new Error("No file URL provided");
+        const res = await fetch(selectedFile.url);
         if (!res.ok) throw new Error(`Server responded ${res.status}`);
         const text = await res.text();
         if (cancelled) return;

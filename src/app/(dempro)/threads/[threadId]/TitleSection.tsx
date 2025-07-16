@@ -11,8 +11,8 @@ function TitleSection({
 }: {
   threadId: string;
   title: string;
-  hasBeenResolved: "true" | "false";
-  hasBeenFlagged: "true" | "false";
+  hasBeenResolved: boolean;
+  hasBeenFlagged: boolean;
 }) {
   const [isResolved, setIsResolved] = React.useState(
     hasBeenResolved ?? "false"

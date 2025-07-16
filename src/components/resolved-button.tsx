@@ -4,8 +4,8 @@ import { resolveThread } from "@/lib/actions";
 
 interface ResolvedButtonProps {
   threadId: string;
-  isResolved: "true" | "false";
-  setIsResolved: (resolved: "true" | "false") => void;
+  isResolved: boolean;
+  setIsResolved: (resolved: boolean) => void;
 }
 
 const ResolvedButton: React.FC<ResolvedButtonProps> = ({

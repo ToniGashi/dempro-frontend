@@ -58,13 +58,13 @@ export interface Comment {
 }
 
 export interface Thread {
-  isResolved: "true" | "false";
+  isResolved: boolean;
   createdById: string | null;
   createdAt: string; // ISO 8601 timestamp
   resolvedAt: string | null; // ISO 8601 timestamp
   resolvedById: string | null;
   comments: Comment[];
-  isFlaggedByCurrentUser: "true" | "false";
+  isFlaggedByCurrentUser: boolean;
   numberOfComments: number;
   numberOfParticipants: number;
   lastComment: Comment;
@@ -92,7 +92,7 @@ export interface ThreadSummary {
 
 export interface FlagThread {
   contentId: string;
-  contentType: "post"; // TODO: Update to Thread when backend supports it
+  contentType: "thread"; // TODO: Update to Thread when backend supports it
   reason: string;
   note?: string;
 }
@@ -174,13 +174,12 @@ export interface FlagedContentResponse {
 
 interface BaseFlag {
   id: number;
-  contentType: "comment" | "post";
-  reason: string;
-  note: string;
-  createdAt: string;
-  flaggedByEmail: string;
-  reviewedByEmail: string | null;
-  status: string;
+  contentType: "thread" | "comment";
+  contentId: number;
+  numberOfFlags: number;
+  reasons: string[];
+  notes: string[];
+  content: any;
 }
 
 export interface CommentContent {
@@ -221,8 +220,13 @@ export interface ThreadContent {
   category: string;
 }
 export interface ThreadFlaggedItem extends BaseFlag {
-  contentType: "post";
+  contentType: "thread";
   content: ThreadContent;
 }
 
 export type FlaggedItem = CommentFlaggedItem | ThreadFlaggedItem;
+
+export interface FlagAction {
+  contentId: number;
+  contentType: "thread" | "comment";
+}

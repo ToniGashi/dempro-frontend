@@ -1,8 +1,8 @@
 "use client";
 
+import { dismissFlag, removeContent } from "@/lib/actions";
+import { FlaggedItem } from "@/lib/types";
 import React, { useState } from "react";
-import { flagThread } from "@/lib/actions";
-import type { FlaggedItem } from "@/lib/types";
 
 export default function FlaggedContentClient({
   items: initialItems,
@@ -11,53 +11,62 @@ export default function FlaggedContentClient({
 }) {
   const [items, setItems] = useState<FlaggedItem[]>(initialItems);
 
-  const handleRemove = async (id: number) => {
-    try {
-      // await removeContent(id);
-      setItems((prev) => prev.filter((item) => item.id !== id));
-    } catch (err) {
-      console.error("Remove failed", err);
-    }
+  const handleRemove = async (
+    contentId: number,
+    contentType: "thread" | "comment"
+  ) => {
+    await removeContent({ contentId: contentId, contentType: contentType });
+    // TODO: call your removeContent API here
+    setItems((prev) => prev.filter((item) => item.contentId !== contentId));
   };
 
-  const handleDismiss = async (id: number) => {
-    try {
-      // await flagThread(id, { status: "Dismissed" });
-      setItems((prev) => prev.filter((item) => item.id !== id));
-    } catch (err) {
-      console.error("Dismiss failed", err);
-    }
+  const handleDismiss = async (
+    contentId: number,
+    contentType: "thread" | "comment"
+  ) => {
+    await dismissFlag({ contentId: contentId, contentType: contentType });
+    // TODO: call your dismissFlag API here
+    setItems((prev) => prev.filter((item) => item.contentId !== contentId));
   };
 
   return (
     <div className="px-4 sm:px-6 lg:px-8 flex flex-col gap-6 py-10">
       {items.map((item) => (
         <div
-          key={item.id}
-          className="p-4 border border-gray-200 rounded-lg shadow-sm bg-white"
+          key={item.contentId}
+          className="p-6 border border-gray-200 rounded-lg shadow-sm bg-white"
         >
-          <header className="flex justify-between items-center mb-2">
-            <span className="font-semibold uppercase text-gray-800">
-              {item.contentType}
-            </span>
-            <span className="text-sm text-gray-500">{item.status}</span>
+          {/* Header */}
+          <header className="flex justify-between items-center mb-4">
+            <div className="flex items-center space-x-2">
+              <span className="uppercase text-sm font-semibold text-gray-800">
+                {item.contentType}
+              </span>
+              <span className="px-2 py-0.5 bg-red-100 text-red-700 text-xs rounded">
+                {item.numberOfFlags} flag
+                {item.numberOfFlags > 1 ? "s" : ""}
+              </span>
+            </div>
+            <span className="text-sm text-gray-500">ID: {item.contentId}</span>
           </header>
 
-          <div className="mb-2">
+          {/* Reasons & Notes */}
+          <div className="mb-4 space-y-1">
             <p className="text-sm">
-              <strong>Reason:</strong> {item.reason}
+              <strong>Reasons:</strong> {item.reasons.join(", ")}
             </p>
-            {item.note && (
+            {item.notes.length > 0 && (
               <p className="text-sm">
-                <strong>Note:</strong> {item.note}
+                <strong>Notes:</strong> {item.notes.join("; ")}
               </p>
             )}
           </div>
 
+          {/* Content Preview */}
           {item.contentType === "comment" ? (
             <div className="pl-4 border-l-4 border-sky-200 mb-4">
               <p className="text-sm mb-1">
-                <strong>Commented by:</strong> {item.content.createdById}
+                <strong>By:</strong> {item.content.createdById}
               </p>
               <p className="text-sm mb-1">{item.content.content}</p>
               <p className="text-xs text-gray-500">
@@ -68,7 +77,7 @@ export default function FlaggedContentClient({
           ) : (
             <div className="pl-4 border-l-4 border-green-200 mb-4">
               <p className="text-sm mb-1">
-                <strong>Thread Title:</strong> {item.content.title}
+                <strong>Title:</strong> {item.content.title}
               </p>
               <p className="text-sm mb-1">{item.content.description}</p>
               <p className="text-xs text-gray-500">
@@ -78,26 +87,26 @@ export default function FlaggedContentClient({
             </div>
           )}
 
+          {/* Actions */}
           <div className="mt-2 flex space-x-2">
             <button
-              onClick={() => handleRemove(item.id)}
+              onClick={() => handleRemove(item.contentId, item.contentType)}
               className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 hover:cursor-pointer"
             >
               Remove Content
             </button>
             <button
-              onClick={() => handleDismiss(item.id)}
+              onClick={() => handleDismiss(item.contentId, item.contentType)}
               className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 hover:cursor-pointer"
             >
               Dismiss Flag
             </button>
           </div>
 
+          {/* Footer */}
           <footer className="mt-4 text-xs text-gray-400">
-            Flagged on {new Date(item.createdAt).toLocaleString()}
-            {item.reviewedByEmail && (
-              <span> • Reviewed by {item.reviewedByEmail}</span>
-            )}
+            {/* using content.createdAt since flaggedAt isn’t provided */}
+            Created: {new Date(item.content.createdAt).toLocaleString()}
           </footer>
         </div>
       ))}

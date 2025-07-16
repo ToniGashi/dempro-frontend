@@ -89,19 +89,12 @@ export default function FileUploadSection({
     const form = new FormData();
     form.append("projectId", projectId);
 
-    pendingUploads.forEach(({ file, license }, idx) => {
+    pendingUploads.forEach(({ file, license }) => {
       // append file
       form.append("files", file, file.name);
 
       // append license metadata in parallel arrays
-      form.append("licenseTypes[]", license);
-      const urlSuffix = LICENSE_OPTIONS.find(
-        (opt) => opt.value === license
-      )!.urlSuffix;
-      form.append(
-        "licenseUrls[]",
-        `https://creativecommons.org/licenses/${urlSuffix}/4.0/`
-      );
+      form.append("licenseTypes", license);
     });
 
     try {
