@@ -2,6 +2,7 @@ import { getThread } from "@/lib/actions";
 import { ArrowLeft, MessageSquare, Clock } from "lucide-react";
 import CommentsSection from "./CommentsSection";
 import Link from "next/link";
+import TitleSection from "./TitleSection";
 
 type Params = Promise<{ threadId: string }>;
 
@@ -33,9 +34,12 @@ export default async function TemplatePage(props: { params: Params }) {
 
       {/* Thread header */}
       <article className="mb-10">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
-          {thread.title}
-        </h1>
+        <TitleSection
+          title={thread.title}
+          threadId={threadId}
+          hasBeenResolved={thread.isResolved}
+          hasBeenFlagged={thread.isFlaggedByCurrentUser}
+        />
         <p className="text-base sm:text-lg text-gray-700 mb-6">
           {thread.description}
         </p>

@@ -8,6 +8,8 @@ import {
   CreateThread,
   DeleteMediaInput,
   FileNode,
+  FlaggedItem,
+  FlagThread,
   InviteUser,
   LikeComment,
   PostComment,
@@ -70,6 +72,16 @@ export const getThreadSummary = createReadOperation<string, ThreadSummary>({
 export const getThread = createReadOperation<string, Thread>({
   url: (id) => `threads/${id}`,
   tags: ["thread"],
+});
+
+export const flagThread = createApiOperation<FlagThread, any>({
+  url: () => "contentflags",
+  method: "POST",
+});
+
+export const resolveThread = createApiOperation<string, any>({
+  url: (id) => `threads/${id}/resolve`,
+  method: "PATCH",
 });
 
 export const getCommentsFromThreadId = createReadOperation<string, Comment[]>({
@@ -141,4 +153,8 @@ export const createUser = createApiOperation<SignUpUser, SignUpUser>({
 export const signInUser = createApiOperation<SignInUser, SignInUser>({
   url: () => `/Auth`,
   method: "POST",
+});
+
+export const getFlaggedContent = createReadOperation<any, FlaggedItem[]>({
+  url: () => "contentflags/pending?Page=1&PageSize=10",
 });

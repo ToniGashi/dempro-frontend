@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 
-import { File, MessagesSquare } from "lucide-react";
+import { File, Flag, MessagesSquare } from "lucide-react";
 
 import {
   SidebarMenu,
@@ -41,11 +41,11 @@ const useMenuItems = () => {
       //   icon: <Users stroke="#3c6e71" />,
       //   url: `/community`,
       // },
-      // {
-      //   title: "Calendar",
-      //   icon: <CalendarPlus2 stroke="#3c6e71" />,
-      //   url: `/calendar`,
-      // },
+      {
+        title: "Flagged Content",
+        icon: <Flag stroke="#3c6e71" />,
+        url: `/flagged-content`,
+      },
     ];
 
     // const mainItems = allItems.filter((item) => hasAccess(item.route));

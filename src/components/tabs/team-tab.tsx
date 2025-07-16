@@ -63,15 +63,6 @@ export default function TeamTab({ team }: TeamListProps) {
         console.error("Invite failed:", result.error);
         return;
       }
-      // assume result.result is the new TeamMember
-      // console.log(result, "invite result");
-      // const newMember: TeamMember = result.result;
-      // console.log(newMember, "added to team");
-      // setMembers((prev) => [...prev, newMember]);
-      // setRoles((prev) => ({
-      //   ...prev,
-      //   [newMember.userEmail]: newMember.teamRole,
-      // }));
       setInviteEmail("");
     } catch (err) {
       console.error("Network/server error:", err);

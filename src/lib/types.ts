@@ -58,12 +58,13 @@ export interface Comment {
 }
 
 export interface Thread {
-  isResolved: boolean;
+  isResolved: "true" | "false";
   createdById: string | null;
   createdAt: string; // ISO 8601 timestamp
   resolvedAt: string | null; // ISO 8601 timestamp
   resolvedById: string | null;
   comments: Comment[];
+  isFlaggedByCurrentUser: "true" | "false";
   numberOfComments: number;
   numberOfParticipants: number;
   lastComment: Comment;
@@ -89,6 +90,12 @@ export interface ThreadSummary {
   topContributors: string[];
 }
 
+export interface FlagThread {
+  contentId: string;
+  contentType: "post"; // TODO: Update to Thread when backend supports it
+  reason: string;
+  note?: string;
+}
 export interface FolderChild {
   id: string;
   url: string;
@@ -153,3 +160,69 @@ export interface AuthContextType {
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
+
+export interface FlagedContentResponse {
+  page: number;
+  pageSize: number;
+  totalCount: number;
+  totalPages: number;
+  result: FlaggedItem[];
+  success: boolean;
+  message: string;
+  error: string | null;
+}
+
+interface BaseFlag {
+  id: number;
+  contentType: "comment" | "post";
+  reason: string;
+  note: string;
+  createdAt: string;
+  flaggedByEmail: string;
+  reviewedByEmail: string | null;
+  status: string;
+}
+
+export interface CommentContent {
+  id: number;
+  content: string;
+  createdById: string;
+  postedByName: string | null;
+  createdAt: string;
+  threadId: number;
+  replyToId: number | null;
+  replies: unknown[];
+  numberOfReplies: number;
+  likes: number;
+  currentUserAlreadyLiked: boolean;
+}
+
+/** Full flagged‐comment item */
+export interface CommentFlaggedItem extends BaseFlag {
+  contentType: "comment";
+  content: CommentContent;
+}
+export interface ThreadContent {
+  isResolved: boolean;
+  createdById: string;
+  createdAt: string; // ISO timestamp
+  resolvedAt: string | null;
+  resolvedById: string | null;
+  comments: unknown[]; // empty array in example
+  numberOfComments: number;
+  numberOfParticipants: number;
+  lastComment: unknown | null;
+  threadTime: string; // e.g. "9 days ago"
+  isFlaggedByCurrentUser: boolean;
+  id: number;
+  title: string;
+  description: string;
+  projectId: number;
+  category: string;
+}
+export interface ThreadFlaggedItem extends BaseFlag {
+  contentType: "post";
+  content: ThreadContent;
+}
+
+export type FlaggedItem = CommentFlaggedItem | ThreadFlaggedItem;
