@@ -8,12 +8,21 @@ export interface Project {
   subtitle: string;
 }
 
+export type LicenseType =
+  | "CC BY"
+  | "CC BY-SA"
+  | "CC BY-ND"
+  | "CC BY-NC"
+  | "CC BY-NC-SA"
+  | "CC BY-NC-ND";
+
 export type FileNode = {
   id: string;
   name: string;
   folder: boolean;
   url: string | null;
   children: FileNode[];
+  licenseType?: LicenseType;
 };
 
 export type CreateProject = {

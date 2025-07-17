@@ -10,6 +10,7 @@ import {
 } from "lucide-react";
 import { FileNode, DeleteMediaInput, LimitedUserProfile } from "@/lib/types";
 import { deleteMediaFromProject } from "@/lib/actions";
+import LicenseChips from "./license-type-chip";
 
 interface ViewRenderFolderItemsProps {
   projectId: string;
@@ -155,7 +156,8 @@ export default function ViewRenderFolderItems({
                           <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-0">
                             <PlayIcon className="text-gray-500 w-5 h-5" />
                             <span className="text-sm sm:text-base text-gray-700 truncate">
-                              {child.name}
+                              {child.name}{" "}
+                              <LicenseChips license={child.licenseType} />
                             </span>
                           </div>
                           {user && (
