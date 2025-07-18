@@ -35,7 +35,7 @@ export function TemplatesFilters() {
         onValueChange={(val) => updateParam("tag", val)}
         defaultValue="all"
       >
-        <SelectTrigger className="rounded-full border border-teal-700 text-teal-700 text-sm min-w-[160px] justify-between">
+        <SelectTrigger className="rounded-full border border-dpro-primary text-dpro-primary text-sm min-w-[160px] justify-between">
           <SelectValue placeholder="All content types" />
         </SelectTrigger>
         <SelectContent>
@@ -54,7 +54,7 @@ export function TemplatesFilters() {
         onValueChange={(val) => updateParam("topic", val)}
         defaultValue="all"
       >
-        <SelectTrigger className="rounded-full border border-teal-700 text-teal-700 text-sm min-w-[160px] justify-between">
+        <SelectTrigger className="rounded-full border border-dpro-primary text-dpro-primary text-sm min-w-[160px] justify-between">
           <SelectValue placeholder="All topics" />
         </SelectTrigger>
         <SelectContent>

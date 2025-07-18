@@ -23,7 +23,7 @@ const useMenuItems = () => {
       // },
       {
         title: "Projects",
-        icon: <File stroke="#3c6e71" />,
+        icon: <File stroke="currentColor" />,
         url: `/projects`,
       },
       // {
@@ -33,17 +33,17 @@ const useMenuItems = () => {
       // },
       {
         title: "Threads",
-        icon: <MessagesSquare stroke="#3c6e71" />,
+        icon: <MessagesSquare stroke="currentColor" />,
         url: `/threads`,
       },
       // {
       //   title: "Community",
-      //   icon: <Users stroke="#3c6e71" />,
+      //   icon: <Users stroke="currentColor" />,
       //   url: `/community`,
       // },
       {
         title: "Flagged Content",
-        icon: <Flag stroke="#3c6e71" />,
+        icon: <Flag stroke="currentColor" />,
         url: `/flagged-content`,
       },
     ];
@@ -69,7 +69,10 @@ export const SidebarMain = () => {
             tooltip={item.title}
             className="h-16! w-full!"
           >
-            <Link className="w-full! flex p-7" href={item.url}>
+            <Link
+              className="w-full! flex p-7 text-dpro-primary"
+              href={item.url}
+            >
               {item.icon}
               <span>{item.title}</span>
             </Link>

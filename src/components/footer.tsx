@@ -21,14 +21,14 @@ export default function Footer() {
   }, []);
 
   return (
-    <footer className="bg-dpro-dark text-white px-6 py-8 md:px-12 md:py-12">
-      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <footer className="bg-dpro-primary z-30 text-white px-6 py-8 md:px-12 md:py-12">
+      <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 justify-end gap-8">
         {/* Contact Info */}
         <div className="space-y-4 text-sm">
           <p>Georgi Izmiriliev Square, CIDC</p>
           <p>Blagoevgrad, Bulgaria, 2700</p>
           <div className="border-t border-dpro-light-gray mt-2" />
-          <div className="space-y-2 text-dpro-gray">
+          <div className="space-y-2 text-dpro-accent">
             <p>
               <span className="font-semibold">Email:</span> aubg@cidc.com
             </p>
@@ -80,7 +80,7 @@ export default function Footer() {
 
       {/* Footer Bottom */}
       <div className="border-t border-dpro-light-gray mt-8 pt-4">
-        <p className="text-center text-dpro-gray text-sm">
+        <p className="text-center text-dpro-accent text-sm">
           &copy; All rights reserved, CIDC,{year ?? ""}
         </p>
       </div>
