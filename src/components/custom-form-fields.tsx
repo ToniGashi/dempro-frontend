@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Input } from "./ui/input";
+import { Textarea } from "./ui/textarea";
 
 export interface FormFieldSelectProps<T extends FieldValues> {
   form: any; // your React Hook Form instance
@@ -188,6 +189,38 @@ export function FormFieldSelect<T extends FieldValues>({
                 ))}
               </SelectContent>
             </Select>
+          </FormControl>
+          <FormMessage className="text-xs font-semibold" />
+        </FormItem>
+      )}
+    />
+  );
+}
+
+type FormFieldTextAreaProps<T extends FieldValues> =
+  StandardFormFieldProps<T> & {
+    placeholder: string;
+  };
+
+export function FormFieldTextArea<T extends FieldValues>({
+  name,
+  label,
+  form,
+  placeholder,
+}: FormFieldTextAreaProps<T>) {
+  return (
+    <FormField
+      control={form.control}
+      name={name}
+      render={({ field }) => (
+        <FormItem className="col-span-2">
+          {label && <FormLabel className="text-base w-full">{label}</FormLabel>}
+          <FormControl>
+            <Textarea
+              placeholder={placeholder}
+              className="w-full h-25 py-2 pl-8 pr-4 text-gray-700 bg-white border border-dpro-primary border-[2px] focus:outline-none focus:ring-1"
+              {...field}
+            />
           </FormControl>
           <FormMessage className="text-xs font-semibold" />
         </FormItem>

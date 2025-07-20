@@ -1,35 +1,47 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useCallback, useState } from "react";
 import { Check } from "lucide-react";
 import { resolveThread } from "@/lib/actions";
+import { toast } from "sonner";
 
 interface ResolvedButtonProps {
-  threadId: string;
+  threadId: number;
   isResolved: boolean;
-  setIsResolved: (resolved: boolean) => void;
 }
 
 const ResolvedButton: React.FC<ResolvedButtonProps> = ({
   threadId,
   isResolved,
-  setIsResolved,
 }) => {
   const [loading, setLoading] = useState(false);
 
-  const handleResolveThread = async (id: string) => {
-    if (isResolved || loading) return;
-
+  const handleResolveThread = useCallback(async (id: number) => {
     setLoading(true);
     try {
-      await resolveThread(id);
-      setIsResolved(true);
-      // Optionally show a success toast here
-    } catch (err) {
-      console.error("Error resolving thread:", err);
-      // Optionally show an error toast here
+      toast.promise(
+        (async () => {
+          const { success } = await resolveThread(id);
+          if (!success) {
+            throw new Error("Failed to resolve thread");
+          }
+          return;
+        })(),
+        {
+          loading: "Resolving thread...",
+          success: () => {
+            return "Thread resolved successfully";
+          },
+          error: (err) => `Something went wrong: ${err.message}`,
+        }
+      );
+    } catch (error) {
+      console.error("Error flagging thread:", error);
+      toast.error("Failed to resolve thread. Please try again.");
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   return (
     <button

@@ -100,7 +100,7 @@ export interface ThreadSummary {
 }
 
 export interface FlagThread {
-  contentId: string;
+  contentId: number;
   contentType: "thread"; // TODO: Update to Thread when backend supports it
   reason: string;
   note?: string;

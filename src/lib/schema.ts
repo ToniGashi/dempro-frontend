@@ -35,5 +35,11 @@ export const signUpUserSchema = z.object({
   lastName: requiredString("Last Name"),
 });
 
+export const flagThreadSchema = z.object({
+  reason: z.string().min(1, "Please select a reason"),
+  note: z.string().max(500, "Note is too long").optional(),
+});
+
 export type SignUpUser = z.infer<typeof signUpUserSchema>;
 export type SignInUser = z.infer<typeof signInUserSchema>;
+export type FlagThreadForm = z.infer<typeof flagThreadSchema>;

@@ -31,6 +31,7 @@ import { CreateProject } from "@/lib/types";
 
 export default function NewProjectDialog() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const router = useRouter();
 
   const form = useForm<CreateProject>({
@@ -121,6 +122,7 @@ export default function NewProjectDialog() {
               <DialogClose asChild>
                 <Button variant="secondary">Cancel</Button>
               </DialogClose>
+
               <Button
                 type="submit"
                 onClick={(e) => e.stopPropagation()}

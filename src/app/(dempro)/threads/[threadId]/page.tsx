@@ -11,22 +11,14 @@ export default async function ThreadByIdPage(props: { params: Params }) {
   const { threadId } = await props.params;
 
   const { result: thread } = await getThread(threadId);
-  if (!thread) return console.error("thread not found");
-
+  if (!thread) return <div>This thread has been deleted</div>;
+  console.log(thread, "thread");
   return (
     <main className="w-full mx-auto px-5 sm:px-7 lg:px-12 py-8">
       {/* Back link */}
       <Link
         href="/threads"
-        className="
-          inline-flex items-center space-x-2
-          text-base sm:text-lg font-medium
-          text-green-700 bg-green-50 hover:bg-green-100
-          border border-green-200 rounded-full
-          px-4 py-2 sm:px-5 sm:py-3
-          mb-8 sm:mb-16
-          transition-colors duration-150
-        "
+        className="inline-flex items-center space-x-2 text-base sm:text-lg font-medium text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded-full px-4 py-2 sm:px-5 sm:py-3 mb-8 sm:mb-16 transition-colors duration-150"
       >
         <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
         <span>Back to Discussions</span>
@@ -34,12 +26,7 @@ export default async function ThreadByIdPage(props: { params: Params }) {
 
       {/* Thread header */}
       <article className="mb-10">
-        <TitleSection
-          title={thread.title}
-          threadId={threadId}
-          hasBeenResolved={thread.isResolved}
-          hasBeenFlagged={thread.isFlaggedByCurrentUser}
-        />
+        <TitleSection thread={thread} />
         <p className="text-base sm:text-lg text-gray-700 mb-6">
           {thread.description}
         </p>

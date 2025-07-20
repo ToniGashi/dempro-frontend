@@ -90,11 +90,13 @@ export const getThreadsByCategory = createReadOperation<
 export const flagThread = createApiOperation<FlagThread, any>({
   url: () => "contentflags",
   method: "POST",
+  tags: ["thread"],
 });
 
-export const resolveThread = createApiOperation<string, any>({
+export const resolveThread = createApiOperation<number, any>({
   url: (id) => `threads/${id}/resolve`,
   method: "PATCH",
+  tags: ["thread"],
 });
 
 export const getCommentsFromThreadId = createReadOperation<string, Comment[]>({
