@@ -36,20 +36,15 @@ export default function ThreadForm({
   const invalidateThreadCaches = useCallback(() => {
     mutate(
       (key) => {
-        if (Array.isArray(key)) {
-          if (key[0] === "threads") {
-            if (projectId) {
-              return key[1] === `${projectId}` || key[1] === undefined;
-            }
-            return true;
-          }
+        if (typeof key === "string" && key.startsWith("threads")) {
+          return true;
         }
         return false;
       },
       undefined,
       { revalidate: true }
     );
-  }, [mutate, projectId]);
+  }, [mutate]);
 
   const onSubmit = useCallback(
     async (values: CreateThread) => {

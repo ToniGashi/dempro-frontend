@@ -16,12 +16,12 @@ const ResolvedButton: React.FC<ResolvedButtonProps> = ({
   const [loading, setLoading] = useState(false);
 
   const handleResolveThread = async (id: string) => {
-    if (isResolved === "true" || loading) return;
+    if (isResolved || loading) return;
 
     setLoading(true);
     try {
       await resolveThread(id);
-      setIsResolved("true");
+      setIsResolved(true);
       // Optionally show a success toast here
     } catch (err) {
       console.error("Error resolving thread:", err);
@@ -34,7 +34,7 @@ const ResolvedButton: React.FC<ResolvedButtonProps> = ({
   return (
     <button
       onClick={() => handleResolveThread(threadId)}
-      disabled={isResolved === "true" || loading}
+      disabled={isResolved || loading}
       className={`
         inline-flex items-center space-x-2
         px-4 py-2

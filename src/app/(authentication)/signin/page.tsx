@@ -118,7 +118,7 @@ export default function AuthPage() {
         setIsSubmitting(false);
       }
     },
-    [form, isSignUp, router]
+    [form, isSignUp, router, handleSuccessfulAuth]
   );
 
   const handleMicrosoftAuthentication = async (accessToken: string) => {

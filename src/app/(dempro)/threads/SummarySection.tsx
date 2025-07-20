@@ -1,10 +1,7 @@
-import { getThreadSummary } from "@/lib/actions";
 import Link from "next/link";
-import React from "react";
+import { ThreadSummary } from "@/lib/types";
 
-async function SummarySection() {
-  const { result: summary } = await getThreadSummary();
-
+async function SummarySection({ summary }: { summary?: ThreadSummary }) {
   return (
     <section className="px-4 sm:px-6 lg:px-8 py-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">

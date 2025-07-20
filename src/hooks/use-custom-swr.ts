@@ -1,3 +1,4 @@
+"use client";
 import useSWR, { SWRConfiguration, SWRResponse } from "swr";
 import { swrFetcher } from "@/lib/utils";
 
@@ -8,12 +9,8 @@ const defaultConfig: SWRConfiguration = {
 };
 
 export function useCustomSWR<T>(
-  key: string[] | null,
-  url: string | null,
+  key: string | null,
   config?: SWRConfiguration
 ): SWRResponse<T, any> {
-  return useSWR<T>(key, url ? () => swrFetcher(url) : null, {
-    ...defaultConfig,
-    ...config,
-  });
+  return useSWR<T>(key, swrFetcher, { ...defaultConfig, ...config });
 }

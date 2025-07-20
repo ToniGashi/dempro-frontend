@@ -68,11 +68,22 @@ export const getThreads = createReadOperation<string, Thread[]>({
 export const getThreadSummary = createReadOperation<string, ThreadSummary>({
   url: () => `threads/summary`,
   tags: ["threadSummary"],
+  cache: "no-cache",
 });
 
 export const getThread = createReadOperation<string, Thread>({
   url: (id) => `threads/${id}`,
   tags: ["thread"],
+  cache: "no-cache",
+});
+
+export const getThreadsByCategory = createReadOperation<
+  { category: string; threadCount: number },
+  Thread[]
+>({
+  url: ({ category, threadCount }) =>
+    `threads?status=${category}&pageSize=${threadCount}&page=1`,
+  tags: ["threads"],
   cache: "no-cache",
 });
 

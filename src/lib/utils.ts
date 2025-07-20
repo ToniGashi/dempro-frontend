@@ -21,11 +21,10 @@ export async function swrFetcher<T extends DemProAPIResponse>(url: string) {
 
     error.info = await response.json();
     error.status = response.status;
-
     throw error;
   }
-  const result = (await response.json()) as T;
 
+  const result = (await response.json()) as T;
   return result.result ?? result;
 }
 

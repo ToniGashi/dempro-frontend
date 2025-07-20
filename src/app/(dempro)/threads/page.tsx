@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { Suspense } from "react";
+import { cookies } from "next/headers";
 
-import { getThreads } from "@/lib/actions";
+import {
+  getThreadsByCategory,
+  getThreads,
+  getThreadSummary,
+} from "@/lib/actions";
+
 import { ThreadCard } from "@/components/cards";
 import { Button } from "@/components/ui/button";
 import FilteredThreadsTabContainer from "@/components/tabs/filtered-threads-container";
@@ -10,7 +15,19 @@ import SearchThreadsInput from "@/components/search-thread-input";
 import SummarySection from "./SummarySection";
 
 export default async function ThreadsPage() {
-  const { result: threads } = await getThreads();
+  const cookieStore = await cookies();
+  const initialCategory =
+    cookieStore.get(`selected-thread-category`)?.value || "Recent";
+
+  const [
+    { result: threads },
+    { result: threadsByCategory },
+    { result: threadsSummary },
+  ] = await Promise.all([
+    getThreads(),
+    getThreadsByCategory({ category: initialCategory, threadCount: 5 }),
+    getThreadSummary(),
+  ]);
 
   return (
     <main className="flex flex-col">
@@ -63,7 +80,11 @@ export default async function ThreadsPage() {
 
       {/* Filtered Tabs */}
       <div className="flex flex-col w-full gap-6 px-4 sm:px-16 py-8">
-        <FilteredThreadsTabContainer threadCount={5} />
+        <FilteredThreadsTabContainer
+          threadCount={5}
+          initialThreads={threadsByCategory}
+          initialCategory={initialCategory}
+        />
         <div className="w-full sm:w-auto mt-4">
           <Link href="/threads/list">
             <Button className="w-full sm:w-auto">View more</Button>
@@ -73,9 +94,7 @@ export default async function ThreadsPage() {
 
       {/* Summary Section */}
       <div className="px-4 sm:px-16 py-8">
-        <Suspense fallback={<div>Loading...</div>}>
-          <SummarySection />
-        </Suspense>
+        <SummarySection summary={threadsSummary} />
       </div>
     </main>
   );
