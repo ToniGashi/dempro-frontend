@@ -8,11 +8,13 @@ const publicOnlyRoutes = [
   "/awaiting-confirmation",
 ];
 
+const protectedRoutes = ["/profile"];
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const token = request.cookies.get("accessToken")?.value;
 
-  // settng the current path in headers for API requests and redirects after authentication
+  // Set the current path in headers for API requests and redirects after authentication
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set(
     "x-current-path",
@@ -22,6 +24,13 @@ export function middleware(request: NextRequest) {
   // If user is authenticated and tries to access a public-only route, redirect to "/"
   if (token && publicOnlyRoutes.some((route) => pathname.startsWith(route))) {
     return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // If user is not authenticated and tries to access a protected route, redirect to signin
+  if (!token && protectedRoutes.some((route) => pathname.startsWith(route))) {
+    return NextResponse.redirect(
+      new URL(`/signin?returnUrl=${encodeURIComponent(pathname)}`, request.url)
+    );
   }
 
   return NextResponse.next({

@@ -33,6 +33,24 @@ export default function ThreadForm({
     },
   });
 
+  const invalidateThreadCaches = useCallback(() => {
+    mutate(
+      (key) => {
+        if (Array.isArray(key)) {
+          if (key[0] === "threads") {
+            if (projectId) {
+              return key[1] === `${projectId}` || key[1] === undefined;
+            }
+            return true;
+          }
+        }
+        return false;
+      },
+      undefined,
+      { revalidate: true }
+    );
+  }, [mutate, projectId]);
+
   const onSubmit = useCallback(
     async (values: CreateThread) => {
       setIsSubmitting(true);
@@ -44,18 +62,13 @@ export default function ThreadForm({
             if (!result.success) {
               throw new Error(result.error || "Failed to create thread");
             }
-            if (projectId) mutate([`threads`, `${projectId}`]);
-            else mutate([`threads`]);
-
+            invalidateThreadCaches();
             form.reset();
             return result;
           })(),
           {
             loading: "Creating thread...",
             success: () => {
-              if (projectId) mutate([`threads`, `${projectId}`]);
-              else mutate([`threads`]);
-              form.reset();
               return "Thread created successfully";
             },
             error: (err) => `Something went wrong: ${err.message}`,
@@ -68,7 +81,7 @@ export default function ThreadForm({
         setIsSubmitting(false);
       }
     },
-    [form, mutate, projectId, setOpenDialog]
+    [form, invalidateThreadCaches, setOpenDialog]
   );
 
   return (

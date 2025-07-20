@@ -1,7 +1,7 @@
 "use client";
 
-import { useCallback, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "sonner";
@@ -33,6 +33,13 @@ export default function AuthPage() {
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("expired") === "true") {
+      toast.error("Your session has expired. Please sign in again.");
+    }
+  }, [searchParams]);
 
   const schema = isSignUp ? signUpUserSchema : signInUserSchema;
 

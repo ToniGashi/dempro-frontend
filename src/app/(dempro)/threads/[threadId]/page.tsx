@@ -1,14 +1,14 @@
-import { getThread } from "@/lib/actions";
-import { ArrowLeft, MessageSquare, Clock } from "lucide-react";
-import CommentsSection from "./CommentsSection";
 import Link from "next/link";
+import { ArrowLeft, MessageSquare, Clock } from "lucide-react";
+
+import { getThread } from "@/lib/actions";
+import CommentsSection from "./CommentsSection";
 import TitleSection from "./TitleSection";
 
 type Params = Promise<{ threadId: string }>;
 
-export default async function TemplatePage(props: { params: Params }) {
+export default async function ThreadByIdPage(props: { params: Params }) {
   const { threadId } = await props.params;
-  if (!threadId) return console.error("no thread id");
 
   const { result: thread } = await getThread(threadId);
   if (!thread) return console.error("thread not found");

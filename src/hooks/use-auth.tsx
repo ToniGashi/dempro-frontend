@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { AuthContextType, LimitedUserProfile } from "@/lib/types";
 import { getCookie } from "@/lib/utils";
 
@@ -15,9 +15,9 @@ export function AuthProvider({
   userData: LimitedUserProfile | null;
 }) {
   const [user, setUser] = useState<LimitedUserProfile | null>(userData);
-
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const logout = async () => {
     try {
@@ -48,12 +48,17 @@ export function AuthProvider({
 
   useEffect(() => {
     const initAuth = async () => {
-      await refreshUser();
+      // Check if user was redirected due to session expiry
+      if (searchParams?.get("expired") === "true") {
+        setUser(null);
+      } else {
+        await refreshUser();
+      }
       setIsLoading(false);
     };
 
     initAuth();
-  }, []);
+  }, [searchParams]);
 
   return (
     <AuthContext.Provider

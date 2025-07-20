@@ -41,9 +41,13 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
 
     if (!res.ok) {
       if (res.status === 401) {
+        await clearAuthCookies();
+
         const headersList = await headers();
         const currentUrl = headersList.get("x-current-path") || "/";
-        redirect(`/signin?returnUrl=${encodeURIComponent(currentUrl)}`);
+        redirect(
+          `/signin?returnUrl=${encodeURIComponent(currentUrl)}&expired=true`
+        );
       }
 
       let errorMessage = `API error: ${res.status} ${res.statusText}`;
@@ -87,7 +91,6 @@ export async function enhancedFetcher<T extends DemProAPIResponse>(
   } catch (error: any) {
     // Check if this is a Next.js redirect error and re-throw it
     if (error?.digest?.startsWith?.("NEXT_REDIRECT")) {
-      error.message = "Please log in to continue";
       throw error;
     }
     if (error.cause === 502) {
@@ -159,7 +162,6 @@ export function createApiOperation<TInput, TOutput>({
   };
 }
 
-// For read-only operations that should include tags but not revalidate
 export function createReadOperation<TInput = void, TOutput = any>({
   url,
   tags = [],
@@ -212,4 +214,21 @@ export async function getUserFromCookie() {
 export async function getServerUser() {
   const user = await getUserFromCookie();
   return { user };
+}
+
+async function clearAuthCookies() {
+  const cookieStore = await cookies();
+  cookieStore.set("accessToken", "", {
+    maxAge: 0,
+    path: "/",
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
+  cookieStore.set("user", "", {
+    maxAge: 0,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+  });
 }

@@ -73,6 +73,7 @@ export const getThreadSummary = createReadOperation<string, ThreadSummary>({
 export const getThread = createReadOperation<string, Thread>({
   url: (id) => `threads/${id}`,
   tags: ["thread"],
+  cache: "no-cache",
 });
 
 export const flagThread = createApiOperation<FlagThread, any>({
