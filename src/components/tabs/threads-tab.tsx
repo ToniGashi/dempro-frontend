@@ -15,7 +15,11 @@ export default function ThreadsTab({ projectId }: { projectId: number }) {
           <ThreadForm projectId={projectId} />
         </div>
         <div>
-          <FilteredThreadsTabContainer threadCount={3} projectId={projectId} />
+          <FilteredThreadsTabContainer
+            threadCount={3}
+            projectId={projectId}
+            initialCategory="Recent"
+          />
         </div>
       </div>
     </div>

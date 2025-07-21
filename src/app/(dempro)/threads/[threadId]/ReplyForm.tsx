@@ -60,7 +60,7 @@ export default function ReplyForm({
         setIsSubmitting(false);
       }
     },
-    [threadId, parentId, form]
+    [threadId, parentId, form, setShowForm]
   );
 
   return (

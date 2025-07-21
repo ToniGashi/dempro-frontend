@@ -24,9 +24,11 @@ export default function CommentItem({
   async function handleLike() {
     setIsLiking(true);
     try {
-      comment.currentUserAlreadyLiked
-        ? await dislikeComment(comment.id.toString())
-        : await likeComment(comment.id.toString());
+      if (comment.currentUserAlreadyLiked) {
+        await dislikeComment(comment.id.toString());
+      } else {
+        await likeComment(comment.id.toString());
+      }
     } catch {
       toast.error("Failed to perform action. Please try again later");
     } finally {

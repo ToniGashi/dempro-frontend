@@ -16,7 +16,7 @@ export default async function ThreadByIdPage(props: { params: Params }) {
   ]);
 
   if (!thread) return <div>This thread has been deleted</div>;
-  console.log(thread, "thread");
+
   return (
     <main className="w-full mx-auto px-5 sm:px-7 lg:px-12 py-8">
       {/* Back link */}

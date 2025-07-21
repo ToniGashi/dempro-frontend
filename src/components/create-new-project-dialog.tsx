@@ -31,6 +31,8 @@ import { CreateProject } from "@/lib/types";
 
 export default function NewProjectDialog() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+
   const router = useRouter();
 
   const form = useForm<CreateProject>({
@@ -46,6 +48,7 @@ export default function NewProjectDialog() {
   const onSubmit = useCallback(
     async (values: CreateProject) => {
       setIsSubmitting(true);
+      setOpenDialog(false);
       try {
         toast.promise(
           (async () => {
@@ -77,7 +80,7 @@ export default function NewProjectDialog() {
   );
 
   return (
-    <Dialog>
+    <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
         <button className="w-75 h-75 hover:cursor-pointer hover:bg-dpro-primary/90 px-10 font-bold text-3xl disabled:pointer-events-none disabled:opacity-50  rounded-4xl bg-dpro-primary text-white max-w-none!">
           Create a New Project

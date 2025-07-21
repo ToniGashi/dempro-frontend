@@ -28,7 +28,7 @@ export default function SearchThreadsInput({
     debouncedSearchTerm.trim().length > 0
       ? `threads?keyword=${debouncedSearchTerm.trim()}`
       : null;
-  console.log(swrKey, "ss");
+
   const { data: threads, isLoading, error } = useCustomSWR<Thread[]>(swrKey);
 
   useEffect(() => {
