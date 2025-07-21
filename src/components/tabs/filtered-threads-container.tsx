@@ -27,7 +27,8 @@ export default function FilteredThreadsTabContainer({
   const [threadCategory, setThreadCategory] = useState(
     tabs.includes(initialCategory) ? initialCategory : "Recent"
   );
-  const [isClientFetching, setIsClientFetching] = useState(false);
+  //if we don't have initialThreads,it means we need to fetch directly on the client(like the case if threads in projects)
+  const [isClientFetching, setIsClientFetching] = useState(!initialThreads);
 
   useEffect(() => {
     document.cookie = `selected-thread-category=${threadCategory}; path=/; max-age=31536000`;
