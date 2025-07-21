@@ -201,6 +201,7 @@ export interface CommentContent {
   replyToId: number | null;
   replies: unknown[];
   numberOfReplies: number;
+  title: string;
   likes: number;
   currentUserAlreadyLiked: boolean;
 }

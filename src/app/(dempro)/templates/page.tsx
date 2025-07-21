@@ -1,10 +1,10 @@
-// app/templates/page.tsx
+import Link from "next/link";
+
 import { MainCard } from "@/components/cards";
 import HeroSection from "@/components/hero-section";
 import { Button } from "@/components/ui/button";
-import { getProjects } from "@/lib/actions";
-import Link from "next/link";
 import { TemplatesFilters } from "./TemplateFilters";
+import { getProjects } from "@/lib/actions";
 
 interface TemplatesPageProps {
   searchParams: Promise<{

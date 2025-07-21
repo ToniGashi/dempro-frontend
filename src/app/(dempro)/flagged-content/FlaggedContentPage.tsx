@@ -1,32 +1,66 @@
 "use client";
 
+import React, { useState } from "react";
+import { toast } from "sonner";
 import { dismissFlag, removeContent } from "@/lib/actions";
 import { FlaggedItem } from "@/lib/types";
-import React, { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 export default function FlaggedContentClient({
-  items: initialItems,
+  items,
 }: {
   items: FlaggedItem[];
 }) {
-  const [items, setItems] = useState<FlaggedItem[]>(initialItems);
+  const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
 
-  const handleRemove = async (
-    contentId: number,
-    contentType: "thread" | "comment"
-  ) => {
-    await removeContent({ contentId: contentId, contentType: contentType });
-    // TODO: call your removeContent API here
-    setItems((prev) => prev.filter((item) => item.contentId !== contentId));
+  const handleRemove = async (item: FlaggedItem) => {
+    if (!item) return;
+    setIsRemoving(true);
+    try {
+      toast.promise(
+        removeContent({
+          contentId: item.contentId,
+          contentType: item.contentType,
+        }),
+        {
+          loading: "Removing content...",
+          success: "Content removed.",
+          error: "Failed to remove content.",
+        }
+      );
+      setRemoveDialogOpen(false);
+    } catch (error) {
+      console.error("Error removing content:", error);
+      toast.error("Failed to remove content. Please try again.");
+    } finally {
+      setIsRemoving(false);
+    }
   };
 
   const handleDismiss = async (
     contentId: number,
     contentType: "thread" | "comment"
   ) => {
-    await dismissFlag({ contentId: contentId, contentType: contentType });
-    // TODO: call your dismissFlag API here
-    setItems((prev) => prev.filter((item) => item.contentId !== contentId));
+    try {
+      toast.promise(dismissFlag({ contentId, contentType }), {
+        loading: "Dismissing flag...",
+        success: "Flag dismissed.",
+        error: "Failed to dismiss flag.",
+      });
+    } catch (error) {
+      console.error("Error dismissing flag:", error);
+      toast.error("Failed to dismiss flag. Please try again.");
+    }
   };
 
   return (
@@ -87,27 +121,59 @@ export default function FlaggedContentClient({
             </div>
           )}
 
-          {/* Actions */}
           <div className="mt-2 flex space-x-2">
-            <button
-              onClick={() => handleRemove(item.contentId, item.contentType)}
-              className="px-3 py-1 text-sm bg-red-100 text-red-700 rounded hover:bg-red-200 hover:cursor-pointer"
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => setRemoveDialogOpen(true)}
+              className="px-1! py-1! text-xs!"
             >
               Remove Content
-            </button>
-            <button
+            </Button>
+            <Button
+              type="button"
+              variant="secondary"
               onClick={() => handleDismiss(item.contentId, item.contentType)}
-              className="px-3 py-1 text-sm bg-gray-100 text-gray-700 rounded hover:bg-gray-200 hover:cursor-pointer"
+              className="px-1! py-1! text-xs!"
             >
               Dismiss Flag
-            </button>
+            </Button>
           </div>
 
-          {/* Footer */}
           <footer className="mt-4 text-xs text-gray-400">
-            {/* using content.createdAt since flaggedAt isn’t provided */}
             Created: {new Date(item.content.createdAt).toLocaleString()}
           </footer>
+
+          <Dialog open={removeDialogOpen} onOpenChange={setRemoveDialogOpen}>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Remove Content</DialogTitle>
+              </DialogHeader>
+              <DialogDescription>
+                Are you sure you want to remove the content of{" "}
+                <b>{item.content.title}</b>?
+              </DialogDescription>
+              <DialogFooter>
+                <DialogClose asChild>
+                  <Button
+                    variant="secondary"
+                    type="button"
+                    disabled={isRemoving}
+                  >
+                    Cancel
+                  </Button>
+                </DialogClose>
+                <Button
+                  type="button"
+                  variant="destructive"
+                  onClick={() => handleRemove(item)}
+                  disabled={isRemoving}
+                >
+                  {isRemoving ? "Removing…" : "Remove"}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
       ))}
     </div>

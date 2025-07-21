@@ -73,6 +73,11 @@ export const deleteMediaFromProject = createApiOperation<
   tags: ["project"],
 });
 
+export const updateRole = createApiOperation<InviteUser, any>({
+  url: () => `ProjectTeams/invite`,
+  method: "POST",
+});
+
 // =============================================
 // Thread Operations
 // =============================================
@@ -110,12 +115,6 @@ export const getThreadsByCategory = createReadOperation<
   cache: "no-cache",
 });
 
-export const flagThread = createApiOperation<FlagThread, any>({
-  url: () => "contentflags",
-  method: "POST",
-  tags: ["thread"],
-});
-
 export const resolveThread = createApiOperation<number, any>({
   url: (id) => `threads/${id}/resolve`,
   method: "PATCH",
@@ -148,12 +147,7 @@ export const dislikeComment = createApiOperation<string, LikeComment>({
 export const postReplyToThread = createApiOperation<PostComment, Comment>({
   url: () => `comments`,
   method: "POST",
-  tags: ["commentsFromThread"],
-});
-
-export const updateRole = createApiOperation<InviteUser, any>({
-  url: () => `ProjectTeams/invite`,
-  method: "POST",
+  tags: ["commentsFromThread", "threads"],
 });
 
 // =============================================
@@ -170,16 +164,29 @@ export const signInUser = createApiOperation<SignInUser, SignInUser>({
   method: "POST",
 });
 
+// =============================================
+// Flagged Content Operations
+// =============================================
+
 export const getFlaggedContent = createReadOperation<any, FlaggedItem[]>({
   url: () => "contentflags/pending?page=1&pageSize=10",
+  tags: ["flaggedContent"],
 });
 
 export const dismissFlag = createApiOperation<FlagAction, any>({
   url: () => `contentflags/dismiss`,
   method: "POST",
+  tags: ["flaggedContent", "threads"],
 });
 
 export const removeContent = createApiOperation<FlagAction, any>({
   url: () => `contentflags/remove`,
   method: "POST",
+  tags: ["flaggedContent"],
+});
+
+export const flagThread = createApiOperation<FlagThread, any>({
+  url: () => "contentflags",
+  method: "POST",
+  tags: ["thread", "flaggedContent", "threads"],
 });
