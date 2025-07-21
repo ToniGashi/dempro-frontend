@@ -22,7 +22,7 @@ export default async function ThreadByIdPage(props: { params: Params }) {
       {/* Back link */}
       <Link
         href="/threads"
-        className="inline-flex items-center space-x-2 text-base sm:text-lg font-medium text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 rounded-full px-4 py-2 sm:px-5 sm:py-3 mb-8 sm:mb-16 transition-colors duration-150"
+        className="inline-flex items-center space-x-2 text-base sm:text-lg font-medium text-dpro-primary bg-dpro-accent hover:bg-dpro-accent/55 border border-dpro-accent/85 rounded-full px-4 py-2 sm:px-5 sm:py-3 mb-8 sm:mb-16 transition-colors duration-150"
       >
         <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
         <span>Back to Discussions</span>
