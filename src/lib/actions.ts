@@ -114,15 +114,18 @@ export const getCommentById = createReadOperation<string, Comment>({
 export const likeComment = createApiOperation<string, LikeComment>({
   url: (id) => `comments/${id}/like`,
   method: "PATCH",
+  tags: ["commentsFromThread"],
 });
 export const dislikeComment = createApiOperation<string, LikeComment>({
   url: (id) => `comments/${id}/unlike`,
   method: "PATCH",
+  tags: ["commentsFromThread"],
 });
 
 export const postReplyToThread = createApiOperation<PostComment, Comment>({
   url: () => `comments`,
   method: "POST",
+  tags: ["commentsFromThread"],
 });
 
 export const createProject = createApiOperation<CreateProject, Project>({

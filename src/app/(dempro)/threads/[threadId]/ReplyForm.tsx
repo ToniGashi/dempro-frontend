@@ -1,63 +1,103 @@
 "use client";
 
-import { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { postReplyToThread } from "@/lib/actions"; // you’ll need to implement this
-import { Comment } from "@/lib/types";
 
+import { Form } from "@/components/ui/form";
+import { FormFieldTextArea } from "@/components/custom-form-fields";
+import { toast } from "sonner";
+
+import { AddCommentForm, addCommentSchema } from "@/lib/schema";
+import { useForm } from "react-hook-form";
+
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
 type ReplyFormProps = {
-  threadId: string;
+  threadId: number;
   parentId: number | null;
-  onSuccess: (newReply: Comment) => void;
+  showForm: boolean;
+  setShowForm: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function ReplyForm({
   threadId,
   parentId,
-  onSuccess,
+  showForm,
+  setShowForm,
 }: ReplyFormProps) {
-  const [content, setContent] = useState("");
-  const [submitting, setSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!content.trim()) return;
-    setSubmitting(true);
-    try {
-      const newReply = await postReplyToThread({
-        threadId: threadId,
-        replyToId: parentId,
-        content,
-      });
-      if (newReply.success) {
-        if (newReply.result) {
-          onSuccess(newReply.result);
-        }
-        setContent("");
-      } else {
-        console.error("Failed to post reply:", newReply.error);
-        alert("Failed to post reply. Please try again.");
+  const form = useForm<AddCommentForm>({
+    resolver: zodResolver(addCommentSchema),
+    defaultValues: {
+      content: "",
+    },
+  });
+  const handleSubmit = useCallback(
+    async (values: AddCommentForm) => {
+      setIsSubmitting(true);
+      try {
+        toast.promise(
+          (async () => {
+            const newReply = await postReplyToThread({
+              threadId,
+              replyToId: parentId,
+              content: values.content,
+            });
+            if (!newReply.success) {
+              throw new Error(newReply.error || "Failed to post reply");
+            }
+            form.reset();
+            setShowForm(false);
+          })(),
+          {
+            loading: "Posting reply...",
+            success: "Reply posted!",
+            error: (err) => `Failed to post reply: ${err.message}`,
+          }
+        );
+      } finally {
+        setIsSubmitting(false);
       }
-    } finally {
-      setSubmitting(false);
-    }
-  }
+    },
+    [threadId, parentId, form]
+  );
 
   return (
-    <form onSubmit={handleSubmit} className="mt-4 space-y-2">
-      <textarea
-        className="w-full border border-gray-300 rounded p-2"
-        rows={3}
-        placeholder="Write your reply…"
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <button
-        type="submit"
-        disabled={submitting}
-        className="px-4 py-2  text-white rounded bg-dpro-primary hover:bg-dpro-dark hover:cursor-pointer disabled:opacity-50"
-      >
-        {submitting ? "Posting…" : "Post Reply"}
-      </button>
-    </form>
+    <>
+      {showForm && (
+        <div className="w-full">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className="mt-4 space-y-2"
+            >
+              <FormFieldTextArea
+                name="content"
+                form={form}
+                placeholder="Write your reply…"
+              />
+              <div className="flex gap-2 justify-end">
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setShowForm(false)}
+                  disabled={isSubmitting}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="bg-dpro-primary text-white"
+                >
+                  {isSubmitting ? "Posting…" : "Post Reply"}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+      )}
+    </>
   );
 }

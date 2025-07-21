@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, MessageSquare, Clock } from "lucide-react";
 
-import { getThread } from "@/lib/actions";
+import { getCommentsFromThreadId, getThread } from "@/lib/actions";
 import CommentsSection from "./CommentsSection";
 import TitleSection from "./TitleSection";
 
@@ -10,7 +10,11 @@ type Params = Promise<{ threadId: string }>;
 export default async function ThreadByIdPage(props: { params: Params }) {
   const { threadId } = await props.params;
 
-  const { result: thread } = await getThread(threadId);
+  const [{ result: thread }, { result: comments }] = await Promise.all([
+    getThread(threadId),
+    getCommentsFromThreadId(threadId),
+  ]);
+
   if (!thread) return <div>This thread has been deleted</div>;
   console.log(thread, "thread");
   return (
@@ -43,8 +47,8 @@ export default async function ThreadByIdPage(props: { params: Params }) {
       </article>
 
       {/* Comments */}
-      <section className="">
-        <CommentsSection threadId={threadId} />
+      <section>
+        <CommentsSection comments={comments ?? []} threadId={thread.id} />
       </section>
     </main>
   );

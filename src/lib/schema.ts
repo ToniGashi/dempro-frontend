@@ -39,7 +39,11 @@ export const flagThreadSchema = z.object({
   reason: z.string().min(1, "Please select a reason"),
   note: z.string().max(500, "Note is too long").optional(),
 });
+export const addCommentSchema = z.object({
+  content: z.string().min(1, "Comment cannot be empty"),
+});
 
 export type SignUpUser = z.infer<typeof signUpUserSchema>;
 export type SignInUser = z.infer<typeof signInUserSchema>;
 export type FlagThreadForm = z.infer<typeof flagThreadSchema>;
+export type AddCommentForm = z.infer<typeof addCommentSchema>;

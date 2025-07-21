@@ -125,7 +125,7 @@ export interface LikeComment {
 }
 
 export interface PostComment {
-  threadId: string;
+  threadId: number;
   content: string;
   replyToId: number | null;
 }
