@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { AuthResponse, LimitedUserProfile } from "@/lib/types";
+import { AuthResponse, UserProfile } from "@/lib/types";
 
 export async function POST(req: NextRequest) {
   const { idToken } = await req.json();
@@ -34,15 +34,26 @@ export async function POST(req: NextRequest) {
     maxAge: 60 * 60 * 24 * 7, // 7 days
   });
 
-  const limitedProfileData: LimitedUserProfile = {
-    fullName: data.profile.fullName,
-    email: data.profile.email,
-    firstName: data.profile.firstName,
-    lastName: data.profile.lastName,
-    isActivated: data.profile.isActivated,
+  const { profile } = data;
+  const profileData: UserProfile = {
+    role: profile.role,
+    userName: profile.userName,
+    firstName: profile.firstName,
+    lastName: profile.lastName,
+    fullName: profile.fullName,
+    email: profile.email,
+    bio: profile.bio,
+    countryOfOrigin: profile.countryOfOrigin,
+    location: profile.location,
+    language: profile.language,
+    civicInterests: profile.civicInterests,
+    phone: profile.phone,
+    affiliation: profile.affiliation,
+    website: profile.website,
+    isActivated: profile.isActivated,
   };
 
-  response.cookies.set("user", JSON.stringify(limitedProfileData), {
+  response.cookies.set("user", JSON.stringify(profileData), {
     httpOnly: false,
     secure: process.env.NODE_ENV === "production",
     sameSite: "strict",

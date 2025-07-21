@@ -10,7 +10,7 @@ import {
   Trash2Icon,
 } from "lucide-react";
 
-import { FileNode, DeleteMediaInput, LimitedUserProfile } from "@/lib/types";
+import { FileNode, DeleteMediaInput, UserProfile } from "@/lib/types";
 import { deleteMediaFromProject } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 import LicenseChips from "./license-type-chip";
@@ -28,7 +28,7 @@ interface ViewRenderFolderItemsProps {
   projectId: string;
   items: FileNode[];
   isFromProjectMedia?: boolean;
-  user: LimitedUserProfile | null;
+  user: UserProfile | null;
 }
 
 export default function ViewRenderFolderItems({

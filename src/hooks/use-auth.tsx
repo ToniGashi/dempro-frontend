@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AuthContextType, LimitedUserProfile } from "@/lib/types";
+import { AuthContextType, UserProfile } from "@/lib/types";
 import { getCookie } from "@/lib/utils";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -12,9 +12,9 @@ export function AuthProvider({
   userData,
 }: {
   children: React.ReactNode;
-  userData: LimitedUserProfile | null;
+  userData: UserProfile | null;
 }) {
-  const [user, setUser] = useState<LimitedUserProfile | null>(userData);
+  const [user, setUser] = useState<UserProfile | null>(userData);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const searchParams = useSearchParams();

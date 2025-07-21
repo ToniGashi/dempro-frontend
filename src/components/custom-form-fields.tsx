@@ -54,6 +54,7 @@ export function FormFieldInput<T extends FieldValues>({
   className,
   placeholder,
   onBlur,
+  ...props
 }: FormFieldInputProps<T>) {
   return (
     <FormField
@@ -78,6 +79,7 @@ export function FormFieldInput<T extends FieldValues>({
                   onBlur(e);
                 }
               }}
+              {...props}
             />
           </FormControl>
           <FormMessage className="text-xs font-semibold" />

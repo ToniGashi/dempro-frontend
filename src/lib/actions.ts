@@ -1,7 +1,7 @@
 "use server";
 
 import { createApiOperation, createReadOperation } from "./api-helpers";
-import { SignInUser, SignUpUser } from "./schema";
+import { ProfileForm, SignInUser, SignUpUser } from "./schema";
 import {
   Comment,
   CreateProject,
@@ -17,6 +17,7 @@ import {
   Project,
   Thread,
   ThreadSummary,
+  UserProfile,
 } from "./types";
 
 // =============================================
@@ -157,6 +158,18 @@ export const postReplyToThread = createApiOperation<PostComment, Comment>({
 export const createUser = createApiOperation<SignUpUser, SignUpUser>({
   url: () => `/user`,
   method: "POST",
+});
+
+export const getUser = createReadOperation<string, UserProfile>({
+  url: (email) => `user/email?email=${email}`,
+  cache: "no-store",
+  tags: ["profile"],
+});
+
+export const updateUser = createApiOperation<ProfileForm, ProfileForm>({
+  url: () => `/user`,
+  method: "PUT",
+  tags: ["profile"],
 });
 
 export const signInUser = createApiOperation<SignInUser, SignInUser>({

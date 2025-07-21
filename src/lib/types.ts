@@ -138,33 +138,25 @@ export interface AuthResponse {
 }
 
 export interface UserProfile {
-  fullName: string;
-  userCanBeDeleted: boolean;
-  createdAt: string;
-  updatedAt: string;
-  id: string;
+  email: string;
+  role: string;
+  userName: string;
   firstName: string;
   lastName: string;
-  personalPhone: string;
-  workPhone: string;
-  email: string;
-  note: string;
-  isActivated: boolean;
-}
-export interface LimitedUserProfile {
   fullName: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  location?: string;
-  phone?: string;
-  website?: string;
-  avatarUrl?: string;
+  bio: string;
+  countryOfOrigin: string;
+  location: string;
+  language: string;
+  civicInterests: string;
+  phone: string;
+  affiliation: string;
+  website: string;
   isActivated: boolean;
 }
 
 export interface AuthContextType {
-  user: LimitedUserProfile | null;
+  user: UserProfile | null;
   isLoading: boolean;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
