@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
+import { toast } from "sonner";
 import {
   ChevronDownIcon,
   FolderIcon,
@@ -8,9 +9,20 @@ import {
   XIcon,
   Trash2Icon,
 } from "lucide-react";
+
 import { FileNode, DeleteMediaInput, LimitedUserProfile } from "@/lib/types";
 import { deleteMediaFromProject } from "@/lib/actions";
+import { cn } from "@/lib/utils";
 import LicenseChips from "./license-type-chip";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 
 interface ViewRenderFolderItemsProps {
   projectId: string;
@@ -26,15 +38,13 @@ export default function ViewRenderFolderItems({
   user = null,
 }: ViewRenderFolderItemsProps) {
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
-  const [folderItems, setFolderItems] = useState<FileNode[]>(items || []);
   const [selectedFile, setSelectedFile] = useState<FileNode | null>(null);
   const [csvData, setCsvData] = useState<string[][] | null>(null);
   const [csvError, setCsvError] = useState<string | null>(null);
 
-  // Sync items
-  useEffect(() => {
-    setFolderItems(items);
-  }, [items]);
+  const [removeDialogOpen, setRemoveDialogOpen] = useState(false);
+  const [fileToRemove, setFileToRemove] = useState<FileNode | null>(null);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   // Fetch and parse CSV when selected
   useEffect(() => {
@@ -81,32 +91,42 @@ export default function ViewRenderFolderItems({
   };
 
   const hasPermissionToRemove = isFromProjectMedia;
-  const handleRemove = useCallback(
-    async (file: FileNode) => {
-      if (!confirm(`Remove “${file.name}” from this project?`)) return;
-      try {
-        const input: DeleteMediaInput = { projectId, mediaId: file.id };
-        const { success } = await deleteMediaFromProject(input);
-        if (success) {
-          setFolderItems((folders) =>
-            folders.map((f) =>
-              f.folder
-                ? { ...f, children: f.children.filter((c) => c.id !== file.id) }
-                : f
-            )
-          );
+
+  const openRemoveDialog = (file: FileNode) => {
+    setFileToRemove(file);
+    setRemoveDialogOpen(true);
+  };
+
+  const handleFileRemove = useCallback(async () => {
+    if (!fileToRemove) return;
+    setIsRemoving(true);
+    try {
+      toast.promise(
+        (async () => {
+          const input: DeleteMediaInput = {
+            projectId,
+            mediaId: fileToRemove.id,
+          };
+          const { success } = await deleteMediaFromProject(input);
+          if (!success) throw new Error("Failed to delete media");
+        })(),
+        {
+          loading: "Removing file...",
+          success: "File removed.",
+          error: "Failed to remove file.",
         }
-      } catch (err) {
-        console.error("Failed to delete media:", err);
-      }
-    },
-    [projectId]
-  );
+      );
+      setRemoveDialogOpen(false);
+      setFileToRemove(null);
+    } finally {
+      setIsRemoving(false);
+    }
+  }, [fileToRemove, projectId]);
 
   return (
     <>
       <ul className="grid grid-cols-1 gap-4">
-        {folderItems.map((item) => {
+        {items.map((item) => {
           const isFolder = item.folder;
           const isOpen = !!openFolders[item.id];
 
@@ -143,15 +163,14 @@ export default function ViewRenderFolderItems({
                 <div className="bg-gray-50 px-4 sm:px-12 py-2">
                   {item.children.length > 0 ? (
                     <ul className="space-y-2">
-                      {item.children.map((child) => (
+                      {item.children.map((child, index) => (
                         <li
                           key={`${item.id}-${child.id}`}
-                          className="
-                            flex flex-col sm:flex-row sm:justify-between
-                            items-start sm:items-center
-                            py-2 sm:py-3 px-2 sm:px-4
-                            border-b border-gray-200
-                          "
+                          className={cn(
+                            "flex flex-col sm:flex-row sm:justify-between items-start sm:items-center py-2 sm:py-3 px-2 sm:px-4",
+                            index + 1 < item.children.length &&
+                              "border-b border-gray-200"
+                          )}
                         >
                           <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-0">
                             <PlayIcon className="text-gray-500 w-5 h-5" />
@@ -161,7 +180,7 @@ export default function ViewRenderFolderItems({
                             </span>
                           </div>
                           {user && (
-                            <div className="flex flex-wrap gap-2 sm:gap-4 text-sm sm:text-base">
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-4 text-sm sm:text-base">
                               <button
                                 onClick={() => setSelectedFile(child)}
                                 className="text-dpro-primary hover:underline px-1"
@@ -179,7 +198,8 @@ export default function ViewRenderFolderItems({
                               </a>
                               {hasPermissionToRemove && (
                                 <button
-                                  onClick={() => handleRemove(child)}
+                                  type="button"
+                                  onClick={() => openRemoveDialog(child)}
                                   className="flex items-center gap-1 text-red-500 hover:text-red-700 px-1 hover:cursor-pointer"
                                 >
                                   <Trash2Icon className="w-4 h-4" />
@@ -200,6 +220,35 @@ export default function ViewRenderFolderItems({
           );
         })}
       </ul>
+
+      {/* Remove Confirmation Dialog */}
+      <Dialog open={removeDialogOpen} onOpenChange={setRemoveDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Remove file</DialogTitle>
+          </DialogHeader>
+          <div>
+            Are you sure you want to remove{" "}
+            <span className="font-semibold">{fileToRemove?.name}</span> from
+            this project?
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="secondary" type="button" disabled={isRemoving}>
+                Cancel
+              </Button>
+            </DialogClose>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={handleFileRemove}
+              disabled={isRemoving}
+            >
+              {isRemoving ? "Removing…" : "Remove"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Preview Modal */}
       {selectedFile && (
