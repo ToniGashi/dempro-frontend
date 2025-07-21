@@ -54,8 +54,14 @@ export const fileUploadSchema = z.object({
     .min(1, "Please select at least one file"),
 });
 
+export const inviteSchema = z.object({
+  email: z.string().email(),
+  role: z.enum(["Admin", "Viewer"]),
+});
+
 export type SignUpUser = z.infer<typeof signUpUserSchema>;
 export type SignInUser = z.infer<typeof signInUserSchema>;
 export type FlagThreadForm = z.infer<typeof flagThreadSchema>;
 export type AddCommentForm = z.infer<typeof addCommentSchema>;
 export type FileUploadForm = z.infer<typeof fileUploadSchema>;
+export type InviteForm = z.infer<typeof inviteSchema>;

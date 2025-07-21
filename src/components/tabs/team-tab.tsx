@@ -1,104 +1,139 @@
 "use client";
 
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+
 import { updateRole } from "@/lib/actions";
 import { TeamMember } from "@/lib/types";
-import React, { useState, useEffect } from "react";
+import { InviteForm, inviteSchema } from "@/lib/schema";
+import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import {
+  FormFieldInput,
+  FormFieldSelect,
+} from "@/components/custom-form-fields";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 interface TeamListProps {
   team: TeamMember[];
 }
 
 export default function TeamTab({ team }: TeamListProps) {
-  // local member list
-  const [members, setMembers] = useState<TeamMember[]>(team);
-  // track individual roles
-  const [roles, setRoles] = useState<Record<string, string>>({});
-  // invite form fields
-  const [inviteEmail, setInviteEmail] = useState("");
-  const [inviteRole, setInviteRole] = useState<"Admin" | "Viewer">("Viewer");
+  const inviteForm = useForm<InviteForm>({
+    resolver: zodResolver(inviteSchema),
+    defaultValues: { email: "", role: "Viewer" },
+  });
 
-  // derive projectId from the first member
-  const projectId = members[0]?.projectId;
+  const [roleLoading, setRoleLoading] = useState<Record<string, boolean>>({});
 
-  // sync incoming prop->state on mount/prop change
-  useEffect(() => {
-    setMembers(team);
-    const map: Record<string, string> = {};
-    team.forEach((m) => {
-      map[m.userEmail] = m.teamRole;
-    });
-    setRoles(map);
-  }, [team]);
+  const onInvite = async (values: InviteForm) => {
+    const projectId = team[0]?.projectId;
 
-  // role-change handler
-  const handleRoleSelect = async (
-    projectId: number,
-    role: string,
-    email: string
-  ) => {
+    if (!projectId) return;
     try {
-      const result = await updateRole({ projectId, role, email });
-      if ("error" in result && result.error) {
-        console.error("Update failed:", result.error);
-        return;
-      }
-      setRoles((prev) => ({ ...prev, [email]: role }));
-    } catch (err) {
-      console.error("Network/server error:", err);
+      toast.promise(
+        (async () => {
+          const result = await updateRole({
+            projectId,
+            email: values.email,
+            role: values.role,
+          });
+          if (!result || !("success" in result) || !result.success) {
+            throw new Error((result as any)?.error || "Failed to invite user");
+          }
+          return result;
+        })(),
+        {
+          loading: "Inviting user...",
+          success: () => {
+            inviteForm.reset();
+            return "User invited!";
+          },
+          error: (err) => `Something went wrong: ${err.message}`,
+        }
+      );
+    } catch (error) {
+      console.error("Error inviting user:", error);
+      toast.error("Failed to invite user. Please try again.");
     }
   };
 
-  // invite-user handler
-  const handleInvite = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!projectId) return;
-
+  const handleRoleChange = async (
+    projectId: number,
+    email: string,
+    role: "Admin" | "Viewer"
+  ) => {
+    setRoleLoading((prev) => ({ ...prev, [email]: true }));
     try {
-      const result = await updateRole({
-        projectId,
-        email: inviteEmail,
-        role: inviteRole,
-      });
-      if ("error" in result && result.error) {
-        console.error("Invite failed:", result.error);
-        return;
-      }
-      setInviteEmail("");
-    } catch (err) {
-      console.error("Network/server error:", err);
+      toast.promise(
+        (async () => {
+          const result = await updateRole({ projectId, email, role });
+          if (!result || !("success" in result) || !result.success) {
+            throw new Error((result as any)?.error || "Failed to update role");
+          }
+          return result;
+        })(),
+        {
+          loading: "Updating role...",
+          success: () => {
+            inviteForm.reset();
+            return "Role updated!";
+          },
+          error: (err) => `Something went wrong: ${err.message}`,
+        }
+      );
+    } catch (error) {
+      console.error("Error updating role:", error);
+      toast.error("Failed to update role. Please try again.");
+    } finally {
+      setRoleLoading((prev) => ({ ...prev, [email]: false }));
     }
   };
 
   return (
     <div className="space-y-6">
-      {/* Invite form */}
-      <form onSubmit={handleInvite} className="flex items-center gap-2">
-        <input
-          type="email"
-          required
-          placeholder="user@example.com"
-          value={inviteEmail}
-          onChange={(e) => setInviteEmail(e.target.value)}
-          className="border px-2 py-1 rounded-md flex-1"
-        />
-        <select
-          value={inviteRole}
-          onChange={(e) => setInviteRole(e.target.value as any)}
-          className="border px-2 py-1 rounded-md"
+      <Form {...inviteForm}>
+        <form
+          onSubmit={inviteForm.handleSubmit(onInvite)}
+          className="sm:flex-row flex flex-col items-center gap-2"
         >
-          <option value="Viewer">Viewer</option>
-          <option value="Admin">Admin</option>
-        </select>
-        <button
-          type="submit"
-          disabled={!inviteEmail}
-          className="bg-blue-600 text-white px-3 py-1 rounded-md disabled:opacity-50"
-        >
-          Invite
-        </button>
-      </form>
+          <FormFieldInput
+            name="email"
+            form={inviteForm}
+            placeholder="user@example.com"
+            type="email"
+            className="rounded-md flex-1"
+          />
+          <div className="flex gap-4">
+            <FormFieldSelect
+              name="role"
+              form={inviteForm}
+              options={[
+                { value: "Viewer", label: "Viewer" },
+                { value: "Admin", label: "Admin" },
+              ]}
+            />
+            <Button
+              type="submit"
+              disabled={
+                !inviteForm.formState.isValid ||
+                inviteForm.formState.isSubmitting
+              }
+            >
+              Invite
+            </Button>
+          </div>
+        </form>
+      </Form>
 
-      {/* Team table */}
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
@@ -114,7 +149,7 @@ export default function TeamTab({ team }: TeamListProps) {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
-            {members.map((m) => (
+            {team.map((m) => (
               <tr key={m.userEmail}>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
                   {m.userName.replace(/\b\w/g, (c) => c.toUpperCase())}
@@ -130,16 +165,28 @@ export default function TeamTab({ team }: TeamListProps) {
                   })}
                 </td>
                 <td className="px-4 py-2 whitespace-nowrap text-sm text-gray-900">
-                  <select
-                    value={roles[m.userEmail]}
-                    onChange={(e) =>
-                      handleRoleSelect(m.projectId, e.target.value, m.userEmail)
+                  <Select
+                    value={m.teamRole}
+                    disabled={roleLoading[m.userEmail]}
+                    onValueChange={(e) =>
+                      handleRoleChange(
+                        m.projectId,
+                        m.userEmail,
+                        e as "Admin" | "Viewer"
+                      )
                     }
-                    className="border border-gray-300 rounded-md px-2 py-1"
                   >
-                    <option value="Admin">Admin</option>
-                    <option value="Viewer">Viewer</option>
-                  </select>
+                    <SelectTrigger className="w-[100px] text-md py-2 pl-4 pr-2 text-gray-700 bg-white border-dpro-primary border-[2px] rounded-full focus:outline-none focus:ring-1">
+                      <SelectValue
+                        placeholder="Select role..."
+                        className="max-w-[80px]"
+                      />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Admin">Admin</SelectItem>
+                      <SelectItem value="Viewer">Viewer</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </td>
               </tr>
             ))}
