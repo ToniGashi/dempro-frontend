@@ -1,7 +1,8 @@
 import { revalidateTag } from "next/cache";
 import { cookies, headers } from "next/headers";
-import { LimitedUserProfile } from "./types";
 import { redirect } from "next/navigation";
+
+import { UserProfile } from "./types";
 
 export interface DemProAPIResponse {
   page?: number;
@@ -205,7 +206,7 @@ export async function getUserFromCookie() {
   const userCookie = cookieStore.get("user")?.value;
   if (!userCookie) return null;
   try {
-    return JSON.parse(userCookie) as LimitedUserProfile;
+    return JSON.parse(userCookie) as UserProfile;
   } catch {
     return null;
   }

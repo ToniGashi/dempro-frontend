@@ -1,7 +1,7 @@
 "use server";
 
 import { createApiOperation, createReadOperation } from "./api-helpers";
-import { SignInUser, SignUpUser } from "./schema";
+import { ProfileForm, SignInUser, SignUpUser } from "./schema";
 import {
   Comment,
   CreateProject,
@@ -17,6 +17,7 @@ import {
   Project,
   Thread,
   ThreadSummary,
+  UserProfile,
 } from "./types";
 
 // =============================================
@@ -73,6 +74,11 @@ export const deleteMediaFromProject = createApiOperation<
   tags: ["project"],
 });
 
+export const updateRole = createApiOperation<InviteUser, any>({
+  url: () => `ProjectTeams/invite`,
+  method: "POST",
+});
+
 // =============================================
 // Thread Operations
 // =============================================
@@ -110,12 +116,6 @@ export const getThreadsByCategory = createReadOperation<
   cache: "no-cache",
 });
 
-export const flagThread = createApiOperation<FlagThread, any>({
-  url: () => "contentflags",
-  method: "POST",
-  tags: ["thread"],
-});
-
 export const resolveThread = createApiOperation<number, any>({
   url: (id) => `threads/${id}/resolve`,
   method: "PATCH",
@@ -148,12 +148,7 @@ export const dislikeComment = createApiOperation<string, LikeComment>({
 export const postReplyToThread = createApiOperation<PostComment, Comment>({
   url: () => `comments`,
   method: "POST",
-  tags: ["commentsFromThread"],
-});
-
-export const updateRole = createApiOperation<InviteUser, any>({
-  url: () => `ProjectTeams/invite`,
-  method: "POST",
+  tags: ["commentsFromThread", "threads"],
 });
 
 // =============================================
@@ -165,21 +160,46 @@ export const createUser = createApiOperation<SignUpUser, SignUpUser>({
   method: "POST",
 });
 
+export const getUser = createReadOperation<string, UserProfile>({
+  url: (email) => `user/email?email=${email}`,
+  cache: "no-store",
+  tags: ["profile"],
+});
+
+export const updateUser = createApiOperation<ProfileForm, ProfileForm>({
+  url: () => `/user`,
+  method: "PUT",
+  tags: ["profile"],
+});
+
 export const signInUser = createApiOperation<SignInUser, SignInUser>({
   url: () => `/Auth`,
   method: "POST",
 });
 
+// =============================================
+// Flagged Content Operations
+// =============================================
+
 export const getFlaggedContent = createReadOperation<any, FlaggedItem[]>({
   url: () => "contentflags/pending?page=1&pageSize=10",
+  tags: ["flaggedContent"],
 });
 
 export const dismissFlag = createApiOperation<FlagAction, any>({
   url: () => `contentflags/dismiss`,
   method: "POST",
+  tags: ["flaggedContent", "threads"],
 });
 
 export const removeContent = createApiOperation<FlagAction, any>({
   url: () => `contentflags/remove`,
   method: "POST",
+  tags: ["flaggedContent"],
+});
+
+export const flagThread = createApiOperation<FlagThread, any>({
+  url: () => "contentflags",
+  method: "POST",
+  tags: ["thread", "flaggedContent", "threads"],
 });

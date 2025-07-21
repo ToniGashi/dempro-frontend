@@ -1,13 +1,18 @@
-// app/profile/page.tsx
-import { redirect } from "next/navigation";
+import { Profile } from "@/components/profile-form";
+import { getUser } from "@/lib/actions";
+
 import { getServerUser } from "@/lib/api-helpers";
-import ProfileShell from "@/components/ProfileShell";
 
 export default async function ProfilePage() {
   const { user } = await getServerUser();
   if (!user) {
-    redirect("/signin");
+    return (
+      <div className="container mx-auto px-4 py-8 max-w-4xl">
+        <div className="text-center text-red-500">Failed to load profile</div>
+      </div>
+    );
   }
+  const { result: profileData } = await getUser(user.email);
 
-  return <ProfileShell user={user} />;
+  return <Profile profile={profileData} />;
 }
