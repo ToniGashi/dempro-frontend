@@ -1,10 +1,11 @@
 import { Project } from "@/lib/types";
 import FileUploadSection from "../file-upload-section";
 import ViewRenderFolderItems from "../view-render-folder-items";
-import { getCookie } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 
 export default function MediaTab({ project }: { project: Project }) {
-  const user = JSON.parse(getCookie("user")!);
+  const { user } = useAuth();
+
   return (
     <>
       <ViewRenderFolderItems

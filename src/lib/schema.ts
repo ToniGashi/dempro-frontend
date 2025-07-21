@@ -43,7 +43,19 @@ export const addCommentSchema = z.object({
   content: z.string().min(1, "Comment cannot be empty"),
 });
 
+export const fileUploadSchema = z.object({
+  uploads: z
+    .array(
+      z.object({
+        file: z.instanceof(File),
+        license: z.string().min(1, "Please select a license"),
+      })
+    )
+    .min(1, "Please select at least one file"),
+});
+
 export type SignUpUser = z.infer<typeof signUpUserSchema>;
 export type SignInUser = z.infer<typeof signInUserSchema>;
 export type FlagThreadForm = z.infer<typeof flagThreadSchema>;
 export type AddCommentForm = z.infer<typeof addCommentSchema>;
+export type FileUploadForm = z.infer<typeof fileUploadSchema>;

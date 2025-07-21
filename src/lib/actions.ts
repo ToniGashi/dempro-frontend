@@ -50,6 +50,29 @@ export const createProjectBrief = createApiOperation<
   sendRawContent: true,
 });
 
+export const createProject = createApiOperation<CreateProject, Project>({
+  url: () => `projects`,
+  method: "POST",
+  tags: ["projects"],
+});
+
+export const postMediaToProject = createApiOperation<FormData, FileNode>({
+  url: () => `projects/media`,
+  method: "POST",
+  tags: ["project"],
+});
+
+export const deleteMediaFromProject = createApiOperation<
+  DeleteMediaInput,
+  Project
+>({
+  url: ({ projectId, mediaId }) => {
+    return `projects/${projectId}/media/${mediaId}`;
+  },
+  method: "DELETE",
+  tags: ["project"],
+});
+
 // =============================================
 // Thread Operations
 // =============================================
@@ -126,26 +149,6 @@ export const postReplyToThread = createApiOperation<PostComment, Comment>({
   url: () => `comments`,
   method: "POST",
   tags: ["commentsFromThread"],
-});
-
-export const createProject = createApiOperation<CreateProject, Project>({
-  url: () => `projects`,
-  method: "POST",
-});
-
-export const postMediaToProject = createApiOperation<FormData, FileNode>({
-  url: () => `projects/media`,
-  method: "POST",
-});
-
-export const deleteMediaFromProject = createApiOperation<
-  DeleteMediaInput,
-  Project
->({
-  url: ({ projectId, mediaId }) => {
-    return `projects/${projectId}/media/${mediaId}`;
-  },
-  method: "DELETE",
 });
 
 export const updateRole = createApiOperation<InviteUser, any>({
