@@ -1,22 +1,34 @@
-import { getProjects } from "@/lib/actions";
+import Link from "next/link";
 
+import { getProjectsByUser } from "@/lib/actions";
 import { getServerUser } from "@/lib/api-helpers";
+import { hasPermission } from "@/lib/role-utils";
 import { MainCard } from "@/components/cards";
 import NewProjectDialog from "@/components/create-new-project-dialog";
+import { ServerRequirePermission } from "@/components/server-role-guard";
 
 export default async function Projects() {
-  const { result: projects } = await getProjects();
   const { user } = await getServerUser();
-
+  const { result: projects } = await getProjectsByUser(user?.email);
+  const canViewAll = hasPermission(user, "canViewAllProjects");
+  const canCreate = hasPermission(user, "canCreateProjects");
   return (
     <main className="flex flex-col">
       {user && (
-        <div className="h-140 justify-center flex gap-30 bg-dpro-accent p-16 w-full items-center">
-          {/* <button className="w-75 h-75 hover:cursor-pointer hover:bg-dpro-primary/90 px-10 font-bold text-3xl rounded-4xl bg-dpro-primary text-white disabled:pointer-events-none disabled:opacity-50 max-w-none!">
-          Join a New Project
-        </button> */}
-          {/* <div className="w-2 h-50 bg-dpro-primary rounded-3xl" /> */}
-          <NewProjectDialog />
+        <div className="h-140 justify-center md:flex-row flex-col flex lg:gap-30 gap-15 bg-dpro-accent p-16 w-full items-center">
+          <ServerRequirePermission permission="canViewAllProjects">
+            <Link href="/projects/all">
+              <button className="lg:w-75 lg:h-75 md:w-45 md:h-45 w-40 h-40 hover:cursor-pointer hover:bg-dpro-primary/90 font-bold lg:text-3xl md:text-2xl text-xl disabled:pointer-events-none disabled:opacity-50  rounded-4xl bg-dpro-primary text-white max-w-none!">
+                All Projects
+              </button>
+            </Link>
+          </ServerRequirePermission>
+          {canViewAll && canCreate && (
+            <div className="sm:w-2 lg:h-50 md:h-30 hidden md:block bg-dpro-primary rounded-3xl" />
+          )}
+          <ServerRequirePermission permission="canCreateProjects">
+            <NewProjectDialog />
+          </ServerRequirePermission>
         </div>
       )}
       <div className="text-dpro-primary flex flex-col gap-12 p-16">

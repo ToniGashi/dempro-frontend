@@ -12,46 +12,69 @@ import {
 } from "@/components/ui/sidebar";
 
 import Link from "next/link";
+import { useRoles } from "@/hooks/use-roles";
+import { UserRole } from "@/lib/roles";
+
+type MenuItem = {
+  title: string;
+  icon: React.ReactNode;
+  url: string;
+  requiredRole?: UserRole; // only this role
+  requiredRoles?: UserRole[]; // (any of these roles)
+  hideForRoles?: UserRole[]; // hide for specific roles
+};
 
 const useMenuItems = () => {
+  const { hasRole, hasRoles } = useRoles();
   return useMemo(() => {
-    const allItems = [
-      // {
-      //   title: "Notifications",
-      //   icon: <Bell stroke="#3c6e71" />,
-      //   url: `/notifications`,
-      // },
+    const allItems: MenuItem[] = [
       {
         title: "Projects",
         icon: <File stroke="currentColor" />,
         url: `/projects`,
+        requiredRoles: [
+          UserRole.ADMIN,
+          UserRole.CONTRIBUTOR,
+          UserRole.REVIEWER,
+          UserRole.USER,
+        ],
       },
-      // {
-      //   title: "Chat",
-      //   icon: <MessageCircle stroke="#3c6e71" />,
-      //   url: `/chat`,
-      // },
       {
         title: "Threads",
         icon: <MessagesSquare stroke="currentColor" />,
         url: `/threads`,
+        requiredRoles: [
+          UserRole.ADMIN,
+          UserRole.CONTRIBUTOR,
+          UserRole.REVIEWER,
+          UserRole.USER,
+        ],
       },
-      // {
-      //   title: "Community",
-      //   icon: <Users stroke="currentColor" />,
-      //   url: `/community`,
-      // },
       {
         title: "Flagged Content",
         icon: <Flag stroke="currentColor" />,
         url: `/flagged-content`,
+        requiredRoles: [UserRole.ADMIN, UserRole.REVIEWER],
       },
     ];
 
-    // const mainItems = allItems.filter((item) => hasAccess(item.route));
+    const filteredItems = allItems.filter((item) => {
+      if (item.requiredRole && !hasRole(item.requiredRole)) {
+        return false;
+      }
+      // (exact match - user must have one of these roles)
+      if (item.requiredRoles && !hasRoles(item.requiredRoles)) {
+        return false;
+      }
+      if (item.hideForRoles && hasRoles(item.hideForRoles)) {
+        return false;
+      }
 
-    return { allItems };
-  }, []);
+      return true;
+    });
+
+    return { allItems: filteredItems };
+  }, [hasRole, hasRoles]);
 };
 
 export const SidebarMain = () => {

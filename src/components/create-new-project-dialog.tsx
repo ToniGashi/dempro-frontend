@@ -82,7 +82,7 @@ export default function NewProjectDialog() {
   return (
     <Dialog open={openDialog} onOpenChange={setOpenDialog}>
       <DialogTrigger asChild>
-        <button className="w-75 h-75 hover:cursor-pointer hover:bg-dpro-primary/90 px-10 font-bold text-3xl disabled:pointer-events-none disabled:opacity-50  rounded-4xl bg-dpro-primary text-white max-w-none!">
+        <button className="lg:w-75 lg:px-10 lg:h-75 md:w-45 md:h-45 w-40 h-40 hover:cursor-pointer hover:bg-dpro-primary/90 font-bold lg:text-3xl md:text-2xl text-xl disabled:pointer-events-none disabled:opacity-50  rounded-4xl bg-dpro-primary text-white max-w-none!">
           Create a New Project
         </button>
       </DialogTrigger>
