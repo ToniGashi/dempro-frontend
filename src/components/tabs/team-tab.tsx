@@ -21,18 +21,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { useAuth } from "@/hooks/use-auth";
 
 interface TeamListProps {
   team: TeamMember[];
 }
 
 export default function TeamTab({ team }: TeamListProps) {
+  const { user } = useAuth();
   const inviteForm = useForm<InviteForm>({
     resolver: zodResolver(inviteSchema),
     defaultValues: { email: "", role: "Viewer" },
   });
 
   const [roleLoading, setRoleLoading] = useState<Record<string, boolean>>({});
+  const hasInvitePermission = team
+    .filter((item) => item.teamRole === "Admin")
+    .find((item) => item.userEmail === user?.email);
 
   const onInvite = async (values: InviteForm) => {
     const projectId = team[0]?.projectId;
@@ -100,39 +105,41 @@ export default function TeamTab({ team }: TeamListProps) {
 
   return (
     <div className="space-y-6">
-      <Form {...inviteForm}>
-        <form
-          onSubmit={inviteForm.handleSubmit(onInvite)}
-          className="sm:flex-row flex flex-col items-center gap-2"
-        >
-          <FormFieldInput
-            name="email"
-            form={inviteForm}
-            placeholder="user@example.com"
-            type="email"
-            className="rounded-md flex-1"
-          />
-          <div className="flex gap-4">
-            <FormFieldSelect
-              name="role"
+      {hasInvitePermission && (
+        <Form {...inviteForm}>
+          <form
+            onSubmit={inviteForm.handleSubmit(onInvite)}
+            className="sm:flex-row flex flex-col items-center gap-2"
+          >
+            <FormFieldInput
+              name="email"
               form={inviteForm}
-              options={[
-                { value: "Viewer", label: "Viewer" },
-                { value: "Admin", label: "Admin" },
-              ]}
+              placeholder="user@example.com"
+              type="email"
+              className="rounded-md flex-1"
             />
-            <Button
-              type="submit"
-              disabled={
-                !inviteForm.formState.isValid ||
-                inviteForm.formState.isSubmitting
-              }
-            >
-              Invite
-            </Button>
-          </div>
-        </form>
-      </Form>
+            <div className="flex gap-4">
+              <FormFieldSelect
+                name="role"
+                form={inviteForm}
+                options={[
+                  { value: "Viewer", label: "Viewer" },
+                  { value: "Admin", label: "Admin" },
+                ]}
+              />
+              <Button
+                type="submit"
+                disabled={
+                  !inviteForm.formState.isValid ||
+                  inviteForm.formState.isSubmitting
+                }
+              >
+                Invite
+              </Button>
+            </div>
+          </form>
+        </Form>
+      )}
 
       <div className="overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200">

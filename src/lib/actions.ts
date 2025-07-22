@@ -30,6 +30,11 @@ export const getProjects = createReadOperation<string, Project[]>({
   tags: ["projects"],
 });
 
+export const getProjectsByUser = createReadOperation<string, Project[]>({
+  url: (email) => `projects?userEmail=${email}`,
+  tags: ["projects"],
+});
+
 export const getProject = createReadOperation<string, Project>({
   url: (id) => `projects/${id}`,
   tags: ["project"],

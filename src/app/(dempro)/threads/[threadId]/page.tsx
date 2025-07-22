@@ -3,7 +3,7 @@ import { ArrowLeft, MessageSquare, Clock } from "lucide-react";
 
 import { getCommentsFromThreadId, getThread } from "@/lib/actions";
 import CommentsSection from "./CommentsSection";
-import TitleSection from "./TitleSection";
+import { TitleSection } from "./TitleSection";
 
 type Params = Promise<{ threadId: string }>;
 
