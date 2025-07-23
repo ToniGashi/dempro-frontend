@@ -1,4 +1,3 @@
-import { getThreadSummary } from "@/lib/actions";
 import NewThreadDialog from "@/components/create-new-thread-dialog";
 import SearchThreadsInput from "@/components/search-thread-input";
 import SummarySection from "./SummarySection";
