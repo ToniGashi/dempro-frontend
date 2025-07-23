@@ -1,38 +1,16 @@
-import Link from "next/link";
-import { cookies } from "next/headers";
-
-import {
-  getThreadsByCategory,
-  getThreads,
-  getThreadSummary,
-} from "@/lib/actions";
-
-import { ThreadCard } from "@/components/cards";
-import { Button } from "@/components/ui/button";
-import FilteredThreadsTabContainer from "@/components/tabs/filtered-threads-container";
+import { getThreadSummary } from "@/lib/actions";
 import NewThreadDialog from "@/components/create-new-thread-dialog";
 import SearchThreadsInput from "@/components/search-thread-input";
 import SummarySection from "./SummarySection";
+import WeeklyThreads from "./WeeklyThreads";
+import { Suspense } from "react";
+import FilteredTabs from "./FilteredTabs";
 
 export default async function ThreadsPage() {
-  const cookieStore = await cookies();
-  const initialCategory =
-    cookieStore.get(`selected-thread-category`)?.value || "Recent";
-
-  const [
-    { result: threads },
-    { result: threadsByCategory },
-    { result: threadsSummary },
-  ] = await Promise.all([
-    getThreads(),
-    getThreadsByCategory({ category: initialCategory, threadCount: 5 }),
-    getThreadSummary(),
-  ]);
-
   return (
     <main className="flex flex-col">
       {/* New Thread Banner */}
-      <div className="bg-dpro-accent flex justify-center items-center py-8 sm:py-16 px-4 sm:px-16 gap-4 sm:gap-8">
+      <div className="h-140 bg-dpro-accent flex justify-center items-center py-8 sm:py-16 px-4 sm:px-16 gap-4 sm:gap-8">
         <NewThreadDialog />
       </div>
 
@@ -59,43 +37,22 @@ export default async function ThreadsPage() {
         <h2 className="text-2xl sm:text-3xl font-bold text-dpro-primary">
           This week in threads
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-8 w-full">
-          {threads?.slice(0, 8).map((thread) => (
-            <ThreadCard
-              key={thread.id}
-              id={thread.id}
-              lastPosted={thread.threadTime}
-              nrOfComments={thread.numberOfComments}
-              title={thread.title}
-              content={thread.description}
-            />
-          ))}
-        </div>
-        {threads && threads.length > 8 && (
-          <Link href="/threads/list" className="w-full sm:w-auto mt-4">
-            <Button className="w-full sm:w-auto">View more</Button>
-          </Link>
-        )}
+        <Suspense fallback={"Loading..."}>
+          <WeeklyThreads />
+        </Suspense>
       </div>
 
       {/* Filtered Tabs */}
-      <div className="flex flex-col w-full gap-6 px-4 sm:px-16 py-8">
-        <FilteredThreadsTabContainer
-          threadCount={5}
-          initialThreads={threadsByCategory}
-          initialCategory={initialCategory}
-        />
-        <div className="w-full sm:w-auto mt-4">
-          <Link href="/threads/list">
-            <Button className="w-full sm:w-auto">View more</Button>
-          </Link>
-        </div>
-      </div>
+      <Suspense fallback={"Loading..."}>
+        <FilteredTabs />
+      </Suspense>
 
       {/* Summary Section */}
-      <div className="px-4 sm:px-16 py-8">
-        <SummarySection summary={threadsSummary} />
-      </div>
+      <Suspense fallback={"Loading..."}>
+        <div className="px-4 sm:px-16 py-8">
+          <SummarySection />
+        </div>
+      </Suspense>
     </main>
   );
 }

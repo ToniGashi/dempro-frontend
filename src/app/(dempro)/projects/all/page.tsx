@@ -85,7 +85,7 @@ export default async function AllProjectsPage({
       <div className="px-4 pb-8 sm:px-16 lg:px-24">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-10">
           {projects.map((el) => (
-            <Link key={el.id} href={`/templates/${el.id}`}>
+            <Link key={el.id} href={`/projects/${el.id}`}>
               <MainCard title={el.title} description={el.subtitle} />
             </Link>
           ))}

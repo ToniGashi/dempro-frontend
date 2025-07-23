@@ -201,7 +201,8 @@ export function FormFieldSelect<T extends FieldValues>({
 
 type FormFieldTextAreaProps<T extends FieldValues> =
   StandardFormFieldProps<T> & {
-    placeholder: string;
+    placeholder?: string;
+    className?: string;
   };
 
 export function FormFieldTextArea<T extends FieldValues>({
@@ -209,6 +210,7 @@ export function FormFieldTextArea<T extends FieldValues>({
   label,
   form,
   placeholder,
+  className,
 }: FormFieldTextAreaProps<T>) {
   return (
     <FormField
@@ -220,7 +222,7 @@ export function FormFieldTextArea<T extends FieldValues>({
           <FormControl>
             <Textarea
               placeholder={placeholder}
-              className="w-full h-25 py-2 pl-8 pr-4 text-gray-700 bg-white border border-dpro-primary border-[2px] focus:outline-none focus:ring-1"
+              className={`w-full h-25 py-2 pl-8 pr-4 text-gray-700 bg-white border border-dpro-primary border-[2px] focus:outline-none focus:ring-1 ${className}`}
               {...field}
             />
           </FormControl>

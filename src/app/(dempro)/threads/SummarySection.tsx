@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { ThreadSummary } from "@/lib/types";
+import { getThreadSummary } from "@/lib/actions";
 
-async function SummarySection({ summary }: { summary?: ThreadSummary }) {
+async function SummarySection() {
+  const { result: summary } = await getThreadSummary();
   return (
     <section className="px-4 sm:px-6 lg:px-8 py-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">

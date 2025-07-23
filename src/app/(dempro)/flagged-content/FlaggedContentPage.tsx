@@ -98,7 +98,7 @@ export default function FlaggedContentClient({
 
           {/* Content Preview */}
           {item.contentType === "comment" ? (
-            <div className="pl-4 border-l-4 border-sky-200 mb-4">
+            <div className="pl-4 border-l-4 border-dpro-dark mb-4">
               <p className="text-sm mb-1">
                 <strong>By:</strong> {item.content.createdById}
               </p>
@@ -109,7 +109,7 @@ export default function FlaggedContentClient({
               </p>
             </div>
           ) : (
-            <div className="pl-4 border-l-4 border-green-200 mb-4">
+            <div className="pl-4 border-l-4 border-dpro-primary mb-4">
               <p className="text-sm mb-1">
                 <strong>Title:</strong> {item.content.title}
               </p>

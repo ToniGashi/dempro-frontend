@@ -39,10 +39,10 @@
 } */
 
 @theme {
-  --color-dpro-primary: oklch(0.35 0.1 260);
+  --color-dpro-primary: #0d345f;
 
-  --color-dpro-accent: oklch(0.7 0.12 260);
-  --color-dpro-secondary: oklch(0.76 0.04 240);
+  --color-dpro-accent: #556a8e;
+  --color-dpro-secondary: #6f95c9;
 
   --color-dpro-dark: oklch(0.8 0.05 250);
 

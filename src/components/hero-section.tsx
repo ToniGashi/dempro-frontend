@@ -20,14 +20,14 @@ export default async function HeroSection({
   return (
     <div>
       <div className="h-140 flex gap-10 bg-dpro-accent p-16 w-full items-center">
-        <div className="flex flex-col gap-6 items-center text-center sm:items-center sm:text-left">
-          <div className="space-y-4">
+        <div className="flex flex-col gap-12 items-center text-center sm:items-center sm:text-left">
+          <div className="space-y-12">
             {title_one && (
               <h1
                 className="
         text-3xl sm:text-4xl md:text-5xl lg:text-6xl
         font-bold
-        text-dpro-primary
+        text-white
         max-w-full
         sm:max-w-[400px]
         md:max-w-[600px]
@@ -41,9 +41,9 @@ export default async function HeroSection({
             {title_two && (
               <h1
                 className="
-        text-3xl sm:text-4xl md:text-5xl lg:text-6xl
+        text-xl sm:text-xl md:text-2xl lg:text-3xl
         font-bold
-        text-dpro-primary
+        text-white
         max-w-full
         sm:max-w-[400px]
         md:max-w-[600px]
@@ -60,7 +60,7 @@ export default async function HeroSection({
         mt-2
         text-lg sm:text-xl md:text-2xl lg:text-3xl
         font-medium
-        text-dpro-primary
+        text-white
         max-w-full
         sm:max-w-[350px]
         md:max-w-[550px]
@@ -74,11 +74,11 @@ export default async function HeroSection({
           </div>
 
           {buttonText && (
-            <Link href="/about-us" className="w-full sm:w-auto">
+            <Link href="/about-us" className="w-full self-start sm:w-auto">
               <Button
                 className="
         w-full sm:w-auto
-        max-w-xs
+        max-w-xs text-white border-white bg-dpro-primary
       "
               >
                 {buttonText}
@@ -91,8 +91,8 @@ export default async function HeroSection({
           src={imageSrc}
           alt={imageAlt}
           className="hidden md:block"
-          width={476}
-          height={476}
+          width={576}
+          height={576}
           priority
         />
       </div>
