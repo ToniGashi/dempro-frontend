@@ -38,7 +38,7 @@ const cards: Card[] = [
 
 function NewGenDemocracy() {
   return (
-    <section className="py-16 bg-white">
+    <section className="py-16 bg-white scroll-mt-[40px]" id="involvement">
       {/* Header */}
       <div className="max-w-3xl mx-auto text-center px-4 sm:px-6 lg:px-8">
         <h2 className="text-3xl font-bold text-dpro-primary">
