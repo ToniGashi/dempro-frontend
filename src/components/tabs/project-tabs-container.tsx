@@ -58,7 +58,9 @@ export default function ProjectTabsContainer({
         )}
         {activeTab === "Threads" && <ThreadsTab projectId={project.id} />}
         {activeTab === "Media" && <MediaTab project={project} />}
-        {activeTab === "Team" && <TeamTab team={project.team} />}
+        {activeTab === "Team" && (
+          <TeamTab team={project.team} projectId={project.id} />
+        )}
         {activeTab === "Other" && (
           <div className="mb-8 sm:mb-16">
             <h2 className="text-xl sm:text-3xl font-bold text-gray-900 mb-4">
