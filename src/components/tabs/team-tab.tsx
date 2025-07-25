@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 
+import { useAuth } from "@/hooks/use-auth";
 import { updateRole } from "@/lib/actions";
 import { TeamMember } from "@/lib/types";
 import { InviteForm, inviteSchema } from "@/lib/schema";
@@ -21,13 +22,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import { useAuth } from "@/hooks/use-auth";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 interface TeamListProps {
   team: TeamMember[];
+  projectId: number;
 }
 
-export default function TeamTab({ team }: TeamListProps) {
+export default function TeamTab({ team, projectId }: TeamListProps) {
   const { user } = useAuth();
   const inviteForm = useForm<InviteForm>({
     resolver: zodResolver(inviteSchema),
@@ -35,14 +45,14 @@ export default function TeamTab({ team }: TeamListProps) {
   });
 
   const [roleLoading, setRoleLoading] = useState<Record<string, boolean>>({});
+  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   const hasInvitePermission = team
     .filter((item) => item.teamRole === "Admin")
     .find((item) => item.userEmail === user?.email);
 
   const onInvite = async (values: InviteForm) => {
-    const projectId = team[0]?.projectId;
-
-    if (!projectId) return;
     try {
       toast.promise(
         (async () => {
@@ -52,17 +62,20 @@ export default function TeamTab({ team }: TeamListProps) {
             role: values.role,
           });
           if (!result || !("success" in result) || !result.success) {
-            throw new Error((result as any)?.error || "Failed to invite user");
+            const errorMsg = (result as any)?.error || "Failed to invite user";
+
+            if (errorMsg.toLowerCase().includes("not found")) {
+              setErrorMessage(errorMsg);
+              setShowErrorDialog(true);
+              throw new Error(errorMsg);
+            }
           }
-          return result;
+          inviteForm.reset();
         })(),
         {
           loading: "Inviting user...",
-          success: () => {
-            inviteForm.reset();
-            return "User invited!";
-          },
-          error: (err) => `Something went wrong: ${err.message}`,
+          success: "User invited!",
+          error: (err) => `Failed to invite user: ${err.message}`,
         }
       );
     } catch (error) {
@@ -200,6 +213,21 @@ export default function TeamTab({ team }: TeamListProps) {
           </tbody>
         </table>
       </div>
+      <AlertDialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>User Not Found</AlertDialogTitle>
+            <AlertDialogDescription>
+              {errorMessage + " " + "Invite the user to DemPro first."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setShowErrorDialog(false)}>
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

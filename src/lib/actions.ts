@@ -68,6 +68,12 @@ export const postMediaToProject = createApiOperation<FormData, FileNode>({
   tags: ["project"],
 });
 
+export const acceptProjectInvitation = createApiOperation<string, any>({
+  url: (projectId) => `ProjectTeams/${projectId}/accept`,
+  method: "PATCH",
+  tags: ["thread"],
+});
+
 export const deleteMediaFromProject = createApiOperation<
   DeleteMediaInput,
   Project
@@ -167,7 +173,7 @@ export const createUser = createApiOperation<SignUpUser, SignUpUser>({
 
 export const getUser = createReadOperation<string, UserProfile>({
   url: (email) => `user/email?email=${email}`,
-  cache: "no-store",
+  cache: "no-cache",
   tags: ["profile"],
 });
 
