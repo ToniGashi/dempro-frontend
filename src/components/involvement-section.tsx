@@ -68,17 +68,17 @@ export default function InvolvementSection() {
 
           <div className="flex flex-col sm:flex-row flex-wrap gap-4 mt-8">
             <Link
-              href="/signup"
+              href="/signin"
               className="w-full sm:w-auto text-center bg-dpro-primary text-white px-6 py-3 rounded-lg hover:bg-dpro-primary/90 transition"
             >
               JOIN DEMPRO
             </Link>
-            <Link
-              href="/contact"
+            <button
+              disabled
               className="w-full sm:w-auto text-center border-2 border-dpro-primary text-dpro-primary px-6 py-3 rounded-lg hover:bg-dpro-primary/10 transition"
             >
               HAVE ANY QUESTIONS?
-            </Link>
+            </button>
           </div>
         </div>
 

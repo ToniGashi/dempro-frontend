@@ -19,7 +19,7 @@ export default async function HeroSection({
 }) {
   return (
     <div>
-      <div className="h-140 flex gap-10 bg-dpro-accent p-16 w-full items-center">
+      <div className="h-140 flex justify-between md:pr-12 lg:pr-24 xl:pr-48 gap-10 bg-dpro-accent p-16 w-full items-center">
         <div className="flex flex-col gap-12 items-center text-center sm:items-center sm:text-left">
           <div className="space-y-12">
             {title_one && (
@@ -78,7 +78,7 @@ export default async function HeroSection({
               <Button
                 className="
         w-full sm:w-auto
-        max-w-xs text-white border-white bg-dpro-primary
+        max-w-xs text-white border-white bg-dpro-primary hover:cursor-pointer
       "
               >
                 {buttonText}

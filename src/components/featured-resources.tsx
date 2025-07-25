@@ -5,7 +5,7 @@ type Resource = {
   title: string;
   description: string;
   iconSrc: string;
-  href: string;
+  href?: string;
   buttonText: string;
 };
 
@@ -15,7 +15,7 @@ const resources: Resource[] = [
     description:
       "Explore our open‑source templates library, from project proposals and budgets to blog posts and documentation — all ready to fork. Start here to get your next idea to market.",
     iconSrc: "/Illustration - Asset 35.svg", // place your SVGs under public/icons
-    href: "/library",
+    href: "/templates",
     buttonText: "Go to Library",
   },
   {
@@ -23,7 +23,6 @@ const resources: Resource[] = [
     description:
       "A transparent archive of initiatives our users have launched: budgets and planning docs, before‑and‑after results, lessons learned, code samples, and more. Read through the success stories.",
     iconSrc: "/Asset 6.svg",
-    href: "/case‑studies",
     buttonText: "View Projects",
   },
   {
@@ -31,7 +30,6 @@ const resources: Resource[] = [
     description:
       "Join a growing network of creators, strategists, and problem‑solvers. Share ideas, get feedback, and collaborate on open‑source projects and solutions. Whether you’re a beginner or a pro, the Hub is your place to connect.",
     iconSrc: "/Illustration - Asset 7.svg",
-    href: "/community",
     buttonText: "Go to Community",
   },
 ];
@@ -72,12 +70,18 @@ function FeaturedResources() {
 
                 {/* Footer / Button */}
                 <div className="px-6 pb-6">
-                  <Link
-                    href={res.href}
-                    className="inline-block w-full text-center py-2 px-4 border border-white transition"
-                  >
-                    {res.buttonText}
-                  </Link>
+                  {res.href ? (
+                    <Link
+                      href={res.href}
+                      className="inline-block w-full text-center py-2 px-4 border border-white transition"
+                    >
+                      {res.buttonText}
+                    </Link>
+                  ) : (
+                    <button className="inline-block w-full text-center py-2 px-4 border border-white transition">
+                      {res.buttonText}
+                    </button>
+                  )}
                 </div>
               </div>
             </div>

@@ -96,7 +96,7 @@ export default function StoriesSection() {
               </span>
 
               <h3 className="mt-3 text-lg font-semibold text-gray-900 hover:text-dpro-primary transition">
-                <Link href={story.href}>{story.title}</Link>
+                <button disabled>{story.title}</button>
               </h3>
 
               <p className="mt-2 text-gray-600 text-sm">{story.description}</p>
