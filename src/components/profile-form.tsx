@@ -112,9 +112,9 @@ export function Profile({ profile }: { profile?: UserProfile }) {
     return (
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <Card className="border-dpro-light-gray">
-          <CardHeader className="bg-dpro-accent">
+          <CardHeader className="bg-dpro-primary !items-center p-7">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-dpro-dark flex items-center gap-2">
+              <CardTitle className="text-white flex items-center gap-2 text-2xl">
                 <Pencil className="h-5 w-5" />
                 Edit Profile
               </CardTitle>
@@ -123,7 +123,7 @@ export function Profile({ profile }: { profile?: UserProfile }) {
                 size="sm"
                 onClick={handleCancel}
                 disabled={isSubmitting}
-                className="text-dpro-dark hover:bg-dpro-secondary"
+                className="text-white hover:bg-dpro-secondary hover:cursor-pointer"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -257,23 +257,23 @@ export function Profile({ profile }: { profile?: UserProfile }) {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       <Card className="border-dpro-light-gray">
-        <CardHeader className="bg-dpro-accent">
-          <div className="flex items-center justify-between">
+        <CardHeader className="bg-dpro-primary !items-center p-5">
+          <div className="flex justify-between items-center">
             <div>
-              <CardTitle className="text-dpro-dark text-2xl">
+              <CardTitle className="text-white text-2xl">
                 {profile?.fullName}
               </CardTitle>
               <div className="flex items-center gap-2 mt-2">
                 <Badge
                   variant="secondary"
-                  className="bg-dpro-primary text-white"
+                  className="bg-dpro-accent text-white"
                 >
                   {profile?.role}
                 </Badge>
                 {profile?.isActivated && (
                   <Badge
                     variant="outline"
-                    className="border-dpro-dark-green text-dpro-dark-green"
+                    className="border-dpro-dark-green text-white bg-dpro-dark-green"
                   >
                     Active
                   </Badge>
@@ -282,7 +282,7 @@ export function Profile({ profile }: { profile?: UserProfile }) {
             </div>
             <Button
               onClick={() => setIsEditing(true)}
-              className="bg-dpro-primary text-white hover:bg-dpro-dark"
+              className="bg-dpro-accent text-white hover:bg-dpro-dark hover:cursor-pointer"
             >
               <Pencil className="h-4 w-4 mr-2" />
               Edit Profile

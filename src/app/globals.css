@@ -40,11 +40,10 @@
 
 @theme {
   --color-dpro-primary: #0d345f;
-
   --color-dpro-accent: #556a8e;
   --color-dpro-secondary: #6f95c9;
 
-  --color-dpro-dark: oklch(0.8 0.05 250);
+  --color-dpro-dark: #d8eaff;
 
   --color-dpro-light-gray: oklch(0.93 0 0);
   --color-dpro-gray: oklch(0.75 0 0);

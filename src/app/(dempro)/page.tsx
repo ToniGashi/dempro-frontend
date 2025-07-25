@@ -4,7 +4,9 @@ import HeroSection from "@/components/hero-section";
 import ImpactSection from "@/components/impact-section";
 import InvolvementSection from "@/components/involvement-section";
 import NewGenDemocracy from "@/components/new-gen-democracy";
+import PeopleProjectsSection from "@/components/people-projects-section";
 import StoriesSection from "@/components/stories-section";
+import SuccessStorySection from "@/components/success-story-section";
 
 export default async function DashboardPage() {
   return (
@@ -20,6 +22,8 @@ export default async function DashboardPage() {
       <FeaturedResources />
       <NewGenDemocracy />
       <ImpactSection />
+      <SuccessStorySection />
+      <PeopleProjectsSection />
       <StoriesSection />
       <InvolvementSection />
       {/* <div className="grid grid-cols-1 md:grid-cols-2 gap-10 p-16">

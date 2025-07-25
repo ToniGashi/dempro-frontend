@@ -18,7 +18,7 @@ export default async function Layout(props: { children: React.ReactNode }) {
       <AuthProvider userData={user}>
         <NavBar />
         <SidebarProvider defaultOpen={!isCollapsed} className="mt-17">
-          {user && <AppSidebar className="pt-24 bg-dpro-secondary" />}
+          {user && <AppSidebar className="pt-24 bg-dpro-dark" />}
           <SidebarInset>{props.children}</SidebarInset>
         </SidebarProvider>
         <Footer />
